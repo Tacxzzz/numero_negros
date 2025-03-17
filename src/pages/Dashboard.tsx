@@ -371,7 +371,10 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
   const [level3, setLevel3] = useState(0);
 
   const currentURL = window.location.origin; // Gets the base URL
-  const referralLink = `${currentURL}/create-account?ref=${btoa(userID)}`;
+  const randomKey = Math.random().toString(36).substring(2, 23); // 21-character random key
+  const encodedParams = btoa(`ref=${userID}&key=${randomKey}`); // Encode full params
+
+  const referralLink = `${currentURL}/create-account?data=${encodedParams}`;
   useEffect(() => {
     if (userID) {
       const handleUpdate = async () => {
