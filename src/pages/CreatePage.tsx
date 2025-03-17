@@ -16,9 +16,17 @@ export function CreatePage() {
   const [error, setError] = useState("");
   const ref = searchParams.get("ref");
 
-  const decodedRef = ref ? atob(ref) : "";
-
-  console.log("Decoded Ref:", decodedRef);
+  let decodedRef = "";
+  if (ref) {
+    try {
+      decodedRef = atob(ref);
+      console.log("Decoded ref:", decodedRef); // Debug
+    } catch (err) {
+      console.error("Invalid referral code:", err.message);
+      decodedRef = ""; // Fallback to empty string
+      setError("Invalid referral code provided.");
+    }
+  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
