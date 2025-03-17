@@ -15,7 +15,7 @@ export function CreatePage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState("");
   const ref = searchParams.get("ref");
-
+  console.log("CreatePage mounted, ref:", ref);
   let decodedRef = "";
   if (ref) {
     try {
