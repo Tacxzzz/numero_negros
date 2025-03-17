@@ -2,19 +2,25 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { LoginPage } from "./pages/LoginPage";
 import { Dashboard } from "./pages/Dashboard";
 import { GamePage } from "./pages/GamePage";
-import { CreatePage } from "./pages/CreatePage"; // ✅ Import CreateAccountPage
-import { UserProvider, useUser } from "./pages/UserContext";
+import { CreatePage } from "./pages/CreatePage";
+import { UserProvider } from "./pages/UserContext";
 
 const isAuthenticated = () => {
-  return !!localStorage.getItem("authToken");
+  const token = localStorage.getItem("authToken");
+  console.log("isAuthenticated:", !!token); // Debug auth status
+  return !!token;
 };
 
-const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
-  return isAuthenticated() ? element : <Navigate to="/" replace />;
+const ProtectedRoute = ({ element }) => {
+  const auth = isAuthenticated();
+  console.log("ProtectedRoute check:", auth); // Debug route protection
+  return auth ? element : <Navigate to="/" replace />;
 };
 
-const RedirectIfAuthenticated = ({ element }: { element: JSX.Element }) => {
-  return isAuthenticated() ? <Navigate to="/dashboard" replace /> : element;
+const RedirectIfAuthenticated = ({ element }) => {
+  const auth = isAuthenticated();
+  console.log("RedirectIfAuthenticated check:", auth); // Debug redirect
+  return auth ? <Navigate to="/dashboard" replace /> : element;
 };
 
 const handleLogout = () => {
@@ -24,16 +30,25 @@ const handleLogout = () => {
 };
 
 function App() {
+  console.log("App rendered"); // Confirm App mounts
   return (
     <UserProvider>
-    <Router>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/create-account" element={<RedirectIfAuthenticated element={<CreatePage />} />} />
-        <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard onLogout={handleLogout} />} />} />
-        <Route path="/game" element={<ProtectedRoute element={<GamePage />} />} />
-      </Routes>
-    </Router>
+      <Router>
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route
+            path="/create-account"
+            element={<RedirectIfAuthenticated element={<CreatePage />} />}
+          />
+          <Route
+            path="/dashboard"
+            element={<ProtectedRoute element={<Dashboard onLogout={handleLogout} />} />}
+          />
+          <Route path="/game" element={<ProtectedRoute element={<GamePage />} />} />
+          {/* Add a test route */}
+          <Route path="/test" element={<div>Test Page Works!</div>} />
+        </Routes>
+      </Router>
     </UserProvider>
   );
 }
