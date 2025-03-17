@@ -368,6 +368,7 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
   const [status,setStatus] = useState("");
   const [level1, setLevel1] = useState(0);
   const [level2, setLevel2] = useState(0);
+  const [level3, setLevel3] = useState(0);
 
   const currentURL = window.location.origin; // Gets the base URL
   const referralLink = `${currentURL}/create-account?ref=${btoa(userID)}`;
@@ -383,6 +384,7 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
         const dataRef = await getReferrals(userID);
         setLevel1(dataRef.level1);
         setLevel2(dataRef.level2);
+        setLevel3(dataRef.level3);
       };
       handleUpdate();
     }
@@ -464,16 +466,23 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
                     </div>
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred Lvl 1</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred Lvl 1 (20% Rewards)</label>
                     <div className="flex items-center">
                       <Input readOnly value={level1} disabled className="mr-2" />
                       
                     </div>
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred Lvl 2</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred Lvl 2 (3% Rewards)</label>
                     <div className="flex items-center">
                       <Input readOnly value={level2} disabled className="mr-2" />
+                      
+                    </div>
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred Lvl 3 (2% Rewards)</label>
+                    <div className="flex items-center">
+                      <Input readOnly value={level3} disabled className="mr-2" />
                       
                     </div>
                 </div>

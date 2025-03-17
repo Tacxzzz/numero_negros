@@ -175,15 +175,16 @@ export const getReferrals = async (id: string
       return {
         level1: userData.level1,
         level2: userData.level2,
+        level3: userData.level3,
       };
     } else {
       console.warn("User data is empty or invalid.");
-      return { level1: "", level2: "" };
+      return { level1: "", level2: "", level3: "" };
     }
     
   } catch (error) {
     console.error("Failed to send remittance:", error);
-    return { level1: "", level2: "" };
+    return { level1: "", level2: "", level3: "" };
   }
 };
 
