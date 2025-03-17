@@ -78,7 +78,7 @@ export function CreatePage() {
             {error && <p className="text-red-500 text-sm text-center mt-2">{error}</p>}
             <form onSubmit={handleLogin} className="space-y-4">
             <Input 
-                  type="" 
+                  type="hidden" 
                   value={decodedRef}
                   name="referral"
                 />
