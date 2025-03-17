@@ -13,6 +13,10 @@ const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
   return isAuthenticated() ? element : <Navigate to="/" replace />;
 };
 
+const RedirectIfAuthenticated = ({ element }: { element: JSX.Element }) => {
+  return isAuthenticated() ? <Navigate to="/dashboard" replace /> : element;
+};
+
 const handleLogout = () => {
   localStorage.removeItem("authToken");
   localStorage.removeItem("identifier");
@@ -25,7 +29,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
-        <Route path="/create-account" element={<CreatePage />} /> {/* ✅ New Route */}
+        <Route path="/create-account" element={<RedirectIfAuthenticated element={<CreatePage />} />} />
         <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard onLogout={handleLogout} />} />} />
         <Route path="/game" element={<ProtectedRoute element={<GamePage />} />} />
       </Routes>
