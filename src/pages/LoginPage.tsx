@@ -61,17 +61,24 @@ export function LoginPage() {
             {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
 
             <form onSubmit={handleLogin} className="space-y-4">
-              <div className="space-y-2">
+            <div className="space-y-2">
                 <Label htmlFor="mobile" className="text-gray-700">Mobile Number</Label>
-                <Input 
-                  id="mobile" 
-                  type="number" 
-                  placeholder="Mobile Number" 
-                  value={mobile}
-                  onChange={(e) => setMobile(e.target.value)}
-                  className="rounded-xl"
-                  required
-                />
+                <div className="flex items-center space-x-2 border rounded-xl p-2 bg-gray-100">
+                  {/* Fixed +63 country code */}
+                  <span className="text-gray-700 font-semibold">+63</span>
+
+                  {/* Mobile Input */}
+                  <Input 
+                    id="mobile" 
+                    type="tel" 
+                    placeholder="9XXXXXXXXX" 
+                    value={mobile}
+                    onChange={(e) => setMobile(e.target.value.replace(/\D/g, '').slice(0, 10))} 
+                    pattern="[0-9]{10}" 
+                    className="flex-1 bg-transparent border-none focus:ring-0 outline-none"
+                    required
+                  />
+                </div>
               </div>
               
               <div className="space-y-2">
