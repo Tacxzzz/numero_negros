@@ -14,17 +14,22 @@ export function CreatePage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState("");
-  const ref = searchParams.get("ref");
-  console.log("CreatePage mounted, ref:", ref);
+  
+  const params = new URLSearchParams(window.location.search);
+  const encodedData = params.get("data"); // Get encoded data
   let decodedRef = "";
-  if (ref) {
+  if (encodedData) {
     try {
-      decodedRef = atob(ref);
-      console.log("Decoded ref:", decodedRef); // Debug
+      const decodedParams = atob(encodedData); // Decode the full params
+      const searchParams = new URLSearchParams(decodedParams); // Convert to object
+
+      const ref = searchParams.get("ref"); // Extract referral ID
+      const key = searchParams.get("key"); // Extract key
+      decodedRef = ref;
+      console.log("Decoded Ref:", ref);
+      console.log("Decoded Key:", key);
     } catch (err) {
       console.error("Invalid referral code:", err.message);
-      decodedRef = ""; // Fallback to empty string
-      setError("Invalid referral code provided.");
     }
   }
 
