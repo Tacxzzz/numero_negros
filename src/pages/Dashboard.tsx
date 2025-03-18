@@ -37,7 +37,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const [referral, setReferral] = useState("");
   const [status,setStatus] = useState("");
   const [showAccountModal, setShowAccountModal] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  // const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     if (userID) {
@@ -54,13 +54,13 @@ export function Dashboard({ onLogout }: SidebarProps) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleCashInClick = () => {
-    setShowSuccessModal(true);
-  };
+  // const handleCashInClick = () => {
+  //   setShowSuccessModal(true);
+  // };
 
-  const handleCloseModal = () => {
-    setShowSuccessModal(false);
-  };
+  // const handleCloseModal = () => {
+  //   setShowSuccessModal(false);
+  // };
 
   const popularGames = [
     { id: 1, name: "2D", type: "Lotto", minBet: 20, maxBet: 5000, image: "/img/2d.jpeg" },
@@ -369,7 +369,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
 
       
       {/* Success Modal */}
-      <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
+      {/* <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-green-600 flex items-center gap-2">
@@ -403,7 +403,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
             </Button>
           </DialogFooter>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
 
       
     </div>
