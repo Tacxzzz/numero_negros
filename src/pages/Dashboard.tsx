@@ -17,11 +17,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { FiCopy } from 'react-icons/fi';
+import { CheckCircleIcon } from '@heroicons/react/solid';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from "./UserContext";
 import { fetchUserData, getReferrals } from '@/lib/apiCalls';
 import { formatPeso } from '@/lib/utils';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 
 interface SidebarProps {
   onLogout?: () => void;
@@ -35,6 +37,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const [referral, setReferral] = useState("");
   const [status,setStatus] = useState("");
   const [showAccountModal, setShowAccountModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     if (userID) {
@@ -50,6 +53,14 @@ export function Dashboard({ onLogout }: SidebarProps) {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleCashInClick = () => {
+    setShowSuccessModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowSuccessModal(false);
+  };
 
   const popularGames = [
     { id: 1, name: "2D", type: "Lotto", minBet: 20, maxBet: 5000, image: "/img/2d.jpeg" },
@@ -355,6 +366,46 @@ export function Dashboard({ onLogout }: SidebarProps) {
           </Link>
         </div>
       </div>
+
+      
+      {/* Success Modal */}
+      <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-green-600 flex items-center gap-2">
+              <CheckCircleIcon className="h-5 w-5" />
+              Cash In Successfully
+            </DialogTitle>
+            <DialogDescription>
+              Your Cash In has been processed successfully.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="bg-gray-50 p-4 rounded-md">
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <div className="text-gray-500">Amount:</div>
+                <div className="font-medium">${balance}</div>
+                <div className="text-gray-500">Transaction ID:</div>
+                <div className="font-medium">{Math.random().toString(36).substring(2, 10).toUpperCase()}</div>
+                <div className="text-gray-500">Date:</div>
+                <div className="font-medium">{new Date().toLocaleString()}</div>
+                <div className="text-gray-500">Status:</div>
+                <div className="font-medium text-green-600">Processing</div>
+              </div>
+            </div>
+            <p className="text-sm text-gray-600">
+              Your Cash In request is being processed.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button type="button" onClick={handleCloseModal}>
+              Back to Dashboard
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      
     </div>
   );
 }
@@ -557,6 +608,34 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
                   Add Payment Method
                 </Button>
               </div>
+
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <h4 className="font-medium mb-2">Add Funds</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between bg-white p-2 rounded border">
+                    <div className="flex items-center">
+                      <div>
+                        <input type="number" className="border rounded p-1 text-sm w-full" placeholder="Enter amount" style={{ appearance: 'textfield' }}/>
+                        <style>{`
+                          input[type=number]::-webkit-outer-spin-button,
+                          input[type=number]::-webkit-inner-spin-button {
+                            -webkit-appearance: none;
+                            margin: 0;
+                          }
+                          input[type=number] {
+                            -moz-appearance: textfield;
+                          }
+                        `}</style>
+                      </div>
+                    </div>
+                    <Button type="submit" variant="outline" size="sm" className="text-blue-500 bg-blue-100 hover:text-blue-700 hover:bg-green-50 rounded px-4 py-2">
+                      <label>Cash In</label>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              
               
               <div className="bg-gray-50 p-3 rounded-lg">
                 <h4 className="font-medium mb-2">Transaction History</h4>
