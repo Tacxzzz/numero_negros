@@ -47,7 +47,7 @@ export function GameCard({ game }: GameCardProps) {
             Save
           </Button>
           
-          <Link to="/game" className="flex-1">
+          <Link to={`/game-history/${game.id}`} className="flex-1">
             <Button 
               size="sm" 
               className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
