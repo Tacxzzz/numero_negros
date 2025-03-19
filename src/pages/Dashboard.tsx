@@ -312,7 +312,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
                 <line x1="8" y1="2" x2="8" y2="6"></line>
                 <line x1="3" y1="10" x2="21" y2="10"></line>
               </svg>
-              <span>Tournaments</span>
+              <span>Game Results</span>
             </Button>
             <Button variant="outline" className="h-auto py-6 flex flex-col items-center justify-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -580,6 +580,34 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
           
           {activeTab === 'payment' && (
             <div className="space-y-4">
+
+                <div className="bg-gray-50 p-3 rounded-lg">
+                <h4 className="font-medium mb-2">Add Funds</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between bg-white p-2 rounded border">
+                    <div className="flex items-center">
+                      <div>
+                        <input type="number" className="border rounded p-1 text-sm w-full" placeholder="Enter amount" style={{ appearance: 'textfield' }}/>
+                        <style>{`
+                          input[type=number]::-webkit-outer-spin-button,
+                          input[type=number]::-webkit-inner-spin-button {
+                            -webkit-appearance: none;
+                            margin: 0;
+                          }
+                          input[type=number] {
+                            -moz-appearance: textfield;
+                          }
+                        `}</style>
+                      </div>
+                    </div>
+                    <Button type="submit" variant="outline" size="sm" className="text-blue-500 bg-blue-100 hover:text-blue-700 hover:bg-green-50 rounded px-4 py-2">
+                      <label>Cash In</label>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+
               <div className="bg-gray-50 p-3 rounded-lg">
                 <h4 className="font-medium mb-2">Payment Methods</h4>
                 <div className="space-y-2">
@@ -612,31 +640,7 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
                 </Button>
               </div>
 
-              <div className="bg-gray-50 p-3 rounded-lg">
-                <h4 className="font-medium mb-2">Add Funds</h4>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between bg-white p-2 rounded border">
-                    <div className="flex items-center">
-                      <div>
-                        <input type="number" className="border rounded p-1 text-sm w-full" placeholder="Enter amount" style={{ appearance: 'textfield' }}/>
-                        <style>{`
-                          input[type=number]::-webkit-outer-spin-button,
-                          input[type=number]::-webkit-inner-spin-button {
-                            -webkit-appearance: none;
-                            margin: 0;
-                          }
-                          input[type=number] {
-                            -moz-appearance: textfield;
-                          }
-                        `}</style>
-                      </div>
-                    </div>
-                    <Button type="submit" variant="outline" size="sm" className="text-blue-500 bg-blue-100 hover:text-blue-700 hover:bg-green-50 rounded px-4 py-2">
-                      <label>Cash In</label>
-                    </Button>
-                  </div>
-                </div>
-              </div>
+              
 
               
               

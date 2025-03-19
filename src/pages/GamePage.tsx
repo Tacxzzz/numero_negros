@@ -8,8 +8,12 @@ import { ActionButtons } from '@/components/ActionButtons';
 
 export function GamePage() {
   const navigate = useNavigate();
-  const [score, setScore] = useState(33);
+  const [score, setScore] = useState(0);
   const [betAmount, setBetAmount] = useState(10);
+
+  const handleTileClick = (value: number) => {
+    setScore(value);
+  };
   
   return (
     <div className="min-h-screen bg-gradient-to-b from-sky-400 to-sky-300 flex flex-col items-center justify-center p-4 overflow-hidden relative">
@@ -61,7 +65,7 @@ export function GamePage() {
         {/* Game board */}
         <div className="relative z-10 p-4 pt-16">
           <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-4 shadow-inner">
-            <GameBoard />
+            <GameBoard onTileClick={handleTileClick} />
           </div>
         </div>
         

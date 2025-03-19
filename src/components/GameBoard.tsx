@@ -8,7 +8,11 @@ type GameTile = {
   color: string;
 };
 
-export function GameBoard() {
+interface GameBoardProps {
+  onTileClick: (value: number) => void;
+}
+
+export function GameBoard({ onTileClick }: GameBoardProps) {
   // Generate game tiles with different types and colors
   const generateTiles = (): GameTile[] => {
     const tiles: GameTile[] = [];
@@ -41,17 +45,20 @@ export function GameBoard() {
   };
 
   const [tiles, setTiles] = useState<GameTile[]>(generateTiles());
-
+  const handleTileClick = (tile: GameTile) => {
+    onTileClick(tile.value);
+  };
   return (
     <div className="grid grid-cols-5 gap-2 md:gap-3">
       {tiles.map((tile) => (
         <button
-          key={tile.id}
-          className={cn(
-            "w-full aspect-square rounded-full flex items-center justify-center text-white font-bold text-xl shadow-md transition-transform hover:scale-105 active:scale-95",
-            tile.color
-          )}
-        >
+        key={tile.id}
+        className={cn(
+          "w-full aspect-square rounded-full flex items-center justify-center text-white font-bold text-xl shadow-md transition-transform hover:scale-105 active:scale-95",
+          tile.color
+        )}
+        onClick={() => handleTileClick(tile)}
+      >
           {tile.type === 'normal' && <span>{tile.value}</span>}
           {tile.type === 'star' && (
             <div className="text-yellow-300">
