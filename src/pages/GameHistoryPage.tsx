@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+// import { popularGames } from './Dashboard';
 
 type GameDraw = {
   id: string;
@@ -40,13 +41,10 @@ export function GameHistoryPage() {
   useEffect(() => {
     // In a real app, this would be an API call
     const games = [
-      { id: 1, name: "Color Match", type: "Puzzle", minBet: 5, maxBet: 500, image: "https://picsum.photos/id/237/300/200" },
-      { id: 2, name: "Lucky Spin", type: "Casino", minBet: 10, maxBet: 1000, image: "https://picsum.photos/id/239/300/200" },
-      { id: 3, name: "Number Crush", type: "Puzzle", minBet: 5, maxBet: 200, image: "https://picsum.photos/id/240/300/200" },
-      { id: 4, name: "Star Collector", type: "Arcade", minBet: 2, maxBet: 100, image: "https://picsum.photos/id/241/300/200" },
-      { id: 5, name: "Gem Blast", type: "Puzzle", minBet: 5, maxBet: 300, image: "https://picsum.photos/id/242/300/200" },
-      { id: 6, name: "Fortune Wheel", type: "Casino", minBet: 20, maxBet: 2000, image: "https://picsum.photos/id/243/300/200" },
-      { id: 7, name: "Bubble Pop", type: "Arcade", minBet: 3, maxBet: 150, image: "https://picsum.photos/id/244/300/200" },
+      { id: 1, name: "2D", type: "Lotto", minBet: 20, maxBet: 5000, image: "/img/2d.jpeg" },
+      { id: 2, name: "3D", type: "Lotto", minBet: 20, maxBet: 5000, image: "/img/3D.jpeg" },
+      { id: 3, name: "STL 3D", type: "Lotto", minBet: 20, maxBet: 5000, image: "/img/3D.jpeg" },
+      { id: 4, name: "4D", type: "Lotto", minBet: 20, maxBet: 5000, image: "/img/4D.png" },
     ];
     
     const foundGame = games.find(game => game.id === parseInt(gameId || '0'));
