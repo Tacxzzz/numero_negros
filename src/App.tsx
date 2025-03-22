@@ -5,6 +5,9 @@ import { GamePage } from "./pages/GamePage";
 import { CreatePage } from "./pages/CreatePage";
 import { UserProvider } from "./pages/UserContext";
 import { GameHistoryPage } from './pages/GameHistoryPage';
+import { MyBetsPage } from './pages/MyBetsPage';
+import { TournamentsPage } from './pages/TournamentsPage';
+import { SupportPage } from './pages/SupportPage';
 
 const isAuthenticated = () => {
   const token = localStorage.getItem("authToken");
@@ -49,6 +52,9 @@ function App() {
           <Route path="/game-history/:gameId" element={<GameHistoryPage />} />
           {/* Add a test route */}
           <Route path="/test" element={<div>Test Page Works!</div>} />
+          <Route path="/my-bets" element={<MyBetsPage />} />
+          <Route path="/tournaments" element={<TournamentsPage />} />
+          <Route path="/support" element={<SupportPage />} />
         </Routes>
       </Router>
     </UserProvider>
