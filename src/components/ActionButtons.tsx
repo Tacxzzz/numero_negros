@@ -22,7 +22,7 @@ export function ActionButtons() {
   return (
     <div className="relative z-10 p-4 flex flex-col items-center gap-4">
       <button className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-8 rounded-full shadow-md transition-transform hover:scale-105 active:scale-95 uppercase text-sm tracking-wider">
-        Choose
+        Bet
       </button>
       
       <div className="flex items-center gap-4">

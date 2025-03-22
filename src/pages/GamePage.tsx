@@ -8,11 +8,19 @@ import { ActionButtons } from '@/components/ActionButtons';
 
 export function GamePage() {
   const navigate = useNavigate();
-  const [score, setScore] = useState(0);
   const [betAmount, setBetAmount] = useState(10);
 
-  const handleTileClick = (value: number) => {
-    setScore(value);
+  const [lengthChoice, setLengthChoice] = useState(31);
+  const [dynamicLength, setDynamicLength] = useState(2); 
+  const [scores, setScores] = useState<string[]>(Array.from({ length: dynamicLength }, () => ""));
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handleTileClick = (newScore: string) => {
+    const updatedScores = [...scores];
+    updatedScores[currentIndex] = newScore;
+    setScores(updatedScores);
+
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % scores.length);
   };
   
   return (
@@ -38,7 +46,7 @@ export function GamePage() {
       </div>
 
       {/* Game container */}
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl overflow-hidden relative">
+      <div className="w-full h-full max-w-md bg-white rounded-3xl shadow-xl overflow-hidden relative">
         {/* Rainbow background */}
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-yellow-200 to-pink-200 opacity-50"></div>
         
@@ -60,12 +68,12 @@ export function GamePage() {
         </div>
 
         {/* Score display */}
-        <ScoreDisplay score={score} />
-        
+        <ScoreDisplay scores={scores} />
+        <br/><br/><br/>
         {/* Game board */}
         <div className="relative z-10 p-4 pt-16">
           <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-4 shadow-inner">
-            <GameBoard onTileClick={handleTileClick} />
+            <GameBoard onTileClick={handleTileClick} lengthChoice={lengthChoice} scores={scores} />
           </div>
         </div>
         
