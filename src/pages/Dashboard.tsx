@@ -148,7 +148,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
                   <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
                 </svg>
               </div>
-              <span className="ml-2 font-bold text-gray-800 hidden sm:inline">Numero Games</span>
+              <span className="ml-2 font-bold text-gray-800 hidden sm:inline">PisoPlay</span>
             </div>
           </div>
           
