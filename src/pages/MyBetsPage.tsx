@@ -221,11 +221,11 @@ export function MyBetsPage() {
           </div>
           <div className="bg-white rounded-xl shadow-md p-4">
             <h3 className="text-sm text-gray-500 mb-1">Total Wagered</h3>
-            <p className="text-2xl font-bold text-blue-600">${totalWagered}</p>
+            <p className="text-2xl font-bold text-blue-600">₱{totalWagered}</p>
           </div>
           <div className="bg-white rounded-xl shadow-md p-4">
             <h3 className="text-sm text-gray-500 mb-1">Total Won</h3>
-            <p className="text-2xl font-bold text-green-600">${totalWon}</p>
+            <p className="text-2xl font-bold text-green-600">₱{totalWon}</p>
           </div>
           <div className="bg-white rounded-xl shadow-md p-4">
             <h3 className="text-sm text-gray-500 mb-1">Win Rate</h3>
@@ -408,8 +408,8 @@ function BetsTable({ bets, navigate }: { bets: Bet[], navigate: (path: string) =
                   <p className="text-xs text-gray-500">{bet.time}</p>
                 </div>
               </TableCell>
-              <TableCell className="text-right">${bet.amount.toFixed(2)}</TableCell>
-              <TableCell className="text-right">${bet.potentialWin.toFixed(2)}</TableCell>
+              <TableCell className="text-right">₱{bet.amount.toFixed(2)}</TableCell>
+              <TableCell className="text-right">₱{bet.potentialWin.toFixed(2)}</TableCell>
               <TableCell>{bet.result || '-'}</TableCell>
               <TableCell>
                 <Badge 
