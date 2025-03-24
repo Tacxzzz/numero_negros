@@ -251,7 +251,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
               <p className="text-gray-500 text-sm">Your Balance</p>
               <p className="text-2xl font-bold text-gray-800">{formatPeso(balance)}</p>
             </div>
-            <Button className="bg-green-500 hover:bg-green-600">Deposit</Button>
+            {/* <Button className="bg-green-500 hover:bg-green-600">Deposit</Button> */}
           </div>
         </div>
         
