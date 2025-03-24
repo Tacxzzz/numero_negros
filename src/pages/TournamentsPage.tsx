@@ -263,7 +263,7 @@ export function TournamentsPage() {
           <div className="absolute inset-0 p-6 flex flex-col justify-center text-white">
             <Badge className="bg-yellow-500 text-white mb-2 w-fit">Featured</Badge>
             <h2 className="text-2xl font-bold mb-2">Weekly Puzzle Masters</h2>
-            <p className="mb-4 max-w-lg">Join our biggest tournament of the month with a prize pool of $5,000!</p>
+            <p className="mb-4 max-w-lg">Join our biggest tournament of the month with a prize pool of ₱5,000!</p>
             <Button className="bg-white text-purple-700 hover:bg-gray-100 w-fit">
               Register Now
             </Button>
@@ -395,7 +395,7 @@ export function TournamentsPage() {
                       <CardDescription>{tournament.gameType}</CardDescription>
                     </div>
                     <Badge variant="outline" className="border-purple-300 text-purple-700">
-                      ${tournament.entryFee}
+                      ₱{tournament.entryFee}
                     </Badge>
                   </div>
                 </CardHeader>
@@ -406,7 +406,7 @@ export function TournamentsPage() {
                     
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-500">Prize Pool:</span>
-                      <span className="font-medium text-green-600">${tournament.prizePool.toLocaleString()}</span>
+                      <span className="font-medium text-green-600">₱{tournament.prizePool.toLocaleString()}</span>
                     </div>
                     
                     <div className="space-y-1">

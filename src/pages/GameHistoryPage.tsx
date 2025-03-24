@@ -150,11 +150,11 @@ export function GameHistoryPage() {
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-sm text-gray-500">Minimum Bet</p>
-                  <p className="text-lg font-bold">${gameData.minBet}</p>
+                  <p className="text-lg font-bold">₱{gameData.minBet}</p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-sm text-gray-500">Maximum Bet</p>
-                  <p className="text-lg font-bold">${gameData.maxBet}</p>
+                  <p className="text-lg font-bold">₱{gameData.maxBet}</p>
                 </div>
               </div>
               
@@ -210,7 +210,7 @@ export function GameHistoryPage() {
                     <TableCell>{draw.date}</TableCell>
                     <TableCell>{draw.time}</TableCell>
                     <TableCell>{draw.result}</TableCell>
-                    <TableCell className="text-right">${draw.prize.toFixed(2)}</TableCell>
+                    <TableCell className="text-right">₱{draw.prize.toFixed(2)}</TableCell>
                     <TableCell>{draw.winners}</TableCell>
                     <TableCell>
                       <Badge 

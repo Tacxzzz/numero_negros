@@ -39,6 +39,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const [status,setStatus] = useState("");
   const [showAccountModal, setShowAccountModal] = useState(false);
   // const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showCashInDialog, setShowCashInDialog] = useState(false);
 
   useEffect(() => {
     if (userID) {
@@ -62,6 +63,10 @@ export function Dashboard({ onLogout }: SidebarProps) {
   // const handleCloseModal = () => {
   //   setShowSuccessModal(false);
   // };
+
+  const handleCashIn = () => {
+    setShowCashInDialog(false);
+  };
 
   const popularGames = [
     { id: 1, name: "2D", type: "Lotto", minBet: 20, maxBet: 5000, image: "/img/2d.jpeg" },
@@ -251,7 +256,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
               <p className="text-gray-500 text-sm">Your Balance</p>
               <p className="text-2xl font-bold text-gray-800">{formatPeso(balance)}</p>
             </div>
-            <Button className="bg-green-500 hover:bg-green-600">Deposit</Button>
+            <Button className="bg-green-500 hover:bg-green-600" onClick={() => setShowCashInDialog(true)}>Cash In</Button>
           </div>
         </div>
         
@@ -303,6 +308,55 @@ export function Dashboard({ onLogout }: SidebarProps) {
             </div>
           </TabsContent>
         </Tabs>
+
+              {/* Cash In Dialog */}
+      <Dialog open={showCashInDialog} onOpenChange={setShowCashInDialog}>
+        <DialogContent className="bg-gray-200 border-[#34495e]">
+          <DialogHeader>
+            <DialogTitle className="text-xl text-blue-600">Cash In</DialogTitle>
+            <DialogDescription className="text-black-300">
+              Add more coins to your balance to continue playing.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="bg-gray-50 p-3 rounded-lg">
+                <h4 className="font-medium mb-2">Add Funds</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between bg-white p-2 rounded border">
+                    <div className="flex items-center">
+                      <div>
+                        <input type="number" className="border rounded p-1 text-sm w-full" placeholder="Enter amount" style={{ appearance: 'textfield' }}/>
+                        <style>{`
+                          input[type=number]::-webkit-outer-spin-button,
+                          input[type=number]::-webkit-inner-spin-button {
+                            -webkit-appearance: none;
+                            margin: 0;
+                          }
+                          input[type=number] {
+                            -moz-appearance: textfield;
+                          }
+                        `}</style>
+                      </div>
+                    </div>
+                    <Button type="submit" variant="outline" size="sm" className="text-blue-500 bg-blue-100 hover:text-blue-700 hover:bg-green-50 rounded px-4 py-2">
+                      <label>Cash In</label>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+          
+          <DialogFooter className="flex flex-col gap-2 sm:flex-row">
+            <Button 
+              variant="outline" 
+              onClick={() => setShowCashInDialog(false)}
+              className="w-full sm:w-auto border-blue-500 text-blue-600 hover:bg-blue-900/20"
+            >
+              Cancel
+            </Button>
+
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
         
         {/* Quick Access */}
         {/* <section>
@@ -357,7 +411,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
                     </svg>
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium">Won $75 on Color Match</p>
+                    <p className="font-medium">Won ₱75 on Color Match</p>
                     <p className="text-sm text-gray-500">Today, 2:30 PM</p>
                   </div>
                   <Badge className="bg-green-100 text-green-800 hover:bg-green-200">Win</Badge>
@@ -371,7 +425,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
                     </svg>
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium">Placed $50 bet on Lucky Spin</p>
+                    <p className="font-medium">Placed ₱50 bet on Lucky Spin</p>
                     <p className="text-sm text-gray-500">Today, 12:45 PM</p>
                   </div>
                   <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200">Pending</Badge>
@@ -385,7 +439,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
                     </svg>
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium">Lost $30 on Number Crush</p>
+                    <p className="font-medium">Lost ₱30 on Number Crush</p>
                     <p className="text-sm text-gray-500">Yesterday, 6:15 PM</p>
                   </div>
                   <Badge className="bg-red-100 text-red-800 hover:bg-red-200">Loss</Badge>
@@ -398,7 +452,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
                     </svg>
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium">Won $45 on Star Collector</p>
+                    <p className="font-medium">Won ₱45 on Star Collector</p>
                     <p className="text-sm text-gray-500">Yesterday, 3:20 PM</p>
                   </div>
                   <Badge className="bg-green-100 text-green-800 hover:bg-green-200">Win</Badge>
@@ -411,7 +465,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
                     </svg>
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium">Won $60 on Gem Blast</p>
+                    <p className="font-medium">Won ₱60 on Gem Blast</p>
                     <p className="text-sm text-gray-500">2 days ago</p>
                   </div>
                   <Badge className="bg-green-100 text-green-800 hover:bg-green-200">Win</Badge>
@@ -444,11 +498,12 @@ export function Dashboard({ onLogout }: SidebarProps) {
             </Link>
             <Link to="/tournaments" className="flex flex-col items-center p-2 text-gray-500">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M4 4v6h4"></path>
-              <path d="M20 4v6h-4"></path>
-              <path d="M4 20v-6h4"></path>
-              <path d="M20 20v-6h-4"></path>
-              <path d="M8 10h8v4H8z"></path>
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                <path d="M4 22h16"></path>
+                <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
               </svg>
               <span className="text-xs mt-1">Tournaments</span>
             </Link>
@@ -677,7 +732,7 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
           {activeTab === 'payment' && (
             <div className="space-y-4">
 
-                <div className="bg-gray-50 p-3 rounded-lg">
+              <div className="bg-gray-50 p-3 rounded-lg">
                 <h4 className="font-medium mb-2">Add Funds</h4>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between bg-white p-2 rounded border">
