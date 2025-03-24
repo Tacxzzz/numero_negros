@@ -411,7 +411,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
                     </svg>
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium">Won $75 on Color Match</p>
+                    <p className="font-medium">Won ₱75 on Color Match</p>
                     <p className="text-sm text-gray-500">Today, 2:30 PM</p>
                   </div>
                   <Badge className="bg-green-100 text-green-800 hover:bg-green-200">Win</Badge>
@@ -425,7 +425,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
                     </svg>
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium">Placed $50 bet on Lucky Spin</p>
+                    <p className="font-medium">Placed ₱50 bet on Lucky Spin</p>
                     <p className="text-sm text-gray-500">Today, 12:45 PM</p>
                   </div>
                   <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200">Pending</Badge>
@@ -439,7 +439,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
                     </svg>
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium">Lost $30 on Number Crush</p>
+                    <p className="font-medium">Lost ₱30 on Number Crush</p>
                     <p className="text-sm text-gray-500">Yesterday, 6:15 PM</p>
                   </div>
                   <Badge className="bg-red-100 text-red-800 hover:bg-red-200">Loss</Badge>
@@ -452,7 +452,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
                     </svg>
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium">Won $45 on Star Collector</p>
+                    <p className="font-medium">Won ₱45 on Star Collector</p>
                     <p className="text-sm text-gray-500">Yesterday, 3:20 PM</p>
                   </div>
                   <Badge className="bg-green-100 text-green-800 hover:bg-green-200">Win</Badge>
@@ -465,7 +465,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
                     </svg>
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium">Won $60 on Gem Blast</p>
+                    <p className="font-medium">Won ₱60 on Gem Blast</p>
                     <p className="text-sm text-gray-500">2 days ago</p>
                   </div>
                   <Badge className="bg-green-100 text-green-800 hover:bg-green-200">Win</Badge>
