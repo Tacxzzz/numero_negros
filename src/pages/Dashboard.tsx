@@ -813,9 +813,14 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
                     <p className="font-medium text-red-600">-$50.00</p>
                   </div> */}
                 </div>
-                <Button variant="outline" size="sm" className="mt-2 w-full">
+                {/* <Button variant="outline" size="sm" className="mt-2 w-full" >
                   View All Transactions
-                </Button>
+                </Button> */}
+                <Link
+                  to="/transactions"
+                  className="inline-block w-full px-4 py-2 text-black font-semibold bg-white-300 hover:bg-gray-200 rounded shadow text-center">
+                  Transactions
+                </Link>
               </div>
             </div>
           )}
