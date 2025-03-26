@@ -382,38 +382,38 @@ function BetsTable({ bets, navigate }: { bets: Bet[], navigate: (path: string) =
         <TableCaption>A history of your Transactions</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead>Bet ID</TableHead>
-            <TableHead>Game</TableHead>
-            <TableHead>Date & Time</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
-            <TableHead className="text-right">Potential Win</TableHead>
-            <TableHead>Result</TableHead>
-            <TableHead>Status</TableHead>
+            <TableHead className="text-center">Bet ID</TableHead>
+            <TableHead className="text-center">Game</TableHead>
+            <TableHead className="text-center">Date & Time</TableHead>
+            <TableHead className="text-center">Amount</TableHead>
+            <TableHead className="text-center">Potential Win</TableHead>
+            <TableHead className="text-center">Result</TableHead>
+            <TableHead className="text-center">Status</TableHead>
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {bets.map((bet) => (
             <TableRow key={bet.id}>
-              <TableCell className="font-medium">{bet.id}</TableCell>
+              <TableCell className="font-medium text-center">{bet.id}</TableCell>
               <TableCell>
                 <div>
-                  <p className="font-medium">{bet.gameName}</p>
-                  <p className="text-xs text-gray-500">{bet.gameType}</p>
+                  <p className="font-medium text-center">{bet.gameName}</p>
+                  <p className="text-xs text-gray-500 text-center">{bet.gameType}</p>
                 </div>
               </TableCell>
-              <TableCell>
+              <TableCell className="text-center">
                 <div>
                   <p>{new Date(bet.date).toLocaleDateString()}</p>
-                  <p className="text-xs text-gray-500">{bet.time}</p>
+                  <p className="text-xs text-gray-500 text-center">{bet.time}</p>
                 </div>
               </TableCell>
-              <TableCell className="text-right">₱{bet.amount.toFixed(2)}</TableCell>
-              <TableCell className="text-right">₱{bet.potentialWin.toFixed(2)}</TableCell>
-              <TableCell>{bet.result || '-'}</TableCell>
-              <TableCell>
+              <TableCell className="text-center">₱{bet.amount.toFixed(2)}</TableCell>
+              <TableCell className="text-center">₱{bet.potentialWin.toFixed(2)}</TableCell>
+              <TableCell className="text-center">{bet.result || '-'}</TableCell>
+              <TableCell className="text-center">
                 <Badge 
-                  className={
+                  className= {
                     bet.status === 'win' 
                       ? 'bg-green-100 text-green-800 hover:bg-green-200' 
                       : bet.status === 'loss'
