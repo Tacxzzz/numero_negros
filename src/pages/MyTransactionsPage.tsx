@@ -424,7 +424,7 @@ function BetsTable({ bets, navigate }: { bets: Bet[], navigate: (path: string) =
                   {bet.status === 'win' ? 'Win' : bet.status === 'loss' ? 'Loss' : 'Pending'}
                 </Badge>
               </TableCell>
-              <TableCell>
+              {/* <TableCell>
                 <Button 
                   variant="ghost" 
                   size="sm"
@@ -432,7 +432,7 @@ function BetsTable({ bets, navigate }: { bets: Bet[], navigate: (path: string) =
                 >
                   Details
                 </Button>
-              </TableCell>
+              </TableCell> */}
             </TableRow>
           ))}
         </TableBody>
