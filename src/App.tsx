@@ -9,6 +9,7 @@ import { MyBetsPage } from './pages/MyBetsPage';
 import { TournamentsPage } from './pages/TournamentsPage';
 import { SupportPage } from './pages/SupportPage';
 import { MyTransactionsPage } from './pages/MyTransactionsPage';
+import { DrawHistoryPage } from "./pages/DrawHistoryPage";
 
 const isAuthenticated = () => {
   const token = localStorage.getItem("authToken");
@@ -57,6 +58,7 @@ function App() {
           <Route path="/tournaments" element={<TournamentsPage />} />
           <Route path="/support" element={<SupportPage />} />
           <Route path="/transactions" element={<MyTransactionsPage />} />
+          <Route path="/drawhistory" element={<DrawHistoryPage />} />
         </Routes>
       </Router>
     </UserProvider>
