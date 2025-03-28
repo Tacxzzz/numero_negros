@@ -1,19 +1,40 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { GameBoard } from '@/components/GameBoard';
 import { ScoreDisplay } from '@/components/ScoreDisplay';
 import { ActionButtons } from '@/components/ActionButtons';
+import { useParams } from "react-router-dom";
+import { useUser } from "./UserContext";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { confirmBet, fetchUserData, getDrawByID, getDrawsByID, getGameByID, getGameTypeByID } from '@/lib/apiCalls';
+import CountdownTimer from './CountdownTimer';
+import { checkBettingTime, formatPeso } from '@/lib/utils';
 
 export function GamePage() {
   const navigate = useNavigate();
-  const [betAmount, setBetAmount] = useState(10);
+  const { setUserID,userID } = useUser();
+  console.log(userID);
+  const { gameId, gameType, drawId } = useParams();
+  const [balance, setBalance] = useState(10);
 
-  const [lengthChoice, setLengthChoice] = useState(31);
-  const [dynamicLength, setDynamicLength] = useState(2); 
-  const [scores, setScores] = useState<string[]>(Array.from({ length: dynamicLength }, () => ""));
+
+  const [lengthStart, setLengthStart] = useState(0);
+  const [lengthChoice, setLengthChoice] = useState(0); 
+  const [digits, setDigits] = useState(0); 
+  const [scores, setScores] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const [starModalOpen, setStarModalOpen] = useState(false);
+  const [playModalOpen, setPlayModalOpen] = useState(false);
+  const [settingsModalOpen, setSettingsModalOpen] = useState(false);
+  const [gameData, setGameData] = useState<any[]>([]);
+  const [gameTypeData, setGameTypeData] = useState<any[]>([]);
+  const [gameDrawData, setGameDrawData] = useState<any[]>([]);
+
+  const [loading, setLoading] = useState(true);
 
   const handleTileClick = (newScore: string) => {
     const updatedScores = [...scores];
@@ -22,12 +43,97 @@ export function GamePage() {
 
     setCurrentIndex((prevIndex) => (prevIndex + 1) % scores.length);
   };
+
+
+
+ 
+
+  useEffect(() => {
+      if (userID) {
+        const handleUpdate = async () => {
+          const userData = await fetchUserData(userID);
+          setBalance(userData.balance);
+
+          const data = await getGameByID(gameId);
+          setGameData(data);
+          console.log(data[0].range_start);
+          setLengthStart(data[0].range_start);
+          setLengthChoice(data[0].range_end);
+          setDigits(data[0].num_digits);
+          setScores(Array.from({ length: data[0].num_digits }, () => ""));
+          const dataType = await getGameTypeByID(gameType);
+          setGameTypeData(dataType);
+
+          const dataDraw = await getDrawByID(drawId);
+          setGameDrawData(dataDraw);
+
+          const withinBettingTime = checkBettingTime(dataDraw[0].date, dataDraw[0].time, dataDraw[0].deadline);
+
+          if (!withinBettingTime) {
+            alert("Betting time is over! Please wait for the next draw.");
+            navigate(`/game-history/${gameId}`);
+            return;
+          }
+
+          setLoading(false);
+          
+        };
+        handleUpdate();
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userID]);
+
+
+    const handleBetConfirm = async () => {
+      setPlayModalOpen(false);
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("draw_id", drawId);
+      formData.append('userID', userID);
+      formData.append('game_type', gameType);
+      formData.append('bets', scores.filter((score) => score !== "").join("-"));
+      formData.append('jackpot', gameTypeData[0].jackpot);
+      const data = await confirmBet(formData);
+      
+      if(data.authenticated)
+      {
+        alert("Bet placed successfully!");
+        navigate(`/game-history/${gameId}`);
+      }
+      else
+      {
+        alert(data.message);
+        if(data.back)
+        {
+          navigate(`/game-history/${gameId}`);
+        }
+        else
+        {
+
+          setScores(Array.from({ length: digits }, () => ""));
+          setLoading(false);
+        }
+        
+      }
+    };
+
+
+    if (loading) {
+        return (
+          <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+            <div className="bg-white p-8 rounded-xl shadow-md">
+              <h2 className="text-xl font-bold mb-4">Game Loading..</h2>
+              <Button onClick={() => navigate('/dashboard')}>Back to Dashboard</Button>
+            </div>
+          </div>
+        );
+      }
   
   return (
     <div className="min-h-screen bg-gradient-to-b from-sky-400 to-sky-300 flex flex-col items-center justify-center p-4 overflow-hidden relative">
       {/* Back button */}
       <button 
-        onClick={() => navigate('/dashboard')}
+        onClick={() => navigate(`/game-history/${gameId}`)}
         className="absolute top-4 left-4 bg-white/80 backdrop-blur-sm p-2 rounded-full shadow-md z-20"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -73,12 +179,85 @@ export function GamePage() {
         {/* Game board */}
         <div className="relative z-10 p-4 pt-16">
           <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-4 shadow-inner">
-            <GameBoard onTileClick={handleTileClick} lengthChoice={lengthChoice} scores={scores} />
+            {gameData &&
+            (
+              <GameBoard onTileClick={handleTileClick} lengthChoice={lengthChoice} lengthStart={lengthStart} scores={scores} />
+            )}
           </div>
         </div>
         
-        {/* Action buttons */}
-        <ActionButtons />
+            {/* Action buttons */}
+            <div className="relative z-10 p-4 flex flex-col items-center gap-4">
+            <h4>{gameData[0]?.name} {gameTypeData[0]?.game_type}</h4>
+            
+              <div className="flex items-center gap-4">
+                
+               
+              
+              <button  
+              onClick={() => setPlayModalOpen(true)} 
+              disabled={
+                !(
+                  scores.every((score) => score.trim() !== "") && userID.trim() !== "" && gameId === "1"
+                )
+              }
+              className={`${
+                scores.every((score) => score.trim() !== "") && userID.trim() !== "" && gameId === "1"
+                  ? "bg-yellow-400 hover:bg-yellow-500"
+                  : "bg-gray-300 cursor-not-allowed"
+              } text-white font-bold py-2 px-8 rounded-full shadow-md transition-transform hover:scale-105 active:scale-95 uppercase text-sm tracking-wider`}
+                >
+                Bet
+              </button>
+                
+                <Dialog open={playModalOpen} onOpenChange={setPlayModalOpen}>
+                  <DialogContent className="bg-gradient-to-b from-pink-100 to-orange-100 border-2 border-pink-300 rounded-xl max-w-xs sm:max-w-sm">
+                    <DialogHeader>
+                      <DialogTitle className="text-center text-xl font-bold text-pink-700">
+                      <h5>Selected Numbers: </h5><h4>{scores.filter((score) => score !== "").join("-") || ""}
+                      </h4>
+                      <br/>
+                      <h4>{gameData[0]?.name} {gameTypeData[0]?.game_type}</h4>
+                      <h4>Bet : {formatPeso(gameTypeData[0]?.bet)}<br/>Winnings : {formatPeso(gameTypeData[0]?.jackpot)}</h4>
+                      <p className="text-green-500 text-sm sm:text-base">
+                        Time left: <CountdownTimer date={gameDrawData[0]?.date} time={gameDrawData[0]?.time} cutoffMinutes={gameDrawData[0]?.deadline} />
+                      </p>
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 my-2">
+                      <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg">
+                        <Label htmlFor="bet" className="text-pink-800 font-medium block mb-2">
+                          Your Current Balance : {formatPeso(balance)}
+                        </Label>
+                      </div>
+                      
+                      <Button 
+                        className="w-full bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-600 hover:to-orange-600 text-white rounded-full py-6 text-lg font-bold"
+                        disabled={balance < gameTypeData[0]?.bet}
+                        onClick={handleBetConfirm}
+                      >
+                        CONFIRM BET
+                      </Button>
+                    </div>
+                    <DialogFooter>
+                      <Button 
+                        onClick={() => setPlayModalOpen(false)}
+                        variant="outline"
+                        className="w-full border-pink-300 text-pink-700 rounded-full"
+                      >
+                        Back
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+                
+                
+              </div>
+            </div>
+
+
+
+
       </div>
     </div>
   );

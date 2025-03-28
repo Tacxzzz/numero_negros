@@ -50,7 +50,7 @@ function App() {
             path="/dashboard"
             element={<ProtectedRoute element={<Dashboard onLogout={handleLogout} />} />}
           />
-          <Route path="/game" element={<ProtectedRoute element={<GamePage />} />} />
+          <Route path="/game/:gameId/:gameType/:drawId" element={<ProtectedRoute element={<GamePage />} />} />
           <Route path="/game-history/:gameId" element={<GameHistoryPage />} />
           {/* Add a test route */}
           <Route path="/test" element={<div>Test Page Works!</div>} />

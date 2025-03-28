@@ -21,60 +21,15 @@ export function ActionButtons() {
 
   return (
     <div className="relative z-10 p-4 flex flex-col items-center gap-4">
-      <button className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-8 rounded-full shadow-md transition-transform hover:scale-105 active:scale-95 uppercase text-sm tracking-wider">
-        Bet
-      </button>
+      
       
       <div className="flex items-center gap-4">
-        {/* Star Button with Favorites Modal */}
-        <button 
-          className="w-10 h-10 rounded-full bg-blue-400 hover:bg-blue-500 flex items-center justify-center text-white shadow-md transition-transform hover:scale-105 active:scale-95"
-          onClick={() => setStarModalOpen(true)}
-        >
-          <StarIcon />
-        </button>
         
-        <Dialog open={starModalOpen} onOpenChange={setStarModalOpen}>
-          <DialogContent className="bg-gradient-to-b from-blue-100 to-purple-100 border-2 border-yellow-300 rounded-xl max-w-xs sm:max-w-sm">
-            <DialogHeader>
-              <DialogTitle className="text-center text-xl font-bold text-purple-700 flex items-center justify-center gap-2">
-                <StarIcon className="text-yellow-500" /> Favorite Games
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-3 my-2">
-              {favoriteGames.map(game => (
-                <div 
-                  key={game.id} 
-                  className="bg-white/70 backdrop-blur-sm p-3 rounded-lg flex justify-between items-center hover:bg-white/90 transition-colors cursor-pointer"
-                >
-                  <div>
-                    <h3 className="font-medium text-purple-800">{game.name}</h3>
-                    <p className="text-xs text-gray-500">{game.lastPlayed}</p>
-                  </div>
-                  <Button size="sm" variant="ghost" className="text-yellow-500 hover:text-yellow-600 hover:bg-yellow-100">
-                    <PlaySmallIcon />
-                  </Button>
-                </div>
-              ))}
-            </div>
-            <DialogFooter>
-              <Button 
-                onClick={() => setStarModalOpen(false)}
-                className="w-full bg-gradient-to-r from-blue-400 to-purple-400 hover:from-blue-500 hover:to-purple-500 text-white rounded-full"
-              >
-                Close
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-        
-        {/* Play Button with Game Start Modal */}
-        <button 
-          className="w-14 h-14 rounded-full bg-pink-500 hover:bg-pink-600 flex items-center justify-center text-white shadow-md transition-transform hover:scale-105 active:scale-95"
-          onClick={() => setPlayModalOpen(true)}
-        >
-          <PlayIcon />
-        </button>
+       
+
+      <button onClick={() => setPlayModalOpen(true)} className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-8 rounded-full shadow-md transition-transform hover:scale-105 active:scale-95 uppercase text-sm tracking-wider">
+        Bet
+      </button>
         
         <Dialog open={playModalOpen} onOpenChange={setPlayModalOpen}>
           <DialogContent className="bg-gradient-to-b from-pink-100 to-orange-100 border-2 border-pink-300 rounded-xl max-w-xs sm:max-w-sm">
@@ -133,65 +88,7 @@ export function ActionButtons() {
           </DialogContent>
         </Dialog>
         
-        {/* Settings Button with Settings Modal */}
-        <button 
-          className="w-10 h-10 rounded-full bg-blue-400 hover:bg-blue-500 flex items-center justify-center text-white shadow-md transition-transform hover:scale-105 active:scale-95"
-          onClick={() => setSettingsModalOpen(true)}
-        >
-          <SettingsIcon />
-        </button>
         
-        <Dialog open={settingsModalOpen} onOpenChange={setSettingsModalOpen}>
-          <DialogContent className="bg-gradient-to-b from-blue-100 to-green-100 border-2 border-blue-300 rounded-xl max-w-xs sm:max-w-sm">
-            <DialogHeader>
-              <DialogTitle className="text-center text-xl font-bold text-blue-700 flex items-center justify-center gap-2">
-                <SettingsIcon className="text-blue-500" /> Game Settings
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4 my-2">
-              <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg space-y-4">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="sound" className="text-blue-800 font-medium">
-                    Sound
-                  </Label>
-                  <Switch id="sound" defaultChecked />
-                </div>
-                
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="music" className="text-blue-800 font-medium">
-                      Music Volume
-                    </Label>
-                    <span className="text-sm text-blue-600 font-medium">75%</span>
-                  </div>
-                  <Slider id="music" defaultValue={[75]} max={100} step={1} />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="vibration" className="text-blue-800 font-medium">
-                    Vibration
-                  </Label>
-                  <Switch id="vibration" />
-                </div>
-              </div>
-              
-              <Button 
-                variant="destructive"
-                className="w-full rounded-full"
-              >
-                Exit Game
-              </Button>
-            </div>
-            <DialogFooter>
-              <Button 
-                onClick={() => setSettingsModalOpen(false)}
-                className="w-full bg-gradient-to-r from-blue-400 to-green-400 hover:from-blue-500 hover:to-green-500 text-white rounded-full"
-              >
-                Save Settings
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
       </div>
     </div>
   );

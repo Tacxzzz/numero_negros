@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { 
@@ -25,138 +25,59 @@ import {
 } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { useUser } from "./UserContext";
+import { getGameByID, getMyBets } from '@/lib/apiCalls';
+import { formatPeso, getTransCode } from '@/lib/utils';
 
-type Bet = {
-  id: string;
-  gameId: number;
-  gameName: string;
-  gameType: string;
-  amount: number;
-  potentialWin: number;
-  date: string;
-  time: string;
-  status: 'win' | 'loss' | 'pending';
-  result?: string;
-};
+
 
 export function MyBetsPage() {
   const navigate = useNavigate();
+  const { setUserID,userID } = useUser();
+  console.log(userID);
   const [filter, setFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [dateRange, setDateRange] = useState('all');
+  const [betsHistory, setBetsHistory] = useState<any[]>([]);
   
-  // Mock data for bets history
-  const betsHistory: Bet[] = [
-    {
-      id: 'BET123456',
-      gameId: 1,
-      gameName: 'Color Match',
-      gameType: 'Puzzle',
-      amount: 25,
-      potentialWin: 75,
-      date: '2023-05-15',
-      time: '14:30',
-      status: 'win',
-      result: 'Match 5'
-    },
-    {
-      id: 'BET123457',
-      gameId: 2,
-      gameName: 'Lucky Spin',
-      gameType: 'Casino',
-      amount: 50,
-      potentialWin: 150,
-      date: '2023-05-14',
-      time: '16:45',
-      status: 'loss',
-      result: '7 Red'
-    },
-    {
-      id: 'BET123458',
-      gameId: 3,
-      gameName: 'Number Crush',
-      gameType: 'Puzzle',
-      amount: 10,
-      potentialWin: 30,
-      date: '2023-05-14',
-      time: '10:15',
-      status: 'win',
-      result: 'Match 4'
-    },
-    {
-      id: 'BET123459',
-      gameId: 4,
-      gameName: 'Star Collector',
-      gameType: 'Arcade',
-      amount: 15,
-      potentialWin: 45,
-      date: '2023-05-13',
-      time: '19:20',
-      status: 'pending'
-    },
-    {
-      id: 'BET123460',
-      gameId: 5,
-      gameName: 'Gem Blast',
-      gameType: 'Puzzle',
-      amount: 20,
-      potentialWin: 60,
-      date: '2023-05-12',
-      time: '11:30',
-      status: 'win',
-      result: 'Score 850'
-    },
-    {
-      id: 'BET123461',
-      gameId: 6,
-      gameName: 'Fortune Wheel',
-      gameType: 'Casino',
-      amount: 100,
-      potentialWin: 300,
-      date: '2023-05-11',
-      time: '20:45',
-      status: 'loss',
-      result: '13 Black'
-    },
-    {
-      id: 'BET123462',
-      gameId: 7,
-      gameName: 'Bubble Pop',
-      gameType: 'Arcade',
-      amount: 5,
-      potentialWin: 15,
-      date: '2023-05-10',
-      time: '15:10',
-      status: 'win',
-      result: 'Score 720'
-    },
-  ];
+
+  useEffect(() => {
+      const handleUpdate = async () => {
+  
+        const gameBetData = await getMyBets(userID);
+        setBetsHistory(gameBetData);
+        };
+        handleUpdate();
+    }, [userID]);
   
   // Filter bets based on status
-  const filterBetsByStatus = (bets: Bet[]) => {
+  const filterBetsByStatus = (bets: any[]) => {
+    if (!Array.isArray(bets)) return [];
     if (filter === 'all') return bets;
     return bets.filter(bet => bet.status === filter);
   };
   
   // Filter bets based on search query
-  const filterBetsBySearch = (bets: Bet[]) => {
+  const filterBetsBySearch = (bets: any[]) => {
+    if (!Array.isArray(bets)) return [];
     if (!searchQuery.trim()) return bets;
     const query = searchQuery.toLowerCase();
     return bets.filter(
-      bet => 
-        bet.gameName.toLowerCase().includes(query) ||
-        bet.id.toLowerCase().includes(query) ||
-        bet.gameType.toLowerCase().includes(query)
+      bet =>
+        bet.game_name?.toLowerCase().includes(query) ||
+        bet.id?.toLowerCase().includes(query) ||
+        bet.game_type_name?.toLowerCase().includes(query)
     );
   };
   
   // Filter bets based on date range
-  const filterBetsByDate = (bets: Bet[]) => {
+  const filterBetsByDate = (bets: any[]) => {
+    if (!Array.isArray(bets)) return [];
     if (dateRange === 'all') return bets;
-    
+  
     const today = new Date();
     const startDate = new Date();
-    
+  
     switch (dateRange) {
       case 'today':
         startDate.setHours(0, 0, 0, 0);
@@ -170,26 +91,46 @@ export function MyBetsPage() {
       default:
         return bets;
     }
-    
+  
     return bets.filter(bet => {
-      const betDate = new Date(bet.date);
+      const betDate = new Date(bet.created_date);
       return betDate >= startDate && betDate <= today;
     });
   };
+  
+  // Combine all filters
+  const getFilteredBets = (bets: any[]) => {
+    let filteredBets = filterBetsByStatus(bets);
+    filteredBets = filterBetsBySearch(filteredBets);
+    filteredBets = filterBetsByDate(filteredBets);
+    return filteredBets;
+  };
+  
   
   // Apply all filters
   const filteredBets = filterBetsByDate(filterBetsBySearch(filterBetsByStatus(betsHistory)));
   
   // Calculate statistics
-  const totalBets = betsHistory.length;
-  const totalWagered = betsHistory.reduce((sum, bet) => sum + bet.amount, 0);
-  const totalWon = betsHistory
-    .filter(bet => bet.status === 'win')
-    .reduce((sum, bet) => sum + bet.potentialWin, 0);
-  const winRate = Math.round(
-    (betsHistory.filter(bet => bet.status === 'win').length / 
-    betsHistory.filter(bet => bet.status !== 'pending').length) * 100
-  );
+  // Check if betsHistory is valid and an array
+const totalBets = Array.isArray(betsHistory) ? betsHistory.length : 0;
+
+const totalWagered = Array.isArray(betsHistory)
+  ? betsHistory.reduce((sum, bet) => sum + parseFloat(bet.bet || 0), 0)
+  : 0;
+
+const totalWon = Array.isArray(betsHistory)
+  ? betsHistory
+      .filter(bet => bet.status === 'win')
+      .reduce((sum, bet) => sum + parseFloat(bet.jackpot || 0), 0)
+  : 0;
+
+const winRate = Array.isArray(betsHistory) && betsHistory.length > 0
+  ? Math.round(
+      (betsHistory.filter(bet => bet.status === 'win').length /
+        (betsHistory.filter(bet => bet.status !== 'pending').length || 1)) * 100
+    )
+  : 0;
+
   
   return (
     <div className="min-h-screen bg-gray-100">
@@ -335,23 +276,35 @@ export function MyBetsPage() {
                     </div>
                   </div>
           
-          <TabsContent value="all" className="p-0">
-            <BetsTable bets={filteredBets} navigate={navigate} />
-          </TabsContent>
-          
-          <TabsContent value="active" className="p-0">
-            <BetsTable 
-              bets={filteredBets.filter(bet => bet.status === 'pending')} 
-              navigate={navigate} 
-            />
-          </TabsContent>
-          
-          <TabsContent value="settled" className="p-0">
-            <BetsTable 
-              bets={filteredBets.filter(bet => bet.status !== 'pending')} 
-              navigate={navigate} 
-            />
-          </TabsContent>
+                  <TabsContent value="all" className="p-0">
+  <BetsTable 
+    bets={Array.isArray(filteredBets) ? filteredBets : []} 
+    navigate={navigate} 
+  />
+</TabsContent>
+
+<TabsContent value="active" className="p-0">
+  <BetsTable 
+    bets={
+      Array.isArray(filteredBets)
+        ? filteredBets.filter(bet => bet.status === 'pending')
+        : []
+    }
+    navigate={navigate} 
+  />
+</TabsContent>
+
+<TabsContent value="settled" className="p-0">
+  <BetsTable 
+    bets={
+      Array.isArray(filteredBets)
+        ? filteredBets.filter(bet => bet.status !== 'pending')
+        : []
+    }
+    navigate={navigate} 
+  />
+</TabsContent>
+
         </Tabs>
       </main>
     </div>
@@ -359,8 +312,8 @@ export function MyBetsPage() {
 }
 
 // Separate component for the bets table
-function BetsTable({ bets, navigate }: { bets: Bet[], navigate: (path: string) => void }) {
-  if (bets.length === 0) {
+function BetsTable({ bets, navigate }: { bets: any[], navigate: (path: string) => void }) {
+  if (!bets || bets.length === 0) {
     return (
       <div className="text-center py-12">
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-auto text-gray-400 mb-4">
@@ -383,34 +336,38 @@ function BetsTable({ bets, navigate }: { bets: Bet[], navigate: (path: string) =
         <TableHeader>
           <TableRow>
             <TableHead>Bet ID</TableHead>
+            <TableHead>Draw ID</TableHead>
             <TableHead>Game</TableHead>
-            <TableHead>Date & Time</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
-            <TableHead className="text-right">Potential Win</TableHead>
-            <TableHead>Result</TableHead>
+            <TableHead>Bet Combination</TableHead>
+            <TableHead className="text-right">Bet Amount</TableHead>
+            <TableHead className="text-right">Prize</TableHead>
+            
             <TableHead>Status</TableHead>
-            <TableHead></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {bets.map((bet) => (
             <TableRow key={bet.id}>
-              <TableCell className="font-medium">{bet.id}</TableCell>
+              <TableCell className="font-medium">
+                
+                <p>BET{getTransCode(bet.created_date+" "+bet.created_time)}{bet.id}</p>
+                <p className="text-xs text-gray-500">{bet.created_date} {bet.created_time}</p>
+                </TableCell>
+                <TableCell className="font-medium">
+                
+                <p>DRAW{getTransCode(bet.draw_date+" "+bet.draw_time)}{bet.draw_id}</p>
+                <p className="text-xs text-gray-500">{bet.draw_date} {bet.draw_time}</p>
+                </TableCell>
               <TableCell>
                 <div>
-                  <p className="font-medium">{bet.gameName}</p>
-                  <p className="text-xs text-gray-500">{bet.gameType}</p>
+                  <p className="font-medium">{bet.game_name}</p>
+                  <p className="text-xs text-gray-500">{bet.game_type_name}</p>
                 </div>
               </TableCell>
-              <TableCell>
-                <div>
-                  <p>{new Date(bet.date).toLocaleDateString()}</p>
-                  <p className="text-xs text-gray-500">{bet.time}</p>
-                </div>
-              </TableCell>
-              <TableCell className="text-right">₱{bet.amount.toFixed(2)}</TableCell>
-              <TableCell className="text-right">₱{bet.potentialWin.toFixed(2)}</TableCell>
-              <TableCell>{bet.result || '-'}</TableCell>
+              <TableCell >{bet.bets}</TableCell>
+              <TableCell className="text-right">{formatPeso(bet.bet)}</TableCell>
+              <TableCell className="text-right">{formatPeso(bet.jackpot)}</TableCell>
+              
               <TableCell>
                 <Badge 
                   className={
@@ -424,7 +381,7 @@ function BetsTable({ bets, navigate }: { bets: Bet[], navigate: (path: string) =
                   {bet.status === 'win' ? 'Win' : bet.status === 'loss' ? 'Loss' : 'Pending'}
                 </Badge>
               </TableCell>
-              <TableCell>
+              {/* <TableCell>
                 <Button 
                   variant="ghost" 
                   size="sm"
@@ -432,7 +389,7 @@ function BetsTable({ bets, navigate }: { bets: Bet[], navigate: (path: string) =
                 >
                   Details
                 </Button>
-              </TableCell>
+              </TableCell> */}
             </TableRow>
           ))}
         </TableBody>

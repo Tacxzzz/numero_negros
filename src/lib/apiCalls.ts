@@ -61,20 +61,6 @@ export const loginAccount = async (
 
 
 
-export const fetchRecipients = async (userID: string) => {
-  try {
-    const response = await axios.post(`${API_URL}/main/getRecipients`, { userID });
-
-    if (Array.isArray(response.data)) {
-      return response.data;
-    } else if (response.data.error) {
-      return [];
-    }
-  } catch (error) {
-    console.error("Failed to fetch recipients:", error);
-    return [];
-  }
-};
 
 
 export const getTransactions = async (userID: string) => {
@@ -113,12 +99,12 @@ export const updateDatabase = async (user: any , getAccessTokenSilently: any) =>
 
 
 
-export const sendRemittance = async (
+export const cashIn = async (
   formData: FormData,
 ) => {
   try {
     const response = await axios.post(
-      `${API_URL}/main/sendRemittance`,
+      `${API_URL}/main/cashIn`,
       formData,
       { headers: { "Content-Type": "application/json" } }
     );
@@ -127,16 +113,15 @@ export const sendRemittance = async (
       const userData = response.data;
       return {
         transID: userData.transCode+userData.transID,
-        recipient: userData.recipient,
       };
     } else {
       console.warn("User data is empty or invalid.");
-      return { transID: "", recipient: "" };
+      return { transID: "" };
     }
     
   } catch (error) {
     console.error("Failed to send remittance:", error);
-    return { transID: "", recipient: "" };
+    return { transID: "" };
   }
 };
 
@@ -150,6 +135,8 @@ export const fetchUserData = async (id: string) => {
       const userData = response.data[0];
       return {
         balance: Number(userData.balance) || 0,
+        wins: Number(userData.wins) || 0,
+        commissions: Number(userData.commissions) || 0,
         mobile: userData.mobile ?? "",
         referral: userData.referral ?? "",
         status: userData.status ?? "pending",
@@ -190,28 +177,211 @@ export const getReferrals = async (id: string
 
 
 
-export const redeemBalance =  async (
+export const getGames = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/main/getGames`);
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch games:", error);
+    return [];
+  }
+};
+
+
+export const getGameTypes = async (game_id: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getGameTypes`, { game_id });
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch game types:", error);
+    return [];
+  }
+};
+
+export const getGameByID = async (game_id: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getGameByID`, { game_id });
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch game types:", error);
+    return [];
+  }
+};
+
+
+export const getDrawByID = async (game_id: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getDrawByID`, { game_id });
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch game types:", error);
+    return [];
+  }
+};
+
+export const getDrawsByID = async (game_id: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getDrawsByID`, { game_id });
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch game types:", error);
+    return [];
+  }
+};
+
+export const getGameTypeByID = async (game_id: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getGameTypeByID`, { game_id });
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch game types:", error);
+    return [];
+  }
+};
+
+export const getGameTypesByID = async (game_id: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getGameTypesByID`, { game_id });
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch game types:", error);
+    return [];
+  }
+};
+
+
+
+export const confirmBet = async (
   formData: FormData,
 ) => {
   try {
     const response = await axios.post(
-      `${API_URL}/main/cashOut`,
+      `${API_URL}/main/confirmBet`,
       formData,
       { headers: { "Content-Type": "application/json" } }
     );
 
-    if (response.data && response.data.authenticated) {
+    if (response.data) {
+
       const userData = response.data;
       return {
-        transID: userData.transCode+userData.transID,
+        authenticated: userData.authenticated,
+        message: userData.message,
+        back: userData.back,
       };
+
     } else {
       console.warn("User data is empty or invalid.");
-      return { transID: "" };
+      return { authenticated: false, message: "no response on the api",back:true };
     }
     
   } catch (error) {
-    console.error("Failed to redeem amount:", error);
-    return { transID: "" };
+    console.error("Failed to send remittance:", error);
+    return { authenticated: false, message: "no response on the api",back:true };
+  }
+};
+
+
+
+export const getBetsByUserAndDraw = async (game_id: string, userID: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getBetsByUserAndDraw`, { game_id, userID });
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch game types:", error);
+    return [];
+  }
+};
+
+export const getMyBets = async (userID: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getMyBets`, {userID });
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch game types:", error);
+    return [];
+  }
+};
+
+
+export const getDrawsResults = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/main/getDrawsResults`);
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch game types:", error);
+    return [];
+  }
+};
+
+
+export const checkCurrentBetsTotal = async (draw_id: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/checkCurrentBetsTotal`, {draw_id });
+
+    if (response.data && response.data.authenticated) {
+      const userData = response.data;
+      return {
+        authenticated: userData.authenticated,
+        totalBets: userData.totalBets,
+      };
+    } else {
+      console.warn("User data is empty or invalid.");
+      return { authenticated: false, totalBets: "" };
+    }
+    
+  } catch (error) {
+    console.error("Failed to send remittance:", error);
+    return { authenticated: false, totalBets: "" };
   }
 };

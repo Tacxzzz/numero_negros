@@ -2,23 +2,30 @@ import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
+
+
 type GameCardProps = {
   game: {
     id: number;
     name: string;
+    status: string;
+    picture: string;
+    range_start: string;
+    range_end: string;
     type: string;
-    minBet: number;
-    maxBet: number;
-    image: string;
   };
 };
 
 export function GameCard({ game }: GameCardProps) {
+
+  const API_URL = import.meta.env.VITE_DATABASE_URL;
+
+  
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow">
       <div className="relative">
         <img 
-          src={game.image} 
+          src={API_URL +"/img/"+ game.picture} 
           alt={game.name} 
           className="w-full h-36 object-cover"
         />
@@ -30,10 +37,10 @@ export function GameCard({ game }: GameCardProps) {
       <div className="p-4">
         <h3 className="font-bold text-lg mb-1">{game.name}</h3>
         
-        <div className="flex justify-between items-center text-sm text-gray-500 mb-3">
+       {/*  <div className="flex justify-between items-center text-sm text-gray-500 mb-3">
           <span>Min: P {game.minBet}</span>
           <span>Max: P {game.maxBet}</span>
-        </div>
+        </div> */}
         
         <div className="flex gap-2">
           <Button 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { 
@@ -25,150 +25,59 @@ import {
 } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { getDrawsResults } from '@/lib/apiCalls';
+import { getTransCode } from '@/lib/utils';
 
-type Bet = {
-  id: string;
-  gameId: number;
-  gameName: string;
-  gameType: string;
-  prize: number;
-  potentialWin: number;
-  date: string;
-  time: string;
-  status: 'win' | 'loss' | 'pending';
-  result?: string;
-  numbers?: number[]; // Add numbers property
-  winners: number;
-};
+
 
 export function DrawHistoryPage() {
   const navigate = useNavigate();
   const [filter, setFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [dateRange, setDateRange] = useState('all');
+  const [transactionsHistory, setTransactionsHistory] = useState<any[]>([]);
   
-  // Mock data for bets history
-  const transactionsHistory: Bet[] = [
-    {
-      id: 'BET123456',
-      gameId: 1,
-      gameName: 'Color Match',
-      gameType: 'Puzzle',
-      prize: 10225,
-      potentialWin: 75,
-      date: '2023-05-15',
-      time: '14:30',
-      status: 'win',
-      result: 'Match 5',
-      winners: 5
-    },
-    {
-      id: 'BET123457',
-      gameId: 2,
-      gameName: 'Lucky Spin',
-      gameType: 'Casino',
-      prize: 5000,
-      potentialWin: 150,
-      date: '2023-05-14',
-      time: '16:45',
-      status: 'loss',
-      result: '7 Red',
-      winners: 2
-    },
-    {
-      id: 'BET123458',
-      gameId: 3,
-      gameName: 'Number Crush',
-      gameType: 'Puzzle',
-      prize: 10000,
-      potentialWin: 30,
-      date: '2023-05-14',
-      time: '10:15',
-      status: 'win',
-      result: 'Match 4',
-      winners: 1
-    },
-    {
-      id: 'BET123459',
-      gameId: 4,
-      gameName: 'Star Collector',
-      gameType: 'Arcade',
-      prize: 15,
-      potentialWin: 45,
-      date: '2023-05-13',
-      time: '19:20',
-      status: 'pending',
-      winners: 5
-    },
-    {
-      id: 'BET123460',
-      gameId: 5,
-      gameName: 'Gem Blast',
-      gameType: 'Puzzle',
-      prize: 20,
-      potentialWin: 60,
-      date: '2023-05-12',
-      time: '11:30',
-      status: 'win',
-      result: 'Score 850',
-      winners: 5
-    },
-    {
-      id: 'BET123461',
-      gameId: 6,
-      gameName: 'Fortune Wheel',
-      gameType: 'Casino',
-      prize: 100,
-      potentialWin: 300,
-      date: '2023-05-11',
-      time: '20:45',
-      status: 'loss',
-      result: '13 Black',
-      winners: 5
-    },
-    {
-      id: 'BET123462',
-      gameId: 7,
-      gameName: 'Bubble Pop',
-      gameType: 'Arcade',
-      prize: 5,
-      potentialWin: 15,
-      date: '2023-05-10',
-      time: '15:10',
-      status: 'win',
-      result: 'Score 720',
-      winners: 5
-    },
-  ];
+   useEffect(() => {
+    const handleUpdate = async () => {
 
-  // const bet = {
-  //   numbers: [1, 2, 3, 4, 5], // Example numbers
-  //   gameName: "Sample Game",
-  //   prize: 1000,
-  //   winners: 1,
-  //   date: "2023-01-01",
-  // };
+      const gameBetData = await getDrawsResults();
+      setTransactionsHistory(gameBetData);
+      };
+      handleUpdate();
+  }, []);
   
   // Filter bets based on status
-  const filterBetsByStatus = (bets: Bet[]) => {
+  const filterBetsByStatus = (bets: any[]) => {
     if (filter === 'all') return bets;
     return bets.filter(bet => bet.status === filter);
   };
   
   // Filter bets based on search query
-  const filterBetsBySearch = (bets: Bet[]) => {
-    if (!searchQuery.trim()) return bets;
+  
+
+  const filterBetsBySearch = (bets: any[]) => {
+    // Check if bets is an array and not empty
+    if (!Array.isArray(bets) || bets.length === 0) {
+      return [];
+    }
+  
+    // Return all bets if search query is empty or just spaces
+    if (!searchQuery?.trim()) {
+      return bets;
+    }
+  
     const query = searchQuery.toLowerCase();
+  
+    // Filter based on id or trans_type
     return bets.filter(
-      bet => 
-        bet.gameName.toLowerCase().includes(query) ||
-        bet.id.toLowerCase().includes(query) ||
-        bet.gameType.toLowerCase().includes(query)
+      (bet) =>
+        bet?.id?.toString().toLowerCase().includes(query) ||
+        bet?.game_name?.toString().toLowerCase().includes(query)
     );
   };
   
   // Filter bets based on date range
-  const filterBetsByDate = (bets: Bet[]) => {
+  const filterBetsByDate = (bets: any[]) => {
     if (dateRange === 'all') return bets;
     
     const today = new Date();
@@ -198,15 +107,7 @@ export function DrawHistoryPage() {
   const filteredBets = filterBetsByDate(filterBetsBySearch(filterBetsByStatus(transactionsHistory)));
   
   // Calculate statistics
-  const totalBets = transactionsHistory.length;
-  const totalWagered = transactionsHistory.reduce((sum, bet) => sum + bet.prize, 0);
-  const totalWon = transactionsHistory
-    .filter(bet => bet.status === 'win')
-    .reduce((sum, bet) => sum + bet.potentialWin, 0);
-  const winRate = Math.round(
-    (transactionsHistory.filter(bet => bet.status === 'win').length / 
-    transactionsHistory.filter(bet => bet.status !== 'pending').length) * 100
-  );
+
   
   return (
     <div className="min-h-screen bg-gray-100">
@@ -230,28 +131,9 @@ export function DrawHistoryPage() {
       </header>
       
       <main className="container mx-auto px-4 py-6">
-        {/* Statistics Cards */}
-        {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white rounded-xl shadow-md p-4">
-            <h3 className="text-sm text-gray-500 mb-1">Total Bets</h3>
-            <p className="text-2xl font-bold">{totalBets}</p>
-          </div>
-          <div className="bg-white rounded-xl shadow-md p-4">
-            <h3 className="text-sm text-gray-500 mb-1">Total Wagered</h3>
-            <p className="text-2xl font-bold text-blue-600">₱{totalWagered}</p>
-          </div>
-          <div className="bg-white rounded-xl shadow-md p-4">
-            <h3 className="text-sm text-gray-500 mb-1">Total Won</h3>
-            <p className="text-2xl font-bold text-green-600">₱{totalWon}</p>
-          </div>
-          <div className="bg-white rounded-xl shadow-md p-4">
-            <h3 className="text-sm text-gray-500 mb-1">Win Rate</h3>
-            <p className="text-2xl font-bold text-purple-600">{winRate}%</p>
-          </div>
-        </div> */}
         
-        {/* Filters */}
-        {/* <div className="bg-white rounded-xl shadow-md p-4 mb-6">
+        
+         <div className="bg-white rounded-xl shadow-md p-4 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
               <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">
@@ -260,13 +142,13 @@ export function DrawHistoryPage() {
               <Input
                 id="search"
                 type="text"
-                placeholder="Search by game name or bet ID..."
+                placeholder="Search by draw..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
             
-            <div className="w-full md:w-48">
+            {/* <div className="w-full md:w-48">
               <label htmlFor="status-filter" className="block text-sm font-medium text-gray-700 mb-1">
                 Status
               </label>
@@ -281,7 +163,7 @@ export function DrawHistoryPage() {
                   <SelectItem value="pending">Pending</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
+            </div> */}
             
             <div className="w-full md:w-48">
               <label htmlFor="date-filter" className="block text-sm font-medium text-gray-700 mb-1">
@@ -300,7 +182,7 @@ export function DrawHistoryPage() {
               </Select>
             </div>
           </div>
-        </div> */}
+        </div> 
         
         {/* Bets History Tabs */}
         <Tabs defaultValue="all" className="bg-white rounded-xl shadow-md overflow-hidden">
@@ -356,19 +238,7 @@ export function DrawHistoryPage() {
             <BetsTable bets={filteredBets} navigate={navigate} />
           </TabsContent>
           
-          <TabsContent value="active" className="p-0">
-            <BetsTable 
-              bets={filteredBets.filter(bet => bet.status === 'pending')} 
-              navigate={navigate} 
-            />
-          </TabsContent>
           
-          <TabsContent value="settled" className="p-0">
-            <BetsTable 
-              bets={filteredBets.filter(bet => bet.status !== 'pending')} 
-              navigate={navigate} 
-            />
-          </TabsContent>
         </Tabs>
       </main>
     </div>
@@ -376,8 +246,8 @@ export function DrawHistoryPage() {
 }
 
 // Separate component for the bets table
-function BetsTable({ bets, navigate }: { bets: Bet[], navigate: (path: string) => void }) {
-  if (bets.length === 0) {
+function BetsTable({ bets, navigate }: { bets: any[], navigate: (path: string) => void }) {
+  if (!bets || bets.length === 0) {
     return (
       <div className="text-center py-12">
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-auto text-gray-400 mb-4">
@@ -399,9 +269,8 @@ function BetsTable({ bets, navigate }: { bets: Bet[], navigate: (path: string) =
         <TableCaption>A history of Winning Result</TableCaption>
         <TableHeader>
           <TableRow>
+          <TableHead className="text-center">Draw Date Result</TableHead>
             <TableHead className="text-center">Game Draw Results</TableHead>
-            <TableHead className="text-center">Prize</TableHead>
-            <TableHead className="text-center">Draw Date Result</TableHead>
             <TableHead className="text-center">Jackpot Winners</TableHead>
             
             {/* <TableHead className="text-center">Date & Time</TableHead> */}
@@ -415,76 +284,52 @@ function BetsTable({ bets, navigate }: { bets: Bet[], navigate: (path: string) =
         <TableBody>
           {bets.map((bet) => (
             <TableRow key={bet.id}>
-              <TableCell>
-                <div className="flex flex-col items-center">
-                  <p className="font-bold text-orange-500 uppercase text-lg">{bet?.gameName || "N/A"}</p>
-                    <div className="flex space-x-2 mt-2">
-                      {(bet?.numbers || (() => {
-                        const gameNumbersResultMap: { [key: string]: number[] } = {
-                          "Color Match": [1, 2, 3, 4, 5, 6],
-                          "Lucky Spin": [7, 8, 9, 10, 11, 12],
-                          "Number Crush": [13, 14, 15, 16, 17, 18],
-                        };
-                        return gameNumbersResultMap[bet?.gameName] || [];
-                      })()).map((num, index) => (
-                        <div
-                          key={index}
-                          className="bg-yellow-400 text-black font-bold rounded-full w-10 h-10 flex items-center justify-center shadow-md"
-                        >
-                          {num}
-                        </div>
-                      ))}
-                    </div>
-                    <p className="text-red-600 font-bold text-lg">
-                      ₱{bet?.prize?.toLocaleString() || "0.00"}.00
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      {bet?.winners || 0} Jackpot Winner/s
-                    </p>
-                  <p className="text-green-500 text-xs">{bet?.date || "N/A"}</p>
-                </div>
-              </TableCell>
-              <TableCell className="text-center">₱{bet.prize.toFixed(2)}</TableCell>
-              {/* <TableCell className="font-medium text-center">{bet.id}</TableCell> */}
-              {/* <TableCell>
-                <div>
-                  <p className="font-medium text-center">{bet.gameName}</p>
-                  <p className="text-xs text-gray-500 text-center">{bet.gameType}</p>
-                </div>
-              </TableCell> */}
-              {/* <TableCell className="text-center">{bet.result || '-'}</TableCell> */}
-
               <TableCell className="text-center">
                 <div>
                   <p>{new Date(bet.date).toLocaleDateString()}</p>
                   <p className="text-xs text-gray-500 text-center">{bet.time}</p>
                 </div>
               </TableCell>
-              <TableCell className="text-center">{bet.winners.toFixed(0)}</TableCell>
-              {/* <TableCell className="text-center">₱{bet.potentialWin.toFixed(2)}</TableCell> */}
+              <TableCell>
+                <div className="flex flex-col items-center">
+                  {/* Game Name */}
+                  <p className="font-bold text-orange-500 uppercase text-lg">
+                    {bet?.game_name || "N/A"}
+                  </p>
+                  <p className="text-red-400 text-sm">
+                      DRAW{getTransCode(bet.date+" "+bet.time)}{bet.id}
+                    </p>
+                  
+
+                  {/* Display Results or Fallback */}
+                  <div className="flex space-x-2 mt-2">
+                    {bet?.results ? (
+                      bet.results
+                        .split('-')
+                        .map((num, index) => (
+                          <div
+                            key={index}
+                            className="bg-yellow-400 text-black font-bold rounded-full w-10 h-10 flex items-center justify-center shadow-md"
+                          >
+                            {num}
+                          </div>
+                        ))
+                    ) : (
+                      <p className="text-gray-500">No results available</p>
+                    )}
+                  </div>
+                  
+                </div>
+              </TableCell>
+
               
-              {/* <TableCell className="text-center">
-                <Badge 
-                  className= {
-                    bet.status === 'win' 
-                      ? 'bg-green-100 text-green-800 hover:bg-green-200' 
-                      : bet.status === 'loss'
-                      ? 'bg-red-100 text-red-800 hover:bg-red-200'
-                      : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
-                  }
-                >
-                  {bet.status === 'win' ? 'Win' : bet.status === 'loss' ? 'Loss' : 'Pending'}
-                </Badge>
-              </TableCell> */}
-              {/* <TableCell>
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  onClick={() => navigate(`/game-history/${bet.gameId}`)}
-                >
-                  Details
-                </Button>
-              </TableCell> */}
+
+              
+              <TableCell className="text-center">
+              {bet.total_winners}
+
+              </TableCell>
+              
             </TableRow>
           ))}
         </TableBody>

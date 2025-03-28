@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import CountdownTimer from "./CountdownTimer";
 import { 
   Table,
   TableBody,
@@ -18,6 +19,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { checkCurrentBetsTotal, getBetsByUserAndDraw, getDrawsByID, getGameByID, getGames, getGameTypeByID, getGameTypesByID } from '@/lib/apiCalls';
+import { formatPeso, getTransCode } from '@/lib/utils';
+import { useUser } from "./UserContext";
 // import { popularGames } from './Dashboard';
 
 type GameDraw = {
@@ -32,69 +36,92 @@ type GameDraw = {
 
 export function GameHistoryPage() {
   const { gameId } = useParams();
+  const { setUserID,userID } = useUser();
+  console.log(userID);
   const navigate = useNavigate();
   const [gameData, setGameData] = useState<any>(null);
-  const [gameDraws, setGameDraws] = useState<GameDraw[]>([]);
+  const [draws, setDraws] = useState<any[]>([]);
+  const [gameTypes, setGameTypes] = useState<any[]>([]);
+  const [betsData, setBetsData] = useState<any[]>([]);
   const [filter, setFilter] = useState('all');
+  const API_URL = import.meta.env.VITE_DATABASE_URL;
+
+  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [filteredDateDraws, setFilteredDateDraws] = useState<any[]>([]);
+  const [totalBets, setTotalBets] = useState<{ [key: string]: number }>({});
+
+// Handle date change and filter draws
+const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const selectedDate = event.target.value;
+  setSelectedDate(selectedDate);
+
+  const filtered = draws.filter((draw) => {
+    const drawDate = draw.date.split(' ')[0]; // Get only the date part
+    return drawDate === formatDate(selectedDate); // Compare with formatted date
+  });
+  setFilteredDateDraws(filtered);
+};
+
+// Format date to match draw.date format (mm/dd/yyyy)
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${month}/${day}/${year}`;
+};
+
+useEffect(() => {
+    const handleUpdate = async () => {
+      if (filteredDateDraws && filteredDateDraws.length > 0) {
+        filteredDateDraws.forEach(async (draw) => {
+          const gameBetData = await checkCurrentBetsTotal(draw.id);
+          console.log(draw.id);
+          if(gameBetData.authenticated)
+          {
+            setTotalBets((prev) => ({
+              ...prev,
+              [draw.id]: gameBetData.totalBets || 0,
+            }));
+          }
+        });
+      }
+    };
+    handleUpdate();
+}, [filteredDateDraws]);
   
   // Simulate fetching game data
   useEffect(() => {
-    // In a real app, this would be an API call
-    const games = [
-      { id: 1, name: "2D", type: "Lotto", minBet: 20, maxBet: 5000, image: "/img/2d.jpeg" },
-      { id: 2, name: "3D", type: "Lotto", minBet: 20, maxBet: 5000, image: "/img/3D.jpeg" },
-      { id: 3, name: "STL 3D", type: "Lotto", minBet: 20, maxBet: 5000, image: "/img/3D.jpeg" },
-      { id: 4, name: "4D", type: "Lotto", minBet: 20, maxBet: 5000, image: "/img/4D.png" },
-    ];
-    
-    const foundGame = games.find(game => game.id === parseInt(gameId || '0'));
-    setGameData(foundGame);
-    
-    // Generate mock game draw history
-    const mockDraws: GameDraw[] = [];
-    const statuses: ('win' | 'loss' | 'pending')[] = ['win', 'loss', 'pending'];
-    
-    for (let i = 0; i < 10; i++) {
-      const date = new Date();
-      date.setDate(date.getDate() - i);
-      
-      mockDraws.push({
-        id: `DRAW${100000 + i}`,
-        date: date.toLocaleDateString(),
-        time: date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        result: generateRandomResult(foundGame?.type || 'Puzzle'),
-        prize: Math.floor(Math.random() * 1000) + 50,
-        winners: Math.floor(Math.random() * 100),
-        status: statuses[Math.floor(Math.random() * statuses.length)]
-      });
-    }
-    
-    setGameDraws(mockDraws);
+    const handleUpdate = async () => {
+      console.log('called');
+      const gamesData = await getGameByID(gameId);
+      setGameData(gamesData);
+      const drawsData = await getDrawsByID(gameId);
+      setDraws(drawsData);
+      const gameTypeData = await getGameTypesByID(gameId);
+      setGameTypes(gameTypeData);
+
+      const gameBetData = await getBetsByUserAndDraw(gameId,userID);
+      setBetsData(gameBetData);
+      };
+      handleUpdate();
   }, [gameId]);
   
-  const generateRandomResult = (gameType: string): string => {
-    if (gameType === 'Puzzle') {
-      return `Match ${Math.floor(Math.random() * 5) + 3}`;
-    } else if (gameType === 'Casino') {
-      return `${Math.floor(Math.random() * 36)} ${['Red', 'Black'][Math.floor(Math.random() * 2)]}`;
-    } else {
-      return `Score ${Math.floor(Math.random() * 1000) + 100}`;
-    }
-  };
+ 
   
   const filteredDraws = filter === 'all' 
-    ? gameDraws 
-    : gameDraws.filter(draw => draw.status === filter);
+    ? betsData 
+    : betsData.filter(draw => draw.status === filter);
   
-  const handlePlayGame = () => {
-    navigate('/game');
-  };
-  
+    const handlePlayGame = (drawId, gameType ) => {
+      navigate(`/game/${gameId}/${gameType}/${drawId}`);
+    };
+
   if (!gameData) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="bg-white p-8 rounded-xl shadow-md">
-          <h2 className="text-xl font-bold mb-4">Game not found</h2>
+          <h2 className="text-xl font-bold mb-4">Game loading..</h2>
           <Button onClick={() => navigate('/dashboard')}>Back to Dashboard</Button>
         </div>
       </div>
@@ -116,7 +143,7 @@ export function GameHistoryPage() {
             Back
           </button>
           
-          <h1 className="text-xl font-bold text-center flex-1">{gameData.name}</h1>
+          <h1 className="text-xl font-bold text-center flex-1">{gameData[0].name}</h1>
           
           <div className="w-[60px]"></div> {/* Spacer for balance */}
         </div>
@@ -128,43 +155,113 @@ export function GameHistoryPage() {
           <div className="md:flex">
             <div className="md:w-1/3">
               <img 
-                src={gameData.image} 
-                alt={gameData.name} 
+                src={API_URL +"/img/"+gameData[0].picture} 
+                alt={gameData[0].name} 
                 className="w-full h-48 md:h-full object-cover"
               />
             </div>
             <div className="p-6 md:w-2/3">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h2 className="text-2xl font-bold mb-1">{gameData.name}</h2>
-                  <Badge className="bg-gray-800">{gameData.type}</Badge>
+                  <h2 className="text-2xl font-bold mb-1">{gameData[0].name}</h2>
+                  <Badge className="bg-gray-800">{gameData[0].type}</Badge>
                 </div>
-                <Button 
-                  onClick={handlePlayGame}
-                  className="bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-600 hover:to-orange-600 text-white"
-                >
-                  Play Now
-                </Button>
               </div>
               
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-sm text-gray-500">Minimum Bet</p>
-                  <p className="text-lg font-bold">₱{gameData.minBet}</p>
-                </div>
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-sm text-gray-500">Maximum Bet</p>
-                  <p className="text-lg font-bold">₱{gameData.maxBet}</p>
-                </div>
-              </div>
+              
               
               <div className="bg-blue-50 p-4 rounded-lg">
                 <h3 className="font-medium text-blue-800 mb-2">Game Rules</h3>
                 <p className="text-sm text-gray-600">
-                  Match colors and patterns to win prizes. The more matches you make, the higher your score.
-                  Special combinations can trigger bonus rounds and multipliers.
+                {gameData[0].description}
                 </p>
               </div>
+
+              <div className="bg-white rounded-xl shadow-md overflow-hidden">
+          <div className="p-4 border-b flex justify-between items-center">
+            <h2 className="text-xl font-bold">Select Draw</h2>
+            
+          </div>
+         
+          <div className="overflow-x-auto">
+            
+          <div className="w-full max-w-lg mx-auto my-6 space-y-4">
+  {/* Date Input for Draw Selection */}
+      <input
+        type="date"
+        value={selectedDate}
+        onChange={handleDateChange}
+        className="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-500"
+      />
+
+  {/* Show Filtered Draws */}
+        {filteredDateDraws && filteredDateDraws.length > 0 ? (
+          filteredDateDraws.map((draw) => (
+            <div
+              key={draw.id}
+              className="p-4 border border-gray-300 rounded-lg shadow-md bg-white mt-4"
+            >
+              {/* Draw Details */}
+              <div className="flex flex-col items-center justify-center space-y-2 sm:space-y-3">
+                <p className="font-medium text-lg sm:text-xl">
+                  DRAW{getTransCode(draw.date + ' ' + draw.time)}{draw.id}
+                </p>
+                <p className="text-gray-500 text-sm sm:text-base">
+                  {draw.date} {draw.time}
+                </p>
+                {/* Countdown Timer */}
+                <p className="text-green-500 text-sm sm:text-base">
+                  Time left:{' '}
+                  <CountdownTimer
+                    date={draw.date}
+                    time={draw.time}
+                    cutoffMinutes={draw.deadline}
+                  />
+                </p>
+
+                <p className="text-blue-500 text-sm sm:text-base">
+                Total Bets: {totalBets[draw.id] !== undefined ? totalBets[draw.id] : 'Loading...'}/{draw.ceiling}
+              </p>
+              </div>
+
+              {/* Accordion Dropdown for Game Types */}
+              <div className="mt-6 w-full max-w-lg mx-auto">
+                <details className="bg-white border border-gray-300 rounded-lg shadow-md">
+                  <summary className="text-gray-700 text-sm sm:text-base px-4 py-3 cursor-pointer bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-t-lg hover:from-pink-600 hover:to-orange-600">
+                    Play Game
+                  </summary>
+                  <div className="p-4 bg-gray-50 space-y-2">
+                    {gameTypes && gameTypes.length > 0 ? (
+                      gameTypes.map((types) => (
+                        <button
+                          key={types.id}
+                          onClick={() => handlePlayGame(draw.id, types.id)}
+                          className="w-full text-left bg-white border border-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-pink-100 transition-all"
+                        >
+                          🎮 {types.game_type} - Bet: {formatPeso(types.bet)} - Winnings: {formatPeso(types.jackpot)}
+                        </button>
+                      ))
+                    ) : (
+                      <p className="text-gray-500">No games available</p>
+                    )}
+                  </div>
+                </details>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="text-center text-gray-500 mt-4">No draws found for this date.</p>
+        )}
+      </div>
+
+          </div>
+          
+          
+        </div>
+
+
+
+
             </div>
           </div>
         </div>
@@ -172,7 +269,7 @@ export function GameHistoryPage() {
         {/* Game History Table */}
         <div className="bg-white rounded-xl shadow-md overflow-hidden">
           <div className="p-4 border-b flex justify-between items-center">
-            <h2 className="text-xl font-bold">Recent Draws</h2>
+            <h2 className="text-xl font-bold">Recent Bets</h2>
             <div className="flex items-center">
               <span className="text-sm text-gray-500 mr-2">Filter:</span>
               <Select value={filter} onValueChange={setFilter}>
@@ -191,54 +288,62 @@ export function GameHistoryPage() {
           
           <div className="overflow-x-auto">
             <Table>
-              <TableCaption>A history of recent game draws</TableCaption>
+              <TableCaption>A history of my recent bets</TableCaption>
               <TableHeader>
                 <TableRow>
+                  <TableHead>Bet ID</TableHead>
                   <TableHead>Draw ID</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Time</TableHead>
-                  <TableHead>Result</TableHead>
-                  <TableHead className="text-right">Prize</TableHead>
-                  <TableHead>Winners</TableHead>
+                  <TableHead>Game</TableHead>
+                  <TableHead >Bet Amount</TableHead>
+                  <TableHead >Bet Combination</TableHead>
+                  <TableHead >Prize</TableHead>
                   <TableHead>Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredDraws.map((draw) => (
-                  <TableRow key={draw.id}>
-                    <TableCell className="font-medium">{draw.id}</TableCell>
-                    <TableCell>{draw.date}</TableCell>
-                    <TableCell>{draw.time}</TableCell>
-                    <TableCell>{draw.result}</TableCell>
-                    <TableCell className="text-right">₱{draw.prize.toFixed(2)}</TableCell>
-                    <TableCell>{draw.winners}</TableCell>
+                {
+                filteredDraws && filteredDraws.length > 0 ? (
+                filteredDraws.map((bet) => (
+                  <TableRow key={bet.id}>
+                    <TableCell className="font-medium">
+                    <p>BET{getTransCode(bet.created_date+" "+bet.created_time)}{bet.id}</p>
+                    <p className="text-xs text-gray-500">{bet.created_date} {bet.created_time}</p>
+                    </TableCell>
+                    <TableCell className="font-medium">
+                    <p>DRAW{getTransCode(bet.draw_date+" "+bet.draw_time)}{bet.draw_id}</p>
+                    <p className="text-xs text-gray-500">{bet.draw_date} {bet.draw_time}</p>
+                      </TableCell>
+                    <TableCell>{bet.game_name} {bet.game_type_name}</TableCell>
+                    <TableCell>{formatPeso(bet.bet)}</TableCell>
+                    <TableCell>{bet.bets}</TableCell>
+                    <TableCell>{formatPeso(bet.jackpot)}</TableCell>
                     <TableCell>
                       <Badge 
                         className={
-                          draw.status === 'win' 
+                          bet.status === 'win' 
                             ? 'bg-green-100 text-green-800 hover:bg-green-200' 
-                            : draw.status === 'loss'
+                            : bet.status === 'loss'
                             ? 'bg-red-100 text-red-800 hover:bg-red-200'
                             : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
                         }
                       >
-                        {draw.status === 'win' ? 'Win' : draw.status === 'loss' ? 'Loss' : 'Pending'}
+                        {bet.status === 'win' ? 'Win' : bet.status === 'loss' ? 'Loss' : 'Pending'}
                       </Badge>
                     </TableCell>
                   </TableRow>
-                ))}
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-4 text-gray-500">
+                    No bets found.
+                  </TableCell>
+                </TableRow>
+              )}
               </TableBody>
             </Table>
           </div>
           
-          <div className="p-4 border-t flex justify-center">
-            <Button 
-              onClick={handlePlayGame}
-              className="bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-600 hover:to-orange-600 text-white px-8"
-            >
-              Play Now
-            </Button>
-          </div>
+         
         </div>
       </main>
     </div>

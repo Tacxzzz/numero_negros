@@ -17,11 +17,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { FiCopy } from 'react-icons/fi';
-import { CheckCircleIcon } from '@heroicons/react/solid';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from "./UserContext";
-import { fetchUserData, getReferrals } from '@/lib/apiCalls';
+import { cashIn, fetchUserData, getGames, getReferrals } from '@/lib/apiCalls';
 import { formatPeso } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -34,22 +33,32 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const { setUserID,userID } = useUser();
   console.log(userID);
   const [balance, setBalance] = useState(0);
+  const [winnings, setWinnings] = useState(0);
+  const [commissions, setCommissions] = useState(0);
   const [mobile, setMobile] = useState("");
   const [referral, setReferral] = useState("");
   const [status,setStatus] = useState("");
   const [showAccountModal, setShowAccountModal] = useState(false);
   // const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showCashInDialog, setShowCashInDialog] = useState(false);
+  const [transLimit, setTransLimit] = useState(5000);
+  const [cashInAmount, setCashInAmount] = useState(0);
+  const [popularGames, setPopularGames] = useState<any[]>([]);
 
   useEffect(() => {
     if (userID) {
       const handleUpdate = async () => {
         const data = await fetchUserData(userID);
         setBalance(data.balance);
+        setWinnings(data.wins);
+        setCommissions(data.commissions);
         setMobile(data.mobile);
         setReferral(data.referral);
         setStatus(data.status);
         console.log(data.mobile);
+
+        const gamesData = await getGames();
+        setPopularGames(gamesData);
       };
       handleUpdate();
     }
@@ -68,12 +77,44 @@ export function Dashboard({ onLogout }: SidebarProps) {
     setShowCashInDialog(false);
   };
 
-  const popularGames = [
-    { id: 1, name: "2D", type: "Lotto", minBet: 20, maxBet: 5000, image: "/img/2d.jpeg" },
-    { id: 2, name: "3D", type: "Lotto", minBet: 20, maxBet: 5000, image: "/img/3D.jpeg" },
-    { id: 3, name: "STL 3D", type: "Lotto", minBet: 20, maxBet: 5000, image: "/img/3D.jpeg" },
-    { id: 4, name: "4D", type: "Lotto", minBet: 20, maxBet: 5000, image: "/img/4D.png" },
-  ];
+  const handleCloseModal = async () => {
+    const data = await fetchUserData(userID);
+    setBalance(data.balance);
+    setMobile(data.mobile);
+    setReferral(data.referral);
+    setStatus(data.status);
+    console.log(data.mobile);
+    setShowAccountModal(false);
+  };
+
+  const cashInSubmit =  async () => {
+  
+    console.log(userID);
+    const formData = new FormData();
+    formData.append("amount", cashInAmount.toString());
+    formData.append('userID', userID);
+    const dataRemit = await cashIn(formData);
+    console.log(dataRemit.transID);
+    setCashInAmount(0);
+    const data = await fetchUserData(userID);
+    setBalance(data.balance);
+    setWinnings(data.wins);
+    setCommissions(data.commissions);
+    setMobile(data.mobile);
+    setReferral(data.referral);
+    setStatus(data.status);
+    console.log(data.mobile);
+    alert("Cash In successfully! Transaction ID: " + dataRemit.transID);
+};
+
+const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  let value = parseFloat(e.target.value); // Convert to number, fallback to 0
+  if (value > transLimit) value = transLimit; // Restrict maximum value
+  setCashInAmount(value);
+  
+};
+
+
   
   const newGames = [
     { id: 5, name: "Pick 3 & first 2", type: "Lotto", minBet: 5, maxBet: 300, image: "/img/pick3first2.jpeg" },
@@ -108,6 +149,13 @@ export function Dashboard({ onLogout }: SidebarProps) {
                       <polyline points="9 22 9 12 15 12 15 22"></polyline>
                     </svg>
                     Home
+                  </Link>
+                  <Link to="/transactions" className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <ellipse cx="12" cy="5" rx="8" ry="3"></ellipse>
+                      <path d="M4 5v6a8 3 0 0 0 16 0V5"></path>
+                      <path d="M4 11v6a8 3 0 0 0 16 0v-6"></path>
+                    </svg>My Transactions
                   </Link>
                   <Link to="/my-bets" className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -159,6 +207,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
           
           <nav className="hidden md:flex items-center space-x-6">
             <Link to="/dashboard" className="text-blue-600 font-medium">Home</Link>
+            <Link to="/transactions" className="text-gray-600 hover:text-gray-900">My Transactions</Link>
             <Link to="/my-bets" className="text-gray-600 hover:text-gray-900">My Bets</Link>
             <Link to="/drawhistory" className="text-gray-600 hover:text-gray-900">Draws</Link>
             <Link to="/support" className="text-gray-600 hover:text-gray-900">Support</Link>
@@ -245,12 +294,12 @@ export function Dashboard({ onLogout }: SidebarProps) {
 
       {/* Account Management Modal */}
         {showAccountModal && (
-        <AccountManagementModal onClose={() => setShowAccountModal(false)} />
+        <AccountManagementModal onClose={handleCloseModal} />
       )}
       
       <main className="container mx-auto px-4 py-6">
         {/* Balance Card (Mobile) */}
-        <div className="md:hidden mb-6">
+        <div >
           <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
             <div>
               <p className="text-gray-500 text-sm">Your Balance</p>
@@ -258,7 +307,16 @@ export function Dashboard({ onLogout }: SidebarProps) {
             </div>
             <Button className="bg-green-500 hover:bg-green-600" onClick={() => setShowCashInDialog(true)}>Cash In</Button>
           </div>
+          <br/>
+          <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
+            <div>
+              <p className="text-gray-500 text-sm">Your Winnings and Commissions</p>
+              <p className="text-2xl font-bold text-gray-800">{formatPeso(winnings + commissions)}</p>
+            </div>
+            <Button className="bg-green-500 hover:bg-green-600" disabled>Cash Out</Button>
+          </div>
         </div>
+
         
         {/* Live Streams */}
         <section className="mb-8">
@@ -276,7 +334,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
             <h2 className="text-xl font-bold text-gray-800">Games</h2>
             <TabsList>
               <TabsTrigger value="popular">Popular</TabsTrigger>
-              <TabsTrigger value="new">New</TabsTrigger>
+             {/*  <TabsTrigger value="new">New</TabsTrigger> */}
               <TabsTrigger value="favorites">Favorites</TabsTrigger>
             </TabsList>
           </div>
@@ -289,13 +347,13 @@ export function Dashboard({ onLogout }: SidebarProps) {
             </div>
           </TabsContent>
           
-          <TabsContent value="new" className="mt-0">
+          {/* <TabsContent value="new" className="mt-0">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {newGames.map(game => (
                 <GameCard key={game.id} game={game} />
               ))}
             </div>
-          </TabsContent>
+          </TabsContent> */}
           
           <TabsContent value="favorites" className="mt-0">
             <div className="text-center py-8">
@@ -325,7 +383,13 @@ export function Dashboard({ onLogout }: SidebarProps) {
                   <div className="flex items-center justify-between bg-white p-2 rounded border">
                     <div className="flex items-center">
                       <div>
-                        <input type="number" className="border rounded p-1 text-sm w-full" placeholder="Enter amount" style={{ appearance: 'textfield' }}/>
+                        <input
+                        value={cashInAmount} 
+                        onChange={handleChange}
+                        type="number" 
+                        className="border rounded p-1 text-sm w-full" 
+                        placeholder="Enter amount" 
+                        style={{ appearance: 'textfield' }}/>
                         <style>{`
                           input[type=number]::-webkit-outer-spin-button,
                           input[type=number]::-webkit-inner-spin-button {
@@ -338,7 +402,13 @@ export function Dashboard({ onLogout }: SidebarProps) {
                         `}</style>
                       </div>
                     </div>
-                    <Button type="submit" variant="outline" size="sm" className="text-blue-500 bg-blue-100 hover:text-blue-700 hover:bg-green-50 rounded px-4 py-2">
+                    <Button 
+                    disabled={!cashInAmount} 
+                    type="button"
+                     variant="outline" 
+                     size="sm"
+                     onClick={cashInSubmit}  
+                    className="text-blue-500 bg-blue-100 hover:text-blue-700 hover:bg-green-50 rounded px-4 py-2">
                       <label>Cash In</label>
                     </Button>
                   </div>
@@ -394,86 +464,6 @@ export function Dashboard({ onLogout }: SidebarProps) {
           </div>
         </section> */}
 
-        {/* Recent Activity */}
-        <div className="mb-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold">Recent Activity</h2>
-            <Link to="/my-bets" className="text-blue-600 hover:underline">View All</Link>
-          </div>
-          
-          <div className="bg-white rounded-xl shadow-md overflow-hidden">
-            <ScrollArea className="h-64">
-              <div className="p-4 space-y-4">
-                <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                  <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium">Won ₱75 on Color Match</p>
-                    <p className="text-sm text-gray-500">Today, 2:30 PM</p>
-                  </div>
-                  <Badge className="bg-green-100 text-green-800 hover:bg-green-200">Win</Badge>
-                </div>
-                
-                <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                  <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <polyline points="12 6 12 12 16 14"></polyline>
-                    </svg>
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium">Placed ₱50 bet on Lucky Spin</p>
-                    <p className="text-sm text-gray-500">Today, 12:45 PM</p>
-                  </div>
-                  <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200">Pending</Badge>
-                </div>
-                
-                <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                  <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="18" y1="6" x2="6" y2="18"></line>
-                      <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium">Lost ₱30 on Number Crush</p>
-                    <p className="text-sm text-gray-500">Yesterday, 6:15 PM</p>
-                  </div>
-                  <Badge className="bg-red-100 text-red-800 hover:bg-red-200">Loss</Badge>
-                </div>
-                
-                <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                  <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium">Won ₱45 on Star Collector</p>
-                    <p className="text-sm text-gray-500">Yesterday, 3:20 PM</p>
-                  </div>
-                  <Badge className="bg-green-100 text-green-800 hover:bg-green-200">Win</Badge>
-                </div>
-                
-                <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                  <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium">Won ₱60 on Gem Blast</p>
-                    <p className="text-sm text-gray-500">2 days ago</p>
-                  </div>
-                  <Badge className="bg-green-100 text-green-800 hover:bg-green-200">Win</Badge>
-                </div>
-              </div>
-            </ScrollArea>
-          </div>
-        </div>
 
 
       </main>
@@ -571,6 +561,8 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
   const [level1, setLevel1] = useState(0);
   const [level2, setLevel2] = useState(0);
   const [level3, setLevel3] = useState(0);
+  const [transLimit, setTransLimit] = useState(5000);
+  const [cashInAmount, setCashInAmount] = useState(0);
 
   const currentURL = window.location.origin; // Gets the base URL
   const randomKey = Math.random().toString(36).substring(2, 23); // 21-character random key
@@ -599,6 +591,26 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
     navigator.clipboard.writeText(referralLink);
     toast.success("Link copied to clipboard!", { autoClose: 1500 });
   };
+
+
+  const cashInSubmit =  async () => {
+  
+    console.log(userID);
+    const formData = new FormData();
+    formData.append("amount", cashInAmount.toString());
+    formData.append('userID', userID);
+    const dataRemit = await cashIn(formData);
+    console.log(dataRemit.transID);
+    setCashInAmount(0);
+    alert("Cash In successfully! Transaction ID: " + dataRemit.transID);
+};
+
+const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  let value = parseFloat(e.target.value); // Convert to number, fallback to 0
+  if (value > transLimit) value = transLimit; // Restrict maximum value
+  setCashInAmount(value);
+  
+};
   
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -671,26 +683,26 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
                     </div>
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred Lvl 1 (20% Rewards)</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred Lvl 1 (3% Rewards)</label>
                     <div className="flex items-center">
                       <Input readOnly value={level1} disabled className="mr-2" />
                       
                     </div>
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred Lvl 2 (3% Rewards)</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred Lvl 2 (2% Rewards)</label>
                     <div className="flex items-center">
                       <Input readOnly value={level2} disabled className="mr-2" />
                       
                     </div>
                 </div>
-                <div>
+                {/* <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred Lvl 3 (2% Rewards)</label>
                     <div className="flex items-center">
                       <Input readOnly value={level3} disabled className="mr-2" />
                       
                     </div>
-                </div>
+                </div> */}
               </div>
               <ToastContainer />
               {/* <Button className="w-full">Save Changes</Button> */}
@@ -738,7 +750,13 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
                   <div className="flex items-center justify-between bg-white p-2 rounded border">
                     <div className="flex items-center">
                       <div>
-                        <input type="number" className="border rounded p-1 text-sm w-full" placeholder="Enter amount" style={{ appearance: 'textfield' }}/>
+                        <input 
+                        type="number" 
+                        value={cashInAmount} 
+                        onChange={handleChange}
+                        className="border rounded p-1 text-sm w-full" 
+                        placeholder="Enter amount" 
+                        style={{ appearance: 'textfield' }}/>
                         <style>{`
                           input[type=number]::-webkit-outer-spin-button,
                           input[type=number]::-webkit-inner-spin-button {
@@ -751,7 +769,14 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
                         `}</style>
                       </div>
                     </div>
-                    <Button type="submit" variant="outline" size="sm" className="text-blue-500 bg-blue-100 hover:text-blue-700 hover:bg-green-50 rounded px-4 py-2">
+                    
+                    <Button 
+                    disabled={!cashInAmount} 
+                    type="button"
+                     variant="outline" 
+                     size="sm"
+                     onClick={cashInSubmit} 
+                     className="text-blue-500 bg-blue-100 hover:text-blue-700 hover:bg-green-50 rounded px-4 py-2">
                       <label>Cash In</label>
                     </Button>
                   </div>

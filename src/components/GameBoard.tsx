@@ -10,15 +10,16 @@ type GameTile = {
 
 interface GameBoardProps {
   onTileClick: (value: string) => void;
+  lengthStart?: number;
   lengthChoice?: number;
   scores: string[];
 }
 
-export function GameBoard({ onTileClick, lengthChoice = 25, scores }: GameBoardProps) {
+export function GameBoard({ onTileClick, lengthChoice = 25,lengthStart = 0, scores }: GameBoardProps) {
   // Generate game tiles with default properties
   const generateTiles = (): GameTile[] => {
     const tiles: GameTile[] = [];
-    for (let i = 1; i <= lengthChoice; i++) {
+    for (let i = lengthStart; i <= lengthChoice; i++) {
       tiles.push({
         id: i,
         value: i.toString(),
@@ -30,21 +31,14 @@ export function GameBoard({ onTileClick, lengthChoice = 25, scores }: GameBoardP
   };
 
   const [tiles, setTiles] = useState<GameTile[]>(generateTiles());
-  const [disabledTiles, setDisabledTiles] = useState<number[]>([]); // Track disabled tile IDs
 
   // Handle tile click
   const handleTileClick = (tile: GameTile) => {
-    if (!disabledTiles.includes(tile.id)) {
+    
       onTileClick(tile.value);
-      setDisabledTiles([...disabledTiles, tile.id]);
-    }
+      
   };
 
-  // Reset disabled tiles when tiles reset
-  useEffect(() => {
-    const updatedDisabledTiles = scores.filter((score) => score !== "").map(Number);
-    setDisabledTiles(updatedDisabledTiles);
-  }, [scores]);
 
   return (
     <div className="grid grid-cols-5 gap-2 md:gap-3">
@@ -54,10 +48,8 @@ export function GameBoard({ onTileClick, lengthChoice = 25, scores }: GameBoardP
           className={cn(
             "w-full aspect-square rounded-full flex items-center justify-center text-white font-bold text-xl shadow-md transition-transform hover:scale-105 active:scale-95",
             tile.color,
-            disabledTiles.includes(tile.id) && "opacity-50 cursor-not-allowed bg-blue-400" // Disable styling
           )}
           onClick={() => handleTileClick(tile)}
-          disabled={disabledTiles.includes(tile.id)} // Disable tile if already clicked
         >
           {tile.type === "normal" && <span>{tile.value}</span>}
         </button>
