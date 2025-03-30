@@ -14,9 +14,10 @@ interface GameBoardProps {
   lengthChoice?: number;
   scores: string[];
   gameId: string;
+  gameType: string;
 }
 
-export function GameBoard({ onTileClick, lengthChoice = 25,lengthStart = 0, scores, gameId }: GameBoardProps) {
+export function GameBoard({ onTileClick, lengthChoice = 25,lengthStart = 0, scores, gameId, gameType }: GameBoardProps) {
   // Generate game tiles with default properties
   const generateTiles = (): GameTile[] => {
     const tiles: GameTile[] = [];
@@ -32,19 +33,49 @@ export function GameBoard({ onTileClick, lengthChoice = 25,lengthStart = 0, scor
   };
 
   const [tiles, setTiles] = useState<GameTile[]>(generateTiles());
-
+  const getScoreCount = (value: string) => {
+    return scores.filter((score) => score === value).length;
+  };
   // Handle tile click
   const handleTileClick = (tile: GameTile) => {
     
       onTileClick(tile.value);
       
   };
-
+  const distinctScores = Array.from(new Set(scores));
 
   return (
     <div className="grid grid-cols-5 gap-2 md:gap-3">
       {tiles.map((tile) => {
-        const isDisabled = scores.includes(tile.value) && gameId !== "1" && gameId !== "2" && gameId !== "3" && gameId !== "4";
+        let isDisabled = false;
+
+        // ✅ For gameType 5 and 8 -> Check distinct scores
+        if (
+          (gameId === "2" || gameId === "3") &&
+          (gameType === "5" || gameType === "8")
+        ) {
+          isDisabled = distinctScores.includes(tile.value);
+        }
+        // ✅ For gameType 4 and 7 -> Check if 2 or more occurrences
+        else if (
+          (gameId === "2" || gameId === "3") &&
+          (gameType === "4" || gameType === "7")
+        ) {
+          const scoreCount = getScoreCount(tile.value);
+          if (scoreCount >= 2) {
+            isDisabled = true;
+          }
+        }
+        // ✅ Default disabling condition
+        else if (
+          scores.includes(tile.value) &&
+          gameId !== "1" &&
+          gameId !== "2" &&
+          gameId !== "3" &&
+          gameId !== "4"
+        ) {
+          isDisabled = true;
+        }
 
         return (
           <button

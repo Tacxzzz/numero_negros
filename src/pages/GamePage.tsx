@@ -182,7 +182,7 @@ export function GamePage() {
           <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-4 shadow-inner">
             {gameData &&
             (
-              <GameBoard onTileClick={handleTileClick} lengthChoice={lengthChoice} lengthStart={lengthStart} scores={scores} gameId={gameId} />
+              <GameBoard onTileClick={handleTileClick} lengthChoice={lengthChoice} lengthStart={lengthStart} scores={scores} gameId={gameId} gameType={gameType} />
             )}
           </div>
         </div>
