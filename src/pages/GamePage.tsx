@@ -117,6 +117,19 @@ export function GamePage() {
         
       }
     };
+    // Check if there are exactly 2 matching values in scores
+const hasTwoMatchingScores = (scores: string[]) => {
+  const countMap: { [key: string]: number } = {};
+
+  scores.forEach((score) => {
+    if (score.trim() !== "") {
+      countMap[score] = (countMap[score] || 0) + 1;
+    }
+  });
+
+  // Check if any value appears exactly 2 times
+  return Object.values(countMap).includes(2);
+};
 
 
     if (loading) {
@@ -195,21 +208,35 @@ export function GamePage() {
                 
                
               
-              <button  
-              onClick={() => setPlayModalOpen(true)} 
-              disabled={
-                !(
-                  scores.every((score) => score.trim() !== "") && userID.trim() !== "" 
-                )
-              }
-              className={`${
-                scores.every((score) => score.trim() !== "") && userID.trim() !== ""
-                  ? "bg-yellow-400 hover:bg-yellow-500"
-                  : "bg-gray-300 cursor-not-allowed"
-              } text-white font-bold py-2 px-8 rounded-full shadow-md transition-transform hover:scale-105 active:scale-95 uppercase text-sm tracking-wider`}
+              <button
+                  onClick={() => setPlayModalOpen(true)}
+                  disabled={
+                    !(
+                      scores.every((score) => score.trim() !== "") &&
+                      userID.trim() !== "" &&
+                      (
+                        (gameId === "2" || gameId === "3") &&
+                        (gameType === "4" || gameType === "7")
+                          ? hasTwoMatchingScores(scores)
+                          : true
+                      )
+                    )
+                  }
+                  className={`${
+                    scores.every((score) => score.trim() !== "") &&
+                    userID.trim() !== "" &&
+                    (
+                      (gameId === "2" || gameId === "3") &&
+                      (gameType === "4" || gameType === "7")
+                        ? hasTwoMatchingScores(scores)
+                        : true
+                    )
+                      ? "bg-yellow-400 hover:bg-yellow-500"
+                      : "bg-gray-300 cursor-not-allowed"
+                  } text-white font-bold py-2 px-8 rounded-full shadow-md transition-transform hover:scale-105 active:scale-95 uppercase text-sm tracking-wider`}
                 >
-                Bet
-              </button>
+                  Bet
+                </button>
                 
                 <Dialog open={playModalOpen} onOpenChange={setPlayModalOpen}>
                   <DialogContent className="bg-gradient-to-b from-pink-100 to-orange-100 border-2 border-pink-300 rounded-xl max-w-xs sm:max-w-sm">
