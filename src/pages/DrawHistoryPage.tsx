@@ -271,7 +271,7 @@ function BetsTable({ bets, navigate }: { bets: any[], navigate: (path: string) =
           <TableRow>
           <TableHead className="text-center">Draw Date Result</TableHead>
             <TableHead className="text-center">Game Draw Results</TableHead>
-            <TableHead className="text-center">Jackpot Winners</TableHead>
+            <TableHead className="text-center">Winners</TableHead>
             
             {/* <TableHead className="text-center">Date & Time</TableHead> */}
             {/* <TableHead className="text-center">Amount</TableHead> */}

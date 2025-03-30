@@ -13,9 +13,10 @@ interface GameBoardProps {
   lengthStart?: number;
   lengthChoice?: number;
   scores: string[];
+  gameId: string;
 }
 
-export function GameBoard({ onTileClick, lengthChoice = 25,lengthStart = 0, scores }: GameBoardProps) {
+export function GameBoard({ onTileClick, lengthChoice = 25,lengthStart = 0, scores, gameId }: GameBoardProps) {
   // Generate game tiles with default properties
   const generateTiles = (): GameTile[] => {
     const tiles: GameTile[] = [];
@@ -42,18 +43,28 @@ export function GameBoard({ onTileClick, lengthChoice = 25,lengthStart = 0, scor
 
   return (
     <div className="grid grid-cols-5 gap-2 md:gap-3">
-      {tiles.map((tile) => (
-        <button
-          key={tile.id}
-          className={cn(
-            "w-full aspect-square rounded-full flex items-center justify-center text-white font-bold text-xl shadow-md transition-transform hover:scale-105 active:scale-95",
-            tile.color,
-          )}
-          onClick={() => handleTileClick(tile)}
-        >
-          {tile.type === "normal" && <span>{tile.value}</span>}
-        </button>
-      ))}
+      {tiles.map((tile) => {
+        const isDisabled = scores.includes(tile.value) && gameId !== "1" && gameId !== "2" && gameId !== "3" && gameId !== "4";
+
+        return (
+          <button
+            key={tile.id}
+            className={cn(
+              "w-full aspect-square rounded-full flex items-center justify-center text-white font-bold text-xl shadow-md transition-transform",
+              isDisabled
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed opacity-70"
+                : "hover:scale-105 active:scale-95",
+              tile.color
+            )}
+            onClick={() => handleTileClick(tile)}
+            disabled={isDisabled}
+          >
+            {tile.type === "normal" && (
+              <span>{isDisabled ? "✓" : tile.value}</span>
+            )}
+          </button>
+        );
+      })}
     </div>
   );
 }

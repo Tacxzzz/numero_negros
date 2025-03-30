@@ -98,7 +98,8 @@ export function GamePage() {
       if(data.authenticated)
       {
         alert("Bet placed successfully!");
-        navigate(`/game-history/${gameId}`);
+        setScores(Array.from({ length: digits }, () => ""));
+        setLoading(false);
       }
       else
       {
@@ -181,7 +182,7 @@ export function GamePage() {
           <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-4 shadow-inner">
             {gameData &&
             (
-              <GameBoard onTileClick={handleTileClick} lengthChoice={lengthChoice} lengthStart={lengthStart} scores={scores} />
+              <GameBoard onTileClick={handleTileClick} lengthChoice={lengthChoice} lengthStart={lengthStart} scores={scores} gameId={gameId} />
             )}
           </div>
         </div>
@@ -198,11 +199,11 @@ export function GamePage() {
               onClick={() => setPlayModalOpen(true)} 
               disabled={
                 !(
-                  scores.every((score) => score.trim() !== "") && userID.trim() !== "" && gameId === "1"
+                  scores.every((score) => score.trim() !== "") && userID.trim() !== "" 
                 )
               }
               className={`${
-                scores.every((score) => score.trim() !== "") && userID.trim() !== "" && gameId === "1"
+                scores.every((score) => score.trim() !== "") && userID.trim() !== ""
                   ? "bg-yellow-400 hover:bg-yellow-500"
                   : "bg-gray-300 cursor-not-allowed"
               } text-white font-bold py-2 px-8 rounded-full shadow-md transition-transform hover:scale-105 active:scale-95 uppercase text-sm tracking-wider`}

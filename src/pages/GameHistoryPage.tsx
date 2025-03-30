@@ -100,6 +100,7 @@ useEffect(() => {
       setDraws(drawsData);
       const gameTypeData = await getGameTypesByID(gameId);
       setGameTypes(gameTypeData);
+      console.log(gameTypeData);
 
       const gameBetData = await getBetsByUserAndDraw(gameId,userID);
       setBetsData(gameBetData);
@@ -231,14 +232,21 @@ useEffect(() => {
                     Play Game
                   </summary>
                   <div className="p-4 bg-gray-50 space-y-2">
-                    {gameTypes && gameTypes.length > 0 ? (
+                  {gameTypes && gameTypes.length > 0 ? (
                       gameTypes.map((types) => (
                         <button
                           key={types.id}
                           onClick={() => handlePlayGame(draw.id, types.id)}
-                          className="w-full text-left bg-white border border-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-pink-100 transition-all"
+                          className={`w-full text-left bg-white border border-gray-200 px-4 py-2 rounded-md transition-all ${
+                            types.status === "hidden" ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "text-gray-700 hover:bg-pink-100"
+                          }`}
+                          disabled={types.status === "hidden"}
                         >
-                          🎮 {types.game_type} - Bet: {formatPeso(types.bet)} - Winnings: {formatPeso(types.jackpot)}
+                          {types.status === "hidden" ? (
+                            <> {types.game_type} - Winnings: {formatPeso(types.jackpot)}</>
+                          ) : (
+                            <>🎮 {types.game_type} - Bet: {formatPeso(types.bet)} - Winnings: {formatPeso(types.jackpot)}</>
+                          )}
                         </button>
                       ))
                     ) : (

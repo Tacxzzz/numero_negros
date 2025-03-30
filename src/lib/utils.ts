@@ -63,3 +63,27 @@ export function checkBettingTime (drawDate: string, drawTime: string, cutoffMinu
     return false;
   }
 };
+
+
+
+export const parseDateTime = (date, time) => {
+  const [month, day, year] = date.split("/");
+  let [timePart, period] = time.split(" ");
+  let [hours, minutes, seconds] = timePart.split(":").map(Number);
+
+  // Convert to 24-hour format if PM
+  if (period.toLowerCase() === "pm" && hours !== 12) {
+    hours += 12;
+  }
+  // Handle 12 AM case
+  if (period.toLowerCase() === "am" && hours === 12) {
+    hours = 0;
+  }
+
+  // Return ISO 8601 format (YYYY-MM-DDTHH:MM:SS)
+  return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}T${String(
+    hours
+  ).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(
+    seconds
+  ).padStart(2, "0")}`;
+};
