@@ -20,7 +20,7 @@ import { FiCopy } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from "./UserContext";
-import { cashIn, fetchUserData, getGames, getReferrals } from '@/lib/apiCalls';
+import { cashIn, fetchUserData, getGames, getMyBetClientsCount, getReferrals } from '@/lib/apiCalls';
 import { formatPeso } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -38,6 +38,8 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const [mobile, setMobile] = useState("");
   const [referral, setReferral] = useState("");
   const [status,setStatus] = useState("");
+  const [agent,setAgent] = useState("");
+  const [clients,setClients] = useState(0);
   const [showAccountModal, setShowAccountModal] = useState(false);
   // const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showCashInDialog, setShowCashInDialog] = useState(false);
@@ -55,7 +57,10 @@ export function Dashboard({ onLogout }: SidebarProps) {
         setMobile(data.mobile);
         setReferral(data.referral);
         setStatus(data.status);
-        console.log(data.mobile);
+        setAgent(data.agent);
+
+        const dataClients = await getMyBetClientsCount(userID);
+        setClients(dataClients.countClients);
 
         const gamesData = await getGames();
         setPopularGames(gamesData);
@@ -115,11 +120,6 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 };
 
 
-  
-  const newGames = [
-    { id: 5, name: "Pick 3 & first 2", type: "Lotto", minBet: 5, maxBet: 300, image: "/img/pick3first2.jpeg" },
-    ];
-  
   const liveStreams = [
     { id: 1, title: "[LIVE] PCSO 2:00 PM Lotto Draw",live: true, viewers: 1243, streamer: "[Live] PCSO Lotto Draw", image: "https://www.youtube.com/embed/pO0BDYTq7zw?si=22s1k5ePuyKvgsy5" },
     { id: 2, title: "PCSO 2:00 PM Lotto Draw - September 17, 2024",live:false, viewers: 876, streamer: "PCSO Lotto Draw - September 17, 2024", image: "https://www.youtube.com/embed/-V27j5M_GNM?si=gZY1bCopPs6xKCMa" },
@@ -315,6 +315,20 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             </div>
             <Button className="bg-green-500 hover:bg-green-600" disabled>Cash Out</Button>
           </div>
+
+          {agent==="yes" && (
+              <>
+              <br/>
+              <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
+                <div>
+                  <p className="text-gray-500 text-sm">Betting Clients</p>
+                  <p className="text-2xl font-bold text-gray-800">{clients}</p>
+                </div>
+                <Button className="bg-green-500 hover:bg-green-600" >Manage</Button>
+              </div>
+              </>
+            )
+          }
         </div>
 
         
@@ -400,6 +414,12 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                             -moz-appearance: textfield;
                           }
                         `}</style>
+                        {agent === "yes" && (
+                          <>
+                          <p className="text-sm text-blue-600">You have 20% off based on commission</p>
+                          <p style={{color: 'blue'}} className="font-small mb-2">You will pay only : {formatPeso(cashInAmount - (cashInAmount * 0.2))}</p>
+                          </>
+                        )}
                       </div>
                     </div>
                     <Button 
@@ -641,12 +661,12 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           >
             Security
           </button>
-          <button 
+          {/* <button 
             className={`flex-1 py-3 font-medium text-sm ${activeTab === 'payment' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'}`}
             onClick={() => setActiveTab('payment')}
           >
             Payment
-          </button>
+          </button> */}
         </div>
         
         <div className="p-4">

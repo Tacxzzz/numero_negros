@@ -108,7 +108,7 @@ useEffect(() => {
       handleUpdate();
   }, [gameId]);
   
- 
+  
   
   const filteredDraws = filter === 'all' 
     ? betsData 
@@ -117,6 +117,8 @@ useEffect(() => {
     const handlePlayGame = (drawId, gameType ) => {
       navigate(`/game/${gameId}/${gameType}/${drawId}`);
     };
+
+
 
   if (!gameData) {
     return (

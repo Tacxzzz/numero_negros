@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import { useUser } from "./UserContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { confirmBet, fetchUserData, getDrawByID, getDrawsByID, getGameByID, getGameTypeByID } from '@/lib/apiCalls';
+import { confirmBet, fetchUserData, getDrawByID, getDrawsByID, getGameByID, getGameTypeByID, getGameTypes } from '@/lib/apiCalls';
 import CountdownTimer from './CountdownTimer';
 import { checkBettingTime, formatPeso } from '@/lib/utils';
 
@@ -33,8 +33,25 @@ export function GamePage() {
   const [gameData, setGameData] = useState<any[]>([]);
   const [gameTypeData, setGameTypeData] = useState<any[]>([]);
   const [gameDrawData, setGameDrawData] = useState<any[]>([]);
+  const [gameTypesData, setGameTypesData] = useState<any[]>([]);
+  const [gameDrawsData, setGameDrawsData] = useState<any[]>([]);
 
   const [loading, setLoading] = useState(true);
+
+  const [selectedGameType, setSelectedGameType] = useState("");
+  const [selectedDraw, setSelectedDraw] = useState("");
+
+  const gameTypeOptions = gameTypesData.map((type) => ({
+    id: type.id,
+    name: type.game_type,
+  }));
+
+  const gameDrawOptions = gameDrawsData.map((type) => ({
+    id: type.id,
+    date: type.date,
+    time: type.time,
+  }));
+  
 
   const handleTileClick = (newScore: string) => {
     const updatedScores = [...scores];
@@ -45,8 +62,32 @@ export function GamePage() {
   };
 
 
+  useEffect(() => {
+    if (gameId && selectedDraw && selectedGameType) {
+      const handleUpdate = async () => {
+        
+        const dataType = await getGameTypeByID(selectedGameType);
+        setGameTypeData(dataType);
+        const dataDraw = await getDrawByID(selectedDraw);
+        setGameDrawData(dataDraw);
+        setSelectedGameType(dataType[0].id);
+        setSelectedDraw(dataDraw[0].id);
+        const withinBettingTime = checkBettingTime(dataDraw[0].date, dataDraw[0].time, dataDraw[0].deadline);
 
- 
+        if (!withinBettingTime) {
+          alert("Betting time is over! Please wait for the next draw.");
+          navigate(`/game-history/${gameId}`);
+          return;
+        }
+        setCurrentIndex(0);
+        setScores(Array.from({ length: digits }, () => ""));
+        navigate(`/game/${gameId}/${selectedGameType}/${selectedDraw}`, { replace: true });
+        setLoading(false);
+      }
+
+      handleUpdate();
+    }
+  }, [selectedDraw, selectedGameType, navigate, gameId]);
 
   useEffect(() => {
       if (userID) {
@@ -56,17 +97,20 @@ export function GamePage() {
 
           const data = await getGameByID(gameId);
           setGameData(data);
-          console.log(data[0].range_start);
           setLengthStart(data[0].range_start);
           setLengthChoice(data[0].range_end);
           setDigits(data[0].num_digits);
           setScores(Array.from({ length: data[0].num_digits }, () => ""));
+          const dataTypes = await getGameTypes(gameId);
+          setGameTypesData(dataTypes);
+          const dataDraws = await getDrawsByID(gameId);
+          setGameDrawsData(dataDraws);
           const dataType = await getGameTypeByID(gameType);
           setGameTypeData(dataType);
-
           const dataDraw = await getDrawByID(drawId);
           setGameDrawData(dataDraw);
-
+          setSelectedGameType(dataType[0].id);
+          setSelectedDraw(dataDraw[0].id);
           const withinBettingTime = checkBettingTime(dataDraw[0].date, dataDraw[0].time, dataDraw[0].deadline);
 
           if (!withinBettingTime) {
@@ -80,6 +124,8 @@ export function GamePage() {
         };
         handleUpdate();
       }
+
+      
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userID]);
 
@@ -130,6 +176,8 @@ const hasTwoMatchingScores = (scores: string[]) => {
   // Check if any value appears exactly 2 times
   return Object.values(countMap).includes(2);
 };
+
+
 
 
     if (loading) {
@@ -202,8 +250,87 @@ const hasTwoMatchingScores = (scores: string[]) => {
         
             {/* Action buttons */}
             <div className="relative z-10 p-4 flex flex-col items-center gap-4">
-            <h4>{gameData[0]?.name} {gameTypeData[0]?.game_type}</h4>
-            
+            <div className="relative z-10 p-4 flex flex-col items-center gap-4">
+  {/* Game Title and Info */}
+  <h4 className="text-lg sm:text-xl font-bold text-gray-800">
+    {gameData[0]?.name} 
+  </h4>
+            {/* Stylish Game Type Dropdown */}
+  <div className="w-full max-w-xs">
+    <label
+      htmlFor="gameTypeDropdown"
+      className="block text-sm font-medium text-gray-700 mb-2"
+    >
+      Select Type:
+    </label>
+    <select
+      id="gameTypeDropdown"
+      value={selectedGameType || gameTypeData[0].id || ""}
+      onChange={(e) => {
+        const selectedValue = e.target.value;
+        setSelectedGameType(selectedValue);
+        setLoading(true);
+      }}
+      className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+    >
+      {gameTypeOptions.map((type) => (
+        <option 
+        key={type.id} 
+        value={type.id}
+        selected={type.id === gameTypeData[0].id}
+        >
+          {type.name}
+        </option>
+      ))}
+    </select>
+    <br/><br/>
+     <label
+      htmlFor="gameTypeDropdown"
+      className="block text-sm font-medium text-gray-700 mb-2"
+    >
+      Select Draw:
+    </label>
+    <select
+      id="gameTypeDropdowns"
+      value={selectedDraw || gameDrawData[0]?.id || ""}
+      onChange={(e) => {
+        const selectedValue = e.target.value;
+        setSelectedDraw(selectedValue);
+        setLoading(true);
+      }}
+      className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+    >
+      {gameDrawOptions.map((draw) => (
+        <option 
+        key={draw.id} 
+        value={draw.id}
+        selected={draw.id === (gameDrawData[0]?.id)}
+        >
+           {draw.date} {draw.time}
+        </option>
+      ))}
+    </select> 
+  </div>
+  <h4 className="text-sm sm:text-base text-gray-600">
+    
+  </h4>
+
+  {/* Countdown Timer */}
+  <p className="text-green-500 text-sm sm:text-base">
+    Time left:{" "}
+    <CountdownTimer
+      date={gameDrawData[0]?.date}
+      time={gameDrawData[0]?.time}
+      cutoffMinutes={gameDrawData[0]?.deadline}
+    />
+  </p>
+
+  
+</div>
+
+
+
+           
               <div className="flex items-center gap-4">
                 
                
@@ -246,6 +373,8 @@ const hasTwoMatchingScores = (scores: string[]) => {
                       </h4>
                       <br/>
                       <h4>{gameData[0]?.name} {gameTypeData[0]?.game_type}</h4>
+                      <h4>{gameDrawData[0]?.date} {gameDrawData[0]?.time}</h4>
+                      <br/>
                       <h4>Bet : {formatPeso(gameTypeData[0]?.bet)}<br/>Winnings : {formatPeso(gameTypeData[0]?.jackpot)}</h4>
                       <p className="text-green-500 text-sm sm:text-base">
                         Time left: <CountdownTimer date={gameDrawData[0]?.date} time={gameDrawData[0]?.time} cutoffMinutes={gameDrawData[0]?.deadline} />

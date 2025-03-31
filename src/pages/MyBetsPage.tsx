@@ -341,8 +341,9 @@ function BetsTable({ bets, navigate }: { bets: any[], navigate: (path: string) =
             <TableHead>Bet Combination</TableHead>
             <TableHead className="text-right">Bet Amount</TableHead>
             <TableHead className="text-right">Prize</TableHead>
-            
+            <TableHead>From Bet Client</TableHead>
             <TableHead>Status</TableHead>
+            
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -367,7 +368,7 @@ function BetsTable({ bets, navigate }: { bets: any[], navigate: (path: string) =
               <TableCell >{bet.bets}</TableCell>
               <TableCell className="text-right">{formatPeso(bet.bet)}</TableCell>
               <TableCell className="text-right">{formatPeso(bet.jackpot)}</TableCell>
-              
+              <TableCell>-</TableCell>
               <TableCell>
                 <Badge 
                   className={
@@ -381,6 +382,7 @@ function BetsTable({ bets, navigate }: { bets: any[], navigate: (path: string) =
                   {bet.status === 'win' ? 'Win' : bet.status === 'loss' ? 'Loss' : 'Pending'}
                 </Badge>
               </TableCell>
+              
               {/* <TableCell>
                 <Button 
                   variant="ghost" 

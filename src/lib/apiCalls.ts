@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Agent } from "http";
 
 const API_URL = import.meta.env.VITE_DATABASE_URL;
 
@@ -140,14 +141,15 @@ export const fetchUserData = async (id: string) => {
         mobile: userData.mobile ?? "",
         referral: userData.referral ?? "",
         status: userData.status ?? "pending",
+        agent: userData.agent ?? "",
       };
     } else {
       console.warn("User data is empty or invalid.");
-      return { balance: 0,mobile: "",referral: "", status: "none" };
+      return { balance: 0,mobile: "",referral: "", status: "none", agent: "" };
     }
   } catch (error) {
     console.error("Failed to fetch user data:", error);
-    return { balance: 0,mobile: "",referral: "", status: "none" };
+    return { balance: 0,mobile: "",referral: "", status: "none", agent: "" };
   }
 };
 
@@ -383,5 +385,27 @@ export const checkCurrentBetsTotal = async (draw_id: string) => {
   } catch (error) {
     console.error("Failed to send remittance:", error);
     return { authenticated: false, totalBets: "" };
+  }
+};
+
+
+
+export const getMyBetClientsCount = async (userID: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getMyBetClientsCount`, {userID });
+
+    if (response.data && response.data.authenticated) {
+      const userData = response.data;
+      return {
+        authenticated: userData.authenticated,
+        countClients: userData.countClients,
+      };
+    } else {
+      console.warn("User data is empty or invalid.");
+      return { authenticated: false, countClients: '0' };
+    }
+  } catch (error) {
+    console.error("Failed to send remittance:", error);
+    return { authenticated: false, countClients: '0' };
   }
 };
