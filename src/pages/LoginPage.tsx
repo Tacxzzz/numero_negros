@@ -13,7 +13,19 @@ export function LoginPage() {
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
 
+
+  useEffect(() => {
+    const rememberedEmail = localStorage.getItem("rememberedEmail");
+    const rememberedPassword = localStorage.getItem("rememberedPassword");
+
+    if (rememberedEmail && rememberedPassword) {
+      setMobile(rememberedEmail);
+      setPassword(rememberedPassword);
+      setRememberMe(true);
+    }
+  }, []);
 
   useEffect(() => {
     // Check if user is already logged in
@@ -34,6 +46,15 @@ export function LoginPage() {
       return;
     }
     setUserID(data.userID);
+    if (rememberMe) {
+      // ✅ Save to localStorage if "Remember Me" is checked
+      localStorage.setItem("rememberedEmail", mobile);
+      localStorage.setItem("rememberedPassword", password);
+    } else {
+      // ❌ Clear remembered data if "Remember Me" is unchecked
+      localStorage.removeItem("rememberedEmail");
+      localStorage.removeItem("rememberedPassword");
+    }
     localStorage.setItem('authToken', 'user_authenticated'); // Store token
     navigate('/dashboard'); // Redirect to dashboard
     
@@ -97,10 +118,18 @@ export function LoginPage() {
                 />
               </div>
               
-              <div className="flex items-center space-x-2">
-                <Checkbox id="remember" />
-                <label htmlFor="remember" className="text-sm text-gray-600">Remember me</label>
-              </div>
+              <div className="flex items-center space-x-2 mb-4">
+            <input
+              type="checkbox"
+              id="remember"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              className="w-4 h-4 text-pink-500 border-gray-300 rounded focus:ring-pink-500"
+            />
+            <label htmlFor="remember" className="text-sm text-gray-600">
+              Remember me
+            </label>
+          </div>
               
               <Button 
                 type="submit" 
