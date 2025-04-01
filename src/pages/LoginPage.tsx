@@ -6,10 +6,12 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useUser } from "./UserContext";
 import { loginAccount } from '@/lib/apiCalls';
+import { useClient } from "./ClientContext";
 
 export function LoginPage() {
   const navigate = useNavigate();
   const { setUserID } = useUser();
+  const { setClientId } = useClient();
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -31,6 +33,7 @@ export function LoginPage() {
     // Check if user is already logged in
     const token = localStorage.getItem('authToken'); // Replace 'authToken' with your actual storage key
     if (token) {
+      
       navigate('/dashboard'); // Redirect to dashboard if token exists
     }
   }, [navigate]);
@@ -55,6 +58,7 @@ export function LoginPage() {
       localStorage.removeItem("rememberedEmail");
       localStorage.removeItem("rememberedPassword");
     }
+    setClientId(null);
     localStorage.setItem('authToken', 'user_authenticated'); // Store token
     navigate('/dashboard'); // Redirect to dashboard
     
