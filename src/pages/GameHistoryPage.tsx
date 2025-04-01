@@ -307,6 +307,7 @@ useEffect(() => {
                   <TableHead >Bet Amount</TableHead>
                   <TableHead >Bet Combination</TableHead>
                   <TableHead >Prize</TableHead>
+                  <TableHead >From Bet Client</TableHead>
                   <TableHead>Status</TableHead>
                 </TableRow>
               </TableHeader>
@@ -327,6 +328,7 @@ useEffect(() => {
                     <TableCell>{formatPeso(bet.bet)}</TableCell>
                     <TableCell>{bet.bets}</TableCell>
                     <TableCell>{formatPeso(bet.jackpot)}</TableCell>
+                    <TableCell>{bet.bakas_full_name === "N/A" ? "-" : bet.bakas_full_name}</TableCell>
                     <TableCell>
                       <Badge 
                         className={

@@ -368,7 +368,8 @@ function BetsTable({ bets, navigate }: { bets: any[], navigate: (path: string) =
               <TableCell >{bet.bets}</TableCell>
               <TableCell className="text-right">{formatPeso(bet.bet)}</TableCell>
               <TableCell className="text-right">{formatPeso(bet.jackpot)}</TableCell>
-              <TableCell>-</TableCell>
+              <TableCell>{bet.bakas_full_name === "N/A" ? "-" : bet.bakas_full_name}</TableCell>
+
               <TableCell>
                 <Badge 
                   className={
