@@ -4,12 +4,12 @@ import { useNavigate } from "react-router-dom";
 export const PaymentSuccess = () => {
   const navigate = useNavigate();
 
-  useEffect(() => {
+  /* useEffect(() => {
     // Redirect to dashboard after 2 seconds
     setTimeout(() => {
       navigate("/dashboard");
     }, 2000);
-  }, [navigate]);
+  }, [navigate]); */
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
