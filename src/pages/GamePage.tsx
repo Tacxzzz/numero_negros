@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import { useUser } from "./UserContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { confirmBet, fetchUserData, getDrawByID, getDrawsByID, getGameByID, getGameTypeByID, getGameTypes } from '@/lib/apiCalls';
+import { confirmBet, fetchUserData, getDrawByID, getDrawsByID, getGameByID, getGameTypeByID, getGameTypes, readMyFavorite, saveFavorite } from '@/lib/apiCalls';
 import CountdownTimer from './CountdownTimer';
 import { checkBettingTime, formatPeso } from '@/lib/utils';
 
@@ -25,6 +25,7 @@ export function GamePage() {
   const [lengthChoice, setLengthChoice] = useState(0); 
   const [digits, setDigits] = useState(0); 
   const [scores, setScores] = useState<string[]>([]);
+  const [favorites, setFavorites] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const [starModalOpen, setStarModalOpen] = useState(false);
@@ -94,7 +95,11 @@ export function GamePage() {
         const handleUpdate = async () => {
           const userData = await fetchUserData(userID);
           setBalance(userData.balance);
-
+          const dataFave = await readMyFavorite(userID,gameId);
+          if(dataFave.authenticated)
+          {
+            setFavorites(dataFave.bet.split("-"));
+          }
           const data = await getGameByID(gameId);
           setGameData(data);
           setLengthStart(data[0].range_start);
@@ -130,6 +135,84 @@ export function GamePage() {
     }, [userID]);
 
 
+    const handleLuckyPick = () => {
+      const min = Number(lengthStart);
+      const max = Number(lengthChoice);
+      console.log("Min:", min, "Max:", max);
+  
+      let randomScores: string[];
+      if (gameId === "2" || gameId === "3" ) {
+        if(gameType === "4" || gameType === "7")
+        {
+            // 3D Rambol: 2 identical numbers, 1 distinct
+            const num1 = (Math.floor(Math.random() * (max - min + 1)) + min).toString();
+            const num2 = (Math.floor(Math.random() * (max - min + 1)) + min).toString();
+            let num3 = num1; // Start with a duplicate
+
+            // Ensure num3 is distinct from num1 and num2
+            while (num3 === num1) {
+              num3 = (Math.floor(Math.random() * (max - min + 1)) + min).toString();
+            }
+
+            randomScores = [num1, num1, num3]; // Two identical, one distinct
+        }
+        else if(gameType === "5" || gameType === "8")
+        {
+            const uniqueNumbers = new Set<string>();
+
+            while (uniqueNumbers.size < 3) {
+              uniqueNumbers.add((Math.floor(Math.random() * (max - min + 1)) + min).toString());
+            }
+
+            randomScores = Array.from(uniqueNumbers);
+        }
+        else {
+          // Default: Random numbers as usual
+          randomScores = Array.from({ length: scores.length }, () =>
+            (Math.floor(Math.random() * (max - min + 1)) + min).toString()
+          );
+      }
+      }
+      else if(Number(gameId)>4) {
+        const uniqueNumbers = new Set<string>();
+
+            while (uniqueNumbers.size < 3) {
+              uniqueNumbers.add((Math.floor(Math.random() * (max - min + 1)) + min).toString());
+            }
+
+            randomScores = Array.from(uniqueNumbers);
+    } 
+        else {
+            // Default: Random numbers as usual
+            randomScores = Array.from({ length: scores.length }, () =>
+              (Math.floor(Math.random() * (max - min + 1)) + min).toString()
+            );
+        }
+
+          console.log("Generated Scores:", randomScores);
+          setScores(randomScores);
+    };
+
+
+    const saveFavoriteClicked = async () => {
+      const scoreString = scores.filter((score) => score !== "").join("-");
+      const data = await saveFavorite(userID,gameId,scoreString);
+      
+      if(data.authenticated)
+      {
+        const dataFave = await readMyFavorite(userID,gameId);
+        if(dataFave.authenticated)
+        {
+          setFavorites(dataFave.bet.split("-"));
+          alert("Combination saved");
+        }
+        
+      }
+    };
+
+    const handleSaveCombination = async () => {
+      setScores(favorites);
+    };
     const handleBetConfirm = async () => {
       setPlayModalOpen(false);
       setLoading(true);
@@ -177,6 +260,10 @@ const hasTwoMatchingScores = (scores: string[]) => {
   return Object.values(countMap).includes(2);
 };
 
+const hasAllDistinctScores = (scores: string[]) => {
+  const uniqueScores = new Set(scores.filter(score => score.trim() !== ""));
+  return uniqueScores.size === scores.length;
+};
 
 
 
@@ -255,6 +342,91 @@ const hasTwoMatchingScores = (scores: string[]) => {
   <h4 className="text-lg sm:text-xl font-bold text-gray-800">
     {gameData[0]?.name} 
   </h4>
+
+  <div className="flex justify-center space-x-4">
+        <button 
+          onClick={handleLuckyPick} 
+          disabled={!gameId || !gameType} 
+          className={`px-4 py-2 rounded-lg shadow-md text-white 
+            ${!gameId || !gameType ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-600"}`}>
+          🎲
+        </button>
+        {favorites?.length > 0 && (
+          <button 
+            onClick={handleSaveCombination}
+            disabled={
+              !(
+                favorites.every((favorites) => favorites.trim() !== "") &&
+                userID.trim() !== "" &&
+                (
+                  (gameId === "2" || gameId === "3") &&
+                  (gameType === "4" || gameType === "7")
+                    ? hasTwoMatchingScores(favorites)
+                    : true
+                )
+                &&
+                (
+                  (gameId === "2" || gameId === "3") &&
+                  (gameType === "5" || gameType === "8")
+                    ? hasAllDistinctScores(favorites)
+                    : true
+                )
+              )
+            } 
+            className={`${
+              favorites.every((favorites) => favorites.trim() !== "") &&
+              userID.trim() !== "" &&
+              (
+                (gameId === "2" || gameId === "3") &&
+                (gameType === "4" || gameType === "7")
+                  ? hasTwoMatchingScores(favorites)
+                  : true
+              )
+              &&
+                (
+                  (gameId === "2" || gameId === "3") &&
+                  (gameType === "5" || gameType === "8")
+                    ? hasAllDistinctScores(favorites)
+                    : true
+                )
+                ? "px-4 py-2 bg-blue-500 hover:bg-blue-600"
+                : "px-4 py-2 bg-gray-300 cursor-not-allowed"
+            }
+            text-white rounded-lg shadow-md `}>
+            ⭐ {favorites.filter(fav => fav !== "").join("-")}
+          </button>
+        )}
+
+        <button 
+          onClick={saveFavoriteClicked} 
+          disabled={
+            !(
+              scores.every((score) => score.trim() !== "") &&
+              userID.trim() !== "" &&
+              (
+                (gameId === "2" || gameId === "3") &&
+                (gameType === "4" || gameType === "7")
+                  ? hasTwoMatchingScores(scores)
+                  : true
+              )
+            )
+          }
+          className={`${
+            scores.every((score) => score.trim() !== "") &&
+            userID.trim() !== "" &&
+            (
+              (gameId === "2" || gameId === "3") &&
+              (gameType === "4" || gameType === "7")
+                ? hasTwoMatchingScores(scores)
+                : true
+            )
+              ? "px-4 py-2 bg-blue-500 hover:bg-blue-600"
+              : "px-4 py-2 bg-gray-300 cursor-not-allowed"
+          }
+          text-white rounded-lg shadow-md `}>
+          💾
+        </button>
+      </div>
             {/* Stylish Game Type Dropdown */}
   <div className="w-full max-w-xs">
     <label

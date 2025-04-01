@@ -409,3 +409,44 @@ export const getMyBetClientsCount = async (userID: string) => {
     return { authenticated: false, countClients: '0' };
   }
 };
+
+
+
+export const saveFavorite = async (userID: string, game_id: string, bet:string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/saveFavorite`, {userID,game_id,bet });
+
+    if (response.data && response.data.authenticated) {
+      const userData = response.data;
+      return {
+        authenticated: userData.authenticated,
+      };
+    } else {
+      console.warn("User data is empty or invalid.");
+      return { authenticated: false };
+    }
+  } catch (error) {
+    console.error("Failed to send remittance:", error);
+    return { authenticated: false };
+  }
+};
+
+export const readMyFavorite = async (userID: string, game_id: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/readMyFavorite`, {userID,game_id });
+
+    if (response.data && response.data.authenticated) {
+      const userData = response.data;
+      return {
+        authenticated: userData.authenticated,
+        bet: userData.bet,
+      };
+    } else {
+      console.warn("User data is empty or invalid.");
+      return { authenticated: false,bet: '' };
+    }
+  } catch (error) {
+    console.error("Failed to send remittance:", error);
+    return { authenticated: false,bet: '' };
+  }
+};
