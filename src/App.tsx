@@ -10,6 +10,7 @@ import { TournamentsPage } from './pages/TournamentsPage';
 import { SupportPage } from './pages/SupportPage';
 import { MyTransactionsPage } from './pages/MyTransactionsPage';
 import { DrawHistoryPage } from "./pages/DrawHistoryPage";
+import { PaymentSuccess } from "./pages/PaymentSuccess";
 
 const isAuthenticated = () => {
   const token = localStorage.getItem("authToken");
@@ -59,6 +60,7 @@ function App() {
           <Route path="/support" element={<SupportPage />} />
           <Route path="/transactions" element={<MyTransactionsPage />} />
           <Route path="/drawhistory" element={<DrawHistoryPage />} />
+          <Route path="/payment-success" element={<ProtectedRoute element={<PaymentSuccess />} />} />
         </Routes>
       </Router>
     </UserProvider>
