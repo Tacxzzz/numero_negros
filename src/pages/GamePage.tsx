@@ -9,13 +9,16 @@ import { useParams } from "react-router-dom";
 import { useUser } from "./UserContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { confirmBet, fetchUserData, getDrawByID, getDrawsByID, getGameByID, getGameTypeByID, getGameTypes, readMyFavorite, saveFavorite } from '@/lib/apiCalls';
+import { confirmBet, fetchUserData, getBetClientData, getDrawByID, getDrawsByID, getGameByID, getGameTypeByID, getGameTypes, readMyFavorite, saveFavorite } from '@/lib/apiCalls';
 import CountdownTimer from './CountdownTimer';
 import { checkBettingTime, formatPeso } from '@/lib/utils';
+import { useClient } from "./ClientContext";
 
 export function GamePage() {
   const navigate = useNavigate();
   const { setUserID,userID } = useUser();
+  const { clientId } = useClient();
+  const [clientFullName, setClientFullName] = useState("");
   console.log(userID);
   const { gameId, gameType, drawId } = useParams();
   const [balance, setBalance] = useState(10);
@@ -99,6 +102,12 @@ export function GamePage() {
           if(dataFave.authenticated)
           {
             setFavorites(dataFave.bet.split("-"));
+          }
+
+          if(clientId)
+          {
+            const clientData = await getBetClientData(clientId);
+            setClientFullName(clientData.full_name);
           }
           const data = await getGameByID(gameId);
           setGameData(data);
@@ -219,6 +228,7 @@ export function GamePage() {
       const formData = new FormData();
       formData.append("draw_id", drawId);
       formData.append('userID', userID);
+      formData.append('clientID', clientId || "");  
       formData.append('game_type', gameType);
       formData.append('bets', scores.filter((score) => score !== "").join("-"));
       formData.append('jackpot', gameTypeData[0].jackpot);
@@ -429,7 +439,9 @@ const hasAllDistinctScores = (scores: string[]) => {
       </div>
             {/* Stylish Game Type Dropdown */}
   <div className="w-full max-w-xs">
-    <label
+    {gameTypeData[0].game_type!=="" &&(
+      <>
+      <label
       htmlFor="gameTypeDropdown"
       className="block text-sm font-medium text-gray-700 mb-2"
     >
@@ -456,6 +468,9 @@ const hasAllDistinctScores = (scores: string[]) => {
       ))}
     </select>
     <br/><br/>
+      </>
+    )}
+    
      <label
       htmlFor="gameTypeDropdown"
       className="block text-sm font-medium text-gray-700 mb-2"
@@ -497,7 +512,13 @@ const hasAllDistinctScores = (scores: string[]) => {
     />
   </p>
 
-  
+   {clientId && (
+    <>
+  <p className="text-red-500 text-sm sm:text-base">
+    Playing as : {clientFullName}
+  </p>
+  </>
+  )} 
 </div>
 
 
@@ -559,6 +580,16 @@ const hasAllDistinctScores = (scores: string[]) => {
                           Your Current Balance : {formatPeso(balance)}
                         </Label>
                       </div>
+
+                      {clientId && (
+                        <>
+                        <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg">
+                        <Label htmlFor="bet" className="text-pink-800 font-medium block mb-2">
+                        Playing as : {clientFullName}
+                        </Label>
+                      </div>
+                      </>
+                      )} 
                       
                       <Button 
                         className="w-full bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-600 hover:to-orange-600 text-white rounded-full py-6 text-lg font-bold"

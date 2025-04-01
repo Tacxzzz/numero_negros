@@ -11,6 +11,8 @@ import { SupportPage } from './pages/SupportPage';
 import { MyTransactionsPage } from './pages/MyTransactionsPage';
 import { DrawHistoryPage } from "./pages/DrawHistoryPage";
 import { PaymentSuccess } from "./pages/PaymentSuccess";
+import { BetClientsPage } from "./pages/BetClientsPage";
+import { ClientProvider } from "./pages/ClientContext";
 
 const isAuthenticated = () => {
   const token = localStorage.getItem("authToken");
@@ -40,6 +42,7 @@ function App() {
   console.log("App rendered"); // Confirm App mounts
   return (
     <UserProvider>
+      <ClientProvider>
       <Router>
         <Routes>
           <Route path="/" element={<LoginPage />} />
@@ -60,9 +63,11 @@ function App() {
           <Route path="/support" element={<SupportPage />} />
           <Route path="/transactions" element={<MyTransactionsPage />} />
           <Route path="/drawhistory" element={<DrawHistoryPage />} />
+          <Route path="/betclients" element={<BetClientsPage />} />
           <Route path="/payment-success" element={<ProtectedRoute element={<PaymentSuccess />} />} />
         </Routes>
       </Router>
+      </ClientProvider>
     </UserProvider>
   );
 }

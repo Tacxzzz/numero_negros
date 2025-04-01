@@ -20,18 +20,24 @@ import { FiCopy } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from "./UserContext";
-import { cashIn, fetchUserData, getGames, getMyBetClientsCount, getReferrals } from '@/lib/apiCalls';
+import { cashIn, fetchUserData, getBetClientData, getGames, getMyBetClientsCount, getReferrals } from '@/lib/apiCalls';
 import { formatPeso } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
+
+import { useClient } from "./ClientContext";
 
 interface SidebarProps {
   onLogout?: () => void;
 }
 export function Dashboard({ onLogout }: SidebarProps) {
+
   const navigate = useNavigate();
   const { setUserID,userID } = useUser();
+  const { clientId, setClientId } = useClient();
+  const [clientFullName, setClientFullName] = useState("");
   console.log(userID);
+  console.log("playing as : "+clientId);
   const [balance, setBalance] = useState(0);
   const [winnings, setWinnings] = useState(0);
   const [commissions, setCommissions] = useState(0);
@@ -59,6 +65,13 @@ export function Dashboard({ onLogout }: SidebarProps) {
         setStatus(data.status);
         setAgent(data.agent);
 
+        if(clientId)
+        {
+          const clientData = await getBetClientData(clientId);
+          setClientFullName(clientData.full_name);
+        }
+        
+
         const dataClients = await getMyBetClientsCount(userID);
         setClients(dataClients.countClients);
 
@@ -68,7 +81,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
       handleUpdate();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [userID]);
 
   // const handleCashInClick = () => {
   //   setShowSuccessModal(true);
@@ -116,6 +129,11 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   let value = parseFloat(e.target.value); // Convert to number, fallback to 0
   if (value > transLimit) value = transLimit; // Restrict maximum value
   setCashInAmount(value);
+  
+};
+
+const removePlayer = () => {
+  setClientId(null);
   
 };
 
@@ -344,9 +362,32 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                 <div>
                   <p className="text-gray-500 text-sm">Betting Clients</p>
                   <p className="text-2xl font-bold text-gray-800">{clients}</p>
+                  
                 </div>
-                <Button className="bg-green-500 hover:bg-green-600" >Manage</Button>
+                <Button
+                onClick={() => {
+                  navigate('/betclients');
+                }} 
+                className="bg-green-500 hover:bg-green-600"  >Manage</Button>
               </div>
+              {clientId && (
+                <>
+                <br/>
+                <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
+                  <div>
+                    
+                      <p className="text-gray-500 text-sm">Currently Playing as : </p>
+                      <p className="text-2xl font-bold text-gray-800">{clientFullName}</p>
+                    
+                  </div>
+                  <Button
+                  onClick={() => {
+                    removePlayer();
+                  }} 
+                  className="bg-red-500 hover:bg-red-600"  >REMOVE</Button>
+                </div>
+                </>
+              )}
               </>
             )
           }

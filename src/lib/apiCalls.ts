@@ -450,3 +450,101 @@ export const readMyFavorite = async (userID: string, game_id: string) => {
     return { authenticated: false,bet: '' };
   }
 };
+
+
+
+export const getMyBetClients = async (userID: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getMyBetClients`, {userID });
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch game types:", error);
+    return [];
+  }
+};
+
+
+
+
+export const addBetClients = async (
+  formData: FormData,
+) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/main/addBetClients`,
+      formData,
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    if (response.data) {
+
+      const userData = response.data;
+      return {
+        authenticated: userData.authenticated,
+      };
+
+    } else {
+      console.warn("User data is empty or invalid.");
+      return { authenticated: false };
+    }
+    
+  } catch (error) {
+    console.error("Failed to send remittance:", error);
+    return { authenticated: false };
+  }
+};
+
+
+export const updateBetClient = async (
+  formData: FormData,
+) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/main/updateBetClient`,
+      formData,
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    if (response.data) {
+
+      const userData = response.data;
+      return {
+        authenticated: userData.authenticated,
+      };
+
+    } else {
+      console.warn("User data is empty or invalid.");
+      return { authenticated: false };
+    }
+    
+  } catch (error) {
+    console.error("Failed to send remittance:", error);
+    return { authenticated: false };
+  }
+};
+
+
+
+export const getBetClientData = async (id: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getBetClientData`, { clientID: id });
+
+    if (response.data && response.data.length > 0) {
+      const userData = response.data[0];
+      return {
+        full_name: userData.full_name ?? "",
+      };
+    } else {
+      console.warn("User data is empty or invalid.");
+      return { balance: 0,mobile: "",referral: "", status: "none", agent: "" };
+    }
+  } catch (error) {
+    console.error("Failed to fetch user data:", error);
+    return { balance: 0,mobile: "",referral: "", status: "none", agent: "" };
+  }
+};
