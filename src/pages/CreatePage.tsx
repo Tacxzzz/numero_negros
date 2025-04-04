@@ -16,6 +16,7 @@ export function CreatePage() {
   const [error, setError] = useState("");
   const [otp, setOtp] = useState("");
   const [showOtp, setShowOtp] = useState(false);  
+  const [isLoading, setIsLoading] = useState(false);
   
   const params = new URLSearchParams(window.location.search);
   const encodedData = params.get("data"); // Get encoded data
@@ -43,6 +44,8 @@ export function CreatePage() {
     }
 
 
+    setIsLoading(true);
+
     const formData = new FormData();
     formData.append("mobile", mobile);
     formData.append('password', password);
@@ -50,6 +53,7 @@ export function CreatePage() {
     const data = await createAccount(formData);
     if(!data.authenticated){
       setError("An error occurred. Please try again.");
+      setIsLoading(false);
       return;
     }
     setUserID(data.userID);
@@ -150,8 +154,8 @@ export function CreatePage() {
                   />
                 </div>
 
-                <Button type="submit" className="w-full bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-xl py-6 text-lg font-bold">
-                  Send OTP
+                <Button disabled={isLoading} type="submit" className="w-full bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-xl py-6 text-lg font-bold">
+                {isLoading ? "Sending OTP..." : "Send OTP"}
                 </Button>
               </form>
             ) : (

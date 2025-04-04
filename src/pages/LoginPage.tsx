@@ -20,6 +20,8 @@ export function LoginPage() {
   // New state hooks
   const [showOtpInput, setShowOtpInput] = useState(false);
   const [otp, setOtp] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
 
 
 
@@ -44,6 +46,8 @@ export function LoginPage() {
   }, [navigate]);
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    setIsLoading(true);
     
     const formData = new FormData();
     formData.append("mobile", mobile);
@@ -51,6 +55,7 @@ export function LoginPage() {
     const data = await loginAccount(formData);
     if(!data.authenticated){
       setError("Invalid mobile number or password.");
+      setIsLoading(false);
       return;
     }
     setShowOtpInput(true);
@@ -61,7 +66,7 @@ export function LoginPage() {
   const handleOtpVerify = async (e: React.FormEvent) => {
     e.preventDefault();
   
-  
+    setError("");
     const data = await verifyOTPLogin(mobile, otp);
   
     if (!data.authenticated) {
@@ -160,10 +165,13 @@ export function LoginPage() {
               
               <Button 
                 type="submit" 
+                disabled={isLoading}
                 className="w-full bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-600 hover:to-orange-600 text-white rounded-xl py-6 text-lg font-bold"
               >
-                Sign In
+                {isLoading ? "Logging in..." : "Sign in"}
               </Button>
+
+             
             </form>
             ) : (
             // 👇 OTP input form
