@@ -30,6 +30,99 @@ export const createAccount = async (
   }
 };
 
+export const updatePassword = async (
+  userID: string, password: string , newPassword: string
+) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/updatePassword`, { userID, password, newPassword });
+
+    if (response.data && response.data.authenticated) {
+      const userData = response.data;
+      return {
+        authenticated: userData.authenticated
+      };
+    } else {
+      console.warn("User data is empty or invalid.");
+      return { authenticated: false };
+    }
+    
+  } catch (error) {
+    console.error("Failed to send remittance:", error);
+    return {  authenticated: false };
+  }
+};
+
+
+export const verifyOTP = async (
+  mobile: string, otp: string 
+) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/verifyOTP`, { mobile, otp });
+
+    if (response.data) {
+      if(response.data.authenticated)
+      {
+        const userData = response.data;
+        return {
+          authenticated: userData.authenticated
+        };
+      }
+      else
+      {
+        const userData = response.data;
+        return {
+          authenticated: userData.authenticated,
+          message: userData.message
+        };
+      }
+      
+    } else {
+      console.warn("User data is empty or invalid.");
+      return { authenticated: false, message: "no response on the api" };
+    }
+    
+  } catch (error) {
+    console.error("Failed to send remittance:", error);
+    return {  authenticated: false,message: "no response on the api" };
+  }
+};
+
+
+
+export const verifyOTPLogin = async (
+  mobile: string, otp: string 
+) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/verifyOTPLogin`, { mobile, otp });
+
+    if (response.data) {
+      if(response.data.authenticated)
+      {
+        const userData = response.data;
+        return {
+          authenticated: userData.authenticated,
+          userID: userData.userID
+        };
+      }
+      else
+      {
+        const userData = response.data;
+        return {
+          authenticated: userData.authenticated,
+          message: userData.message
+        };
+      }
+      
+    } else {
+      console.warn("User data is empty or invalid.");
+      return { authenticated: false, message: "no response on the api" };
+    }
+    
+  } catch (error) {
+    console.error("Failed to send remittance:", error);
+    return {  authenticated: false,message: "no response on the api" };
+  }
+};
 
 
 

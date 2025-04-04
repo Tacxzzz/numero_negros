@@ -20,7 +20,7 @@ import { FiCopy } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from "./UserContext";
-import { cashIn, fetchUserData, getBetClientData, getGames, getMyBetClientsCount, getReferrals } from '@/lib/apiCalls';
+import { cashIn, fetchUserData, getBetClientData, getGames, getMyBetClientsCount, getReferrals, updatePassword } from '@/lib/apiCalls';
 import { formatPeso } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -52,6 +52,8 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const [transLimit, setTransLimit] = useState(5000);
   const [cashInAmount, setCashInAmount] = useState(0);
   const [popularGames, setPopularGames] = useState<any[]>([]);
+
+  
 
   useEffect(() => {
     if (userID) {
@@ -140,7 +142,7 @@ const removePlayer = () => {
 
   const liveStreams = [
     { id: 1, title: "[LIVE] PCSO 2:00 PM Lotto Draw",live: true, viewers: 1243, streamer: "[Live] PCSO Lotto Draw", image: "https://www.youtube.com/embed/pO0BDYTq7zw?si=22s1k5ePuyKvgsy5" },
-    { id: 2, title: "PCSO 2:00 PM Lotto Draw - September 17, 2024",live:false, viewers: 876, streamer: "PCSO Lotto Draw - September 17, 2024", image: "https://www.youtube.com/embed/-V27j5M_GNM?si=gZY1bCopPs6xKCMa" },
+   /*  { id: 2, title: "PCSO 2:00 PM Lotto Draw - September 17, 2024",live:false, viewers: 876, streamer: "PCSO Lotto Draw - September 17, 2024", image: "https://www.youtube.com/embed/-V27j5M_GNM?si=gZY1bCopPs6xKCMa" }, */
   ];
   
   return (
@@ -401,6 +403,32 @@ const removePlayer = () => {
             {liveStreams.map(stream => (
               <LiveStream key={stream.id} stream={stream} />
             ))}
+
+
+            <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                  <div className="relative">
+                  <iframe
+                    src="https://pisogame.com/pages/home/download/android/index?code=VI6KxuLZb"
+                    className="w-full h-48 object-cover"
+                    allowFullScreen
+                  ></iframe>
+                    
+                  </div>
+                  <div className="p-3 flex justify-between items-center">
+                  <div className="flex items-center">
+                  </div>
+        
+                  
+                  <Button 
+                    size="sm" 
+                    className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
+                    onClick={() => window.open('https://pisogame.com/pages/home/download/android/index?code=VI6KxuLZb', '_blank')}
+                  >
+                    Play
+                  </Button>
+                </div>
+                  
+                </div>
           </div>
         </section>
         
@@ -485,7 +513,8 @@ const removePlayer = () => {
                       </div>
                     </div>
                     <Button 
-                    disabled={!cashInAmount} 
+                    //disabled={!cashInAmount} 
+                    disabled
                     type="button"
                      variant="outline" 
                      size="sm"
@@ -651,6 +680,62 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
   const encodedParams = btoa(`ref=${userID}&key=${randomKey}`); // Encode full params
 
   const referralLink = `${currentURL}/create-account?data=${encodedParams}`;
+
+
+
+  const [passFormData, setPassFormData] = useState({
+    password: "",
+    newPassword: "",
+    conPassword: ""
+  });
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const handleChangePass = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassFormData({
+      ...passFormData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handlePasswordUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    const { password, newPassword, conPassword } = passFormData;
+
+    if (!password || !newPassword || !conPassword) {
+      setError("All fields are required.");
+      return;
+    }
+
+    if (newPassword !== conPassword) {
+      setError("New passwords do not match.");
+      return;
+    }
+
+    try 
+    {
+      // Replace this with your actual API call
+      const res = await updatePassword(userID,password,newPassword);
+
+
+      if (res.authenticated) {
+        setSuccess("Password updated successfully.");
+        setPassFormData({ password: "", newPassword: "", conPassword: "" });
+      } 
+      else 
+      {
+        setError("Something went wrong. Try again");
+      }
+    } 
+    catch (err) 
+    {
+      setError("Failed to update password.");
+    }
+  };
   useEffect(() => {
     if (userID) {
       const handleUpdate = async () => {
@@ -693,6 +778,8 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   setCashInAmount(value);
   
 };
+
+
   
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -792,145 +879,53 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           )}
           
           {activeTab === 'security' && (
-            <div className="space-y-4">
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-                  <Input name='current_password' type="password" placeholder="••••••••" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-                  <Input name='password' type="password" placeholder="••••••••" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
-                  <Input name='con_password' type="password" placeholder="••••••••" />
-                </div>
-              </div>
-              
-              <div className="bg-gray-50 p-3 rounded-lg">
-                <h4 className="font-medium mb-2">Two-Factor Authentication</h4>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-600">Add an extra layer of security</p>
-                    <p className="text-xs text-gray-500">Currently: <span className="text-red-500">Disabled</span></p>
+            <>
+            <form onSubmit={handlePasswordUpdate}>
+                <div className="space-y-4">
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+                      <Input
+                        name="password"
+                        type="password"
+                        placeholder="••••••••"
+                        value={passFormData.password}
+                        onChange={handleChangePass}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                      <Input
+                        name="newPassword"
+                        type="password"
+                        placeholder="••••••••"
+                        value={passFormData.newPassword}
+                        onChange={handleChangePass}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+                      <Input
+                        name="conPassword"
+                        type="password"
+                        placeholder="••••••••"
+                        value={passFormData.conPassword}
+                        onChange={handleChangePass}
+                      />
+                    </div>
                   </div>
-                  <Button variant="outline" size="sm">Enable</Button>
+
+                  {error && <p className="text-sm text-red-500">{error}</p>}
+                  {success && <p className="text-sm text-green-500">{success}</p>}
+
+                  <Button type="submit" className="w-full">
+                    Update Security Settings
+                  </Button>
                 </div>
-              </div>
-              
-              <Button className="w-full">Update Security Settings</Button>
-            </div>
+              </form>
+            </>
           )}
           
-          {activeTab === 'payment' && (
-            <div className="space-y-4">
-
-              <div className="bg-gray-50 p-3 rounded-lg">
-                <h4 className="font-medium mb-2">Add Funds</h4>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between bg-white p-2 rounded border">
-                    <div className="flex items-center">
-                      <div>
-                        <input 
-                        type="number" 
-                        value={cashInAmount} 
-                        onChange={handleChange}
-                        className="border rounded p-1 text-sm w-full" 
-                        placeholder="Enter amount" 
-                        style={{ appearance: 'textfield' }}/>
-                        <style>{`
-                          input[type=number]::-webkit-outer-spin-button,
-                          input[type=number]::-webkit-inner-spin-button {
-                            -webkit-appearance: none;
-                            margin: 0;
-                          }
-                          input[type=number] {
-                            -moz-appearance: textfield;
-                          }
-                        `}</style>
-                      </div>
-                    </div>
-                    
-                    <Button 
-                    disabled={!cashInAmount} 
-                    type="button"
-                     variant="outline" 
-                     size="sm"
-                     onClick={cashInSubmit} 
-                     className="text-blue-500 bg-blue-100 hover:text-blue-700 hover:bg-green-50 rounded px-4 py-2">
-                      <label>Cash In</label>
-                    </Button>
-                  </div>
-                </div>
-              </div>
-
-
-              <div className="bg-gray-50 p-3 rounded-lg">
-                <h4 className="font-medium mb-2">Payment Methods</h4>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between bg-white p-2 rounded border">
-                    <div className="flex items-center">
-                      <div className="bg-blue-100 p-2 rounded mr-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600">
-                          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                          <line x1="1" y1="10" x2="23" y2="10"></line>
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm">GCASH ending in 4242</p>
-                      </div>
-                    </div>
-                    <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-700 hover:bg-red-50">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="3 6 5 6 21 6"></polyline>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                      </svg>
-                    </Button>
-                  </div>
-                </div>
-                <Button variant="outline" size="sm" className="mt-2 w-full">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                  </svg>
-                  Add Payment Method
-                </Button>
-              </div>
-
-              
-
-              
-              
-              <div className="bg-gray-50 p-3 rounded-lg">
-                <h4 className="font-medium mb-2">Transaction History</h4>
-                <div className="space-y-2">
-                  {/* <div className="flex items-center justify-between bg-white p-2 rounded border">
-                    <div>
-                      <p className="font-medium text-sm">Deposit</p>
-                      <p className="text-xs text-gray-500">May 15, 2023</p>
-                    </div>
-                    <p className="font-medium text-green-600">+$100.00</p>
-                  </div>
-                  <div className="flex items-center justify-between bg-white p-2 rounded border">
-                    <div>
-                      <p className="font-medium text-sm">Withdrawal</p>
-                      <p className="text-xs text-gray-500">May 10, 2023</p>
-                    </div>
-                    <p className="font-medium text-red-600">-$50.00</p>
-                  </div> */}
-                </div>
-                {/* <Button variant="outline" size="sm" className="mt-2 w-full" >
-                  View All Transactions
-                </Button> */}
-                <Link
-                  to="/transactions"
-                  className="inline-block w-full px-4 py-2 text-black font-semibold bg-white-300 hover:bg-gray-200 rounded shadow text-center">
-                  Transactions
-                </Link>
-              </div>
-            </div>
-          )}
         </div>
       </div>
       

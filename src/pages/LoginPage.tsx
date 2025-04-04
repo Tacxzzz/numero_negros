@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useUser } from "./UserContext";
-import { loginAccount } from '@/lib/apiCalls';
+import { loginAccount, verifyOTPLogin } from '@/lib/apiCalls';
 import { useClient } from "./ClientContext";
 
 export function LoginPage() {
@@ -16,6 +16,11 @@ export function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+
+  // New state hooks
+  const [showOtpInput, setShowOtpInput] = useState(false);
+  const [otp, setOtp] = useState('');
+
 
 
   useEffect(() => {
@@ -48,21 +53,37 @@ export function LoginPage() {
       setError("Invalid mobile number or password.");
       return;
     }
+    setShowOtpInput(true);
+    
+  };
+
+
+  const handleOtpVerify = async (e: React.FormEvent) => {
+    e.preventDefault();
+  
+  
+    const data = await verifyOTPLogin(mobile, otp);
+  
+    if (!data.authenticated) {
+      setError("Invalid or expired OTP.");
+      return;
+    }
+  
     setUserID(data.userID);
+    setClientId(null);
+    localStorage.setItem('authToken', 'user_authenticated');
+  
     if (rememberMe) {
-      // ✅ Save to localStorage if "Remember Me" is checked
       localStorage.setItem("rememberedEmail", mobile);
       localStorage.setItem("rememberedPassword", password);
     } else {
-      // ❌ Clear remembered data if "Remember Me" is unchecked
       localStorage.removeItem("rememberedEmail");
       localStorage.removeItem("rememberedPassword");
     }
-    setClientId(null);
-    localStorage.setItem('authToken', 'user_authenticated'); // Store token
-    navigate('/dashboard'); // Redirect to dashboard
-    
+  
+    navigate('/dashboard');
   };
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sky-400 to-sky-300 flex flex-col items-center justify-center p-4">
@@ -85,6 +106,8 @@ export function LoginPage() {
 
             {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
 
+
+            {!showOtpInput ? (
             <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
                 <Label htmlFor="mobile" className="text-gray-700">Mobile Number</Label>
@@ -142,6 +165,25 @@ export function LoginPage() {
                 Sign In
               </Button>
             </form>
+            ) : (
+            // 👇 OTP input form
+            <form onSubmit={handleOtpVerify} className="space-y-4">
+              <Label htmlFor="otp" className="text-gray-700">Enter OTP</Label>
+              <Input 
+                id="otp"
+                type="text"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                maxLength={8}
+                pattern="[0-9]{8}"
+                placeholder="Enter 8-digit OTP"
+                required
+              />
+              <Button type="submit" className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-4 rounded-xl">
+                Verify OTP
+              </Button>
+            </form>
+          )}
             
             <div className="mt-6 text-center">
               <p className="text-gray-600">Don't have an account? <a href="/create-account" className="text-blue-500 hover:underline">Sign Up</a></p>
