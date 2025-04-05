@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useUser } from "./UserContext";
-import { loginAccount, verifyOTPLogin } from '@/lib/apiCalls';
+import { loginAccount, sendOTPForReset, verifyOTPForgot, verifyOTPLogin } from '@/lib/apiCalls';
 import { useClient } from "./ClientContext";
 
 export function LoginPage() {
@@ -21,6 +21,8 @@ export function LoginPage() {
   const [showOtpInput, setShowOtpInput] = useState(false);
   const [otp, setOtp] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [forgotPass, setForgotPass] = useState(false);
+  const [openOTPforgot, setOpenOTPforgot] = useState(false);
 
 
 
@@ -58,6 +60,8 @@ export function LoginPage() {
       setIsLoading(false);
       return;
     }
+
+    setError("");
     setShowOtpInput(true);
     
   };
@@ -70,7 +74,55 @@ export function LoginPage() {
     const data = await verifyOTPLogin(mobile, otp);
   
     if (!data.authenticated) {
-      setError("Invalid or expired OTP.");
+      setError(data.message);
+      return;
+    }
+  
+    setUserID(data.userID);
+    setClientId(null);
+    localStorage.setItem('authToken', 'user_authenticated');
+  
+    if (rememberMe) {
+      localStorage.setItem("rememberedEmail", mobile);
+      localStorage.setItem("rememberedPassword", password);
+    } else {
+      localStorage.removeItem("rememberedEmail");
+      localStorage.removeItem("rememberedPassword");
+    }
+  
+    navigate('/dashboard');
+  };
+
+  const handleMobile = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+
+    setError("");
+    setIsLoading(true);
+
+
+    const data = await sendOTPForReset(mobile);
+    if(!data.authenticated){
+      setError(data.message);
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(false);
+    setForgotPass(false);
+    setOpenOTPforgot(true);
+    
+  };
+
+  const handleOtpReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+  
+    setError("");
+    setIsLoading(true);
+    const data = await verifyOTPForgot(mobile, otp);
+  
+    if (!data.authenticated) {
+      setError(data.message);
       return;
     }
   
@@ -112,7 +164,7 @@ export function LoginPage() {
             {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
 
 
-            {!showOtpInput ? (
+            {!showOtpInput && !forgotPass && !openOTPforgot ? (
             <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
                 <Label htmlFor="mobile" className="text-gray-700">Mobile Number</Label>
@@ -137,7 +189,13 @@ export function LoginPage() {
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
                   <Label htmlFor="password" className="text-gray-700">Password</Label>
-                  <a href="#" className="text-sm text-blue-500 hover:underline">Forgot Password?</a>
+                  <a 
+                  href="#" 
+                  className="text-sm text-blue-500 hover:underline"
+                  onClick={(e) => {
+                    e.preventDefault(); // prevents the page from jumping to the top
+                    setForgotPass(true); // sets your state
+                  }}>Forgot Password?</a>
                 </div>
                 <Input 
                   id="password" 
@@ -173,7 +231,54 @@ export function LoginPage() {
 
              
             </form>
-            ) : (
+            ) :
+            forgotPass ? (
+              <form onSubmit={handleMobile} className="space-y-4">
+              <Label htmlFor="otp" className="text-gray-700">Enter Mobile number</Label>
+              
+              <div className="flex items-center space-x-2 border rounded-xl p-2 bg-gray-100">
+                  {/* Fixed +63 country code */}
+                  <span className="text-gray-700 font-semibold">+63</span>
+
+                  {/* Mobile Input */}
+                  <Input 
+                    id="mobile" 
+                    type="tel" 
+                    placeholder="9XXXXXXXXX" 
+                    value={mobile}
+                    onChange={(e) => setMobile(e.target.value.replace(/\D/g, '').slice(0, 10))} 
+                    pattern="[0-9]{10}" 
+                    className="flex-1 bg-transparent border-none focus:ring-0 outline-none"
+                    required
+                  />
+                </div>
+              <Button disabled={isLoading} type="submit" className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-4 rounded-xl">
+              {isLoading ? "Sending OTP..." : "Verify First to reset password"} 
+              </Button>
+            </form>
+            )
+            :
+            openOTPforgot ? (
+              <form onSubmit={handleOtpReset} className="space-y-4">
+              <Label htmlFor="otp" className="text-gray-700">Enter OTP to reset password</Label>
+              <p style={{ color: 'red' }}>Your temporary password will be sent to you via sms. You can then change your password once logged in.</p>
+              <Input 
+                id="otp"
+                type="text"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                maxLength={8}
+                pattern="[0-9]{8}"
+                placeholder="Enter 8-digit OTP"
+                required
+              />
+              <Button  disabled={isLoading} type="submit" className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-4 rounded-xl">
+              {isLoading ? "Resetting Password..." : "Verify OTP"} 
+              </Button>
+            </form>
+            )
+            :
+            (
             // 👇 OTP input form
             <form onSubmit={handleOtpVerify} className="space-y-4">
               <Label htmlFor="otp" className="text-gray-700">Enter OTP</Label>

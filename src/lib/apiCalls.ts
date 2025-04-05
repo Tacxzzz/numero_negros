@@ -88,6 +88,77 @@ export const verifyOTP = async (
 };
 
 
+export const verifyOTPForgot = async (
+  mobile: string, otp: string 
+) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/verifyOTPForgot`, { mobile, otp });
+
+    if (response.data) {
+      if(response.data.authenticated)
+      {
+        const userData = response.data;
+        return {
+          authenticated: userData.authenticated,
+          userID: userData.userID
+        };
+      }
+      else
+      {
+        const userData = response.data;
+        return {
+          authenticated: userData.authenticated,
+          message: userData.message
+        };
+      }
+      
+    } else {
+      console.warn("User data is empty or invalid.");
+      return { authenticated: false, message: "no response on the api" };
+    }
+    
+  } catch (error) {
+    console.error("Failed to send remittance:", error);
+    return {  authenticated: false,message: "no response on the api" };
+  }
+};
+
+
+export const sendOTPForReset = async (
+  mobile: string
+) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/sendOTPForReset`, { mobile });
+
+    if (response.data) {
+      if(response.data.authenticated)
+      {
+        const userData = response.data;
+        return {
+          authenticated: userData.authenticated
+        };
+      }
+      else
+      {
+        const userData = response.data;
+        return {
+          authenticated: userData.authenticated,
+          message: userData.message
+        };
+      }
+      
+    } else {
+      console.warn("User data is empty or invalid.");
+      return { authenticated: false, message: "no response on the api" };
+    }
+    
+  } catch (error) {
+    console.error("Failed to send remittance:", error);
+    return {  authenticated: false,message: "no response on the api" };
+  }
+};
+
+
 
 export const verifyOTPLogin = async (
   mobile: string, otp: string 
