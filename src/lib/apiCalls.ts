@@ -1,5 +1,7 @@
 import axios from "axios";
 import { Agent } from "http";
+import CryptoJS from "crypto-js";
+import { error } from "console";
 
 const API_URL = import.meta.env.VITE_DATABASE_URL;
 
@@ -710,5 +712,123 @@ export const getBetClientData = async (id: string) => {
   } catch (error) {
     console.error("Failed to fetch user data:", error);
     return { balance: 0,mobile: "",referral: "", status: "none", agent: "" };
+  }
+};
+
+
+export const cashInCashko = async (
+  amountToPay: string, creditCashin: string, userID: string 
+) => {
+  try {
+    const timestamp = Date.now().toString();
+    const clientNo = `PP${timestamp}`;
+    const clientCode = import.meta.env.VITE_CLIENT_CODE;
+    const privateKey = import.meta.env.VITE_PRIVATE_KEY;
+
+    const formData = new FormData();
+    formData.append("clientCode", clientCode);
+    formData.append("chainName", "BANK");
+    formData.append("coinUnit", "PHP");
+    formData.append("clientNo",clientNo );
+    formData.append("memberFlag", "user1001");
+    formData.append("requestAmount", amountToPay.toString());
+    formData.append("requestTimestamp", timestamp);
+    formData.append("callbackurl", `${API_URL}/main/requestDepositCashko`);
+    formData.append("hrefbackurl", `${window.location.origin}/payment-success`);
+    formData.append("toPayQr", "0");
+    formData.append("dataType", "PAY_PAGE");
+    formData.append("channel", "GCASH_NATIVE");
+    formData.append("sign", generateSign(clientCode, clientNo, timestamp, privateKey));
+
+    const response = await axios.post(
+      "https://gw01.ckogway.com/api/coin/pay/request",
+      formData
+    );
+    console.log(response);
+    if (response.data && response.data.success && response.data.code === 200) {
+      const { orderNo, receiveAddr, chainName, coinUnit, requestAmount, status, payUrl, hrefbackurl, sign } = response.data.data;
+
+      const res = await axios.post(`${API_URL}/main/cashInRequest`, {userID, orderNo, creditCashin,amountToPay,clientNo });
+  
+      if (res.data && res.data.authenticated) {
+        window.location.href = payUrl;
+      } 
+      else 
+      {
+        console.warn("User data is empty or invalid.");
+        return { transID: "" };
+      }
+     
+    } 
+    else {
+      console.warn("Transaction response is missing expected data.");
+      return {error: true};
+    }
+  } catch (error) {
+    console.error("Cashko request failed:", error);
+    return {error: true};
+  }
+};
+
+
+
+
+const generateSign = (clientCode: string, clientNo: string, latest_requestTimestamp: string, privateKey: string) => {
+  const signString = `${clientCode}&BANK&PHP&${clientNo}&${latest_requestTimestamp}${privateKey}`;
+  const resultHash = CryptoJS.MD5(signString).toString(CryptoJS.enc.Hex);
+  return resultHash;
+};
+
+
+const generateSignPAID = (clientCode: string, clientNo: string, privateKey: string) => {
+  const signString = `${clientCode}&${clientNo}${privateKey}`;
+  const resultHash = CryptoJS.MD5(signString).toString(CryptoJS.enc.Hex);
+  return resultHash;
+};
+
+
+export const cashInCashkoPAID = async (
+  clientNo: string
+) => {
+  try {
+   
+
+    const clientCode = import.meta.env.VITE_CLIENT_CODE;
+    const privateKey = import.meta.env.VITE_PRIVATE_KEY;
+    const sign = generateSignPAID(clientCode, clientNo, privateKey);
+
+    const response = await axios.get(`https://gw01.ckogway.com/api/coin/pay/checkOrder?clientCode=${clientCode}&clientNo=${clientNo}&sign=${sign}`);
+    
+    console.log(response);
+    if (response.data && response.data.success && response.data.code === 200) {
+      const { status, orderNo } = response.data.data;
+
+      if(status==="PAID")
+      {
+        const res = await axios.post(`${API_URL}/main/confirmCreditPaid`, {clientNo, orderNo});
+  
+        if (res.data && res.data.authenticated) {
+          return { authenticated: true };
+        } 
+        else 
+        {
+          return { authenticated: false };
+        }
+      }
+      else
+      {
+        return {error: true};
+      }
+
+      
+     
+    } 
+    else {
+      console.warn("Transaction response is missing expected data.");
+      return {error: true};
+    }
+  } catch (error) {
+    console.error("Cashko request failed:", error);
+    return {error: true};
   }
 };

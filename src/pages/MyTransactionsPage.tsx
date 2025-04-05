@@ -279,7 +279,8 @@ function BetsTable({ bets, navigate }: { bets: any[], navigate: (path: string) =
             
             <TableHead className="text-center">Date & Time</TableHead>
             <TableHead className="text-center">Type</TableHead>
-            <TableHead className="text-center">Amount</TableHead>
+            <TableHead className="text-center">Amount Paid</TableHead>
+            <TableHead className="text-center">Credit</TableHead>
             <TableHead className="text-center">Status</TableHead>
             <TableHead></TableHead>
           </TableRow>
@@ -292,6 +293,7 @@ function BetsTable({ bets, navigate }: { bets: any[], navigate: (path: string) =
               <TableCell className="text-center">{bet.trans_type}</TableCell>
               
               <TableCell className="text-center">{formatPeso(bet.amount)}</TableCell>
+              <TableCell className="text-center">{formatPeso(bet.credit)}</TableCell>
               <TableCell className="text-center">
                 <Badge 
                   className= {

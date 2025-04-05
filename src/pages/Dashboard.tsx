@@ -20,7 +20,7 @@ import { FiCopy } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from "./UserContext";
-import { cashIn, fetchUserData, getBetClientData, getGames, getMyBetClientsCount, getReferrals, updatePassword } from '@/lib/apiCalls';
+import { cashIn, cashInCashko, fetchUserData, getBetClientData, getGames, getMyBetClientsCount, getReferrals, updatePassword } from '@/lib/apiCalls';
 import { formatPeso } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -51,9 +51,9 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const [showCashInDialog, setShowCashInDialog] = useState(false);
   const [transLimit, setTransLimit] = useState(5000);
   const [cashInAmount, setCashInAmount] = useState(0);
+  const [creditAmount, setCreditAmount] = useState(0);
   const [popularGames, setPopularGames] = useState<any[]>([]);
 
-  
 
   useEffect(() => {
     if (userID) {
@@ -66,12 +66,18 @@ export function Dashboard({ onLogout }: SidebarProps) {
         setReferral(data.referral);
         setStatus(data.status);
         setAgent(data.agent);
+        
 
         if(clientId)
         {
           const clientData = await getBetClientData(clientId);
           setClientFullName(clientData.full_name);
         }
+
+        if (clientId==="null") {
+          setClientId(null);
+        }
+        
         
 
         const dataClients = await getMyBetClientsCount(userID);
@@ -110,12 +116,9 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const cashInSubmit =  async () => {
   
     console.log(userID);
-    const formData = new FormData();
-    formData.append("amount", cashInAmount.toString());
-    formData.append('userID', userID);
-    const dataRemit = await cashIn(formData);
-    console.log(dataRemit.transID);
+    const dataRemit = await cashInCashko(cashInAmount.toString(),creditAmount.toString(),userID);
     setCashInAmount(0);
+    setCreditAmount(0);
     const data = await fetchUserData(userID);
     setBalance(data.balance);
     setWinnings(data.wins);
@@ -124,15 +127,33 @@ export function Dashboard({ onLogout }: SidebarProps) {
     setReferral(data.referral);
     setStatus(data.status);
     console.log(data.mobile);
-    alert("Cash In successfully! Transaction ID: " + dataRemit.transID);
 };
 
 const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  let value = parseFloat(e.target.value); // Convert to number, fallback to 0
-  if (value > transLimit) value = transLimit; // Restrict maximum value
-  setCashInAmount(value);
+  let value = parseFloat(e.target.value); // Convert to number
+
+  // Set minimum value (e.g., 0 or any desired minimum value)
+  const minValue = 100; // You can change this to your desired minimum value
+  const maxValue = transLimit; // The maximum value from your existing logic
+
+  // Ensure the value is within the min and max range
+  //if (value < minValue) value = minValue; 
+  if (value > maxValue) value = maxValue;
+
+
+  if(agent)
+  {
+    setCashInAmount(value - (value * 0.2));
+  }
+  else
+  {
+    setCashInAmount(value);
+  }
+  
+  setCreditAmount(value);
   
 };
+
 
 const removePlayer = () => {
   setClientId(null);
@@ -488,7 +509,7 @@ const removePlayer = () => {
                     <div className="flex items-center">
                       <div>
                         <input
-                        value={cashInAmount} 
+                        value={creditAmount} 
                         onChange={handleChange}
                         type="number" 
                         className="border rounded p-1 text-sm w-full" 
@@ -507,14 +528,13 @@ const removePlayer = () => {
                         {agent === "yes" && (
                           <>
                           <p className="text-sm text-blue-600">You have 20% off based on commission</p>
-                          <p style={{color: 'blue'}} className="font-small mb-2">You will pay only : {formatPeso(cashInAmount - (cashInAmount * 0.2))}</p>
+                          <p style={{color: 'blue'}} className="font-small mb-2">You will pay only : {formatPeso(creditAmount - (creditAmount * 0.2))}</p>
                           </>
                         )}
                       </div>
                     </div>
                     <Button 
-                    //disabled={!cashInAmount} 
-                    disabled
+                    disabled={!cashInAmount || cashInAmount < 100} 
                     type="button"
                      variant="outline" 
                      size="sm"
