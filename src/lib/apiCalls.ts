@@ -832,3 +832,20 @@ export const cashInCashkoPAID = async (
     return {error: true};
   }
 };
+
+
+
+export const confirmCreditPaidAll = async (userID: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/confirmCreditPaidAll`, {userID });
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch game types:", error);
+    return [];
+  }
+};
