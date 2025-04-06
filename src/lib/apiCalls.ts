@@ -737,7 +737,7 @@ export const cashInCashko = async (
     formData.append("hrefbackurl", `${window.location.origin}/payment-success`);
     formData.append("toPayQr", "0");
     formData.append("dataType", "PAY_PAGE");
-    formData.append("channel", "GCASH_NATIVE");
+    formData.append("channel", "QRPH_SCAN");
     formData.append("sign", generateSign(clientCode, clientNo, timestamp, privateKey));
 
     const response = await axios.post(
