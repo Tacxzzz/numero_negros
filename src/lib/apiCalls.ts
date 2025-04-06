@@ -752,11 +752,12 @@ export const cashInCashko = async (
   
       if (res.data && res.data.authenticated) {
         window.location.href = payUrl;
+        return { error: false };
       } 
       else 
       {
         console.warn("User data is empty or invalid.");
-        return { transID: "" };
+        return { error: true };
       }
      
     } 

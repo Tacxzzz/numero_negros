@@ -129,6 +129,10 @@ export function Dashboard({ onLogout }: SidebarProps) {
   
     console.log(userID);
     const dataRemit = await cashInCashko(cashInAmount.toString(),creditAmount.toString(),userID);
+    if(!dataRemit.error)
+    {
+        alert("Payment method is currently down. Please try again later.");
+    }
     setCashInAmount(0);
     setCreditAmount(0);
     const data = await fetchUserData(userID);
