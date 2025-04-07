@@ -156,16 +156,7 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   //if (value < minValue) value = minValue; 
   if (value > maxValue) value = maxValue;
 
-
-  if(agent)
-  {
-    setCashInAmount(value - (value * 0.2));
-  }
-  else
-  {
-    setCashInAmount(value);
-  }
-  
+  setCashInAmount(value);
   setCreditAmount(value);
   
 };
@@ -541,12 +532,7 @@ const removePlayer = () => {
                             -moz-appearance: textfield;
                           }
                         `}</style>
-                        {agent === "yes" && (
-                          <>
-                          <p className="text-sm text-blue-600">You have 20% off based on commission</p>
-                          <p style={{color: 'blue'}} className="font-small mb-2">You will pay only : {formatPeso(creditAmount - (creditAmount * 0.2))}</p>
-                          </>
-                        )}
+                        
                       </div>
                     </div>
                     <Button 
