@@ -298,6 +298,8 @@ export function BetClientsPage() {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-lg font-bold mb-4">Add New Client</h2>
+            <p style={{color: 'red'}}>Please enter client payout details carefully. PisoPlay is not responsible for misdirected funds due to incorrect information.</p>
+            <br/>
             <form onSubmit={handleSubmit} className="space-y-3">
               <input
                 type="text"
@@ -308,15 +310,26 @@ export function BetClientsPage() {
                 className="w-full p-2 border rounded"
                 required
               />
-              <input
-                type="text"
+              <select
                 name="bank"
-                placeholder="Payment Method E.G GCASH, UNIONBANK ETC."
                 value={newClient.bank}
                 onChange={handleChange}
                 className="w-full p-2 border rounded"
                 required
-              />
+              >
+                <option value="" disabled>
+                  Select Payment Method
+                </option>
+                <option value="GCASH">GCASH</option>
+                <option value="BDO">BDO Unibank, Inc.</option>
+                <option value="BPI">Bank of the Philippine Islands</option>
+                <option value="UBP">Union Bank of the Philippines</option>
+                <option value="MYW">Maya Philippines, Inc./Maya Wallet</option>
+                <option value="PNB">Philippine National Bank</option>
+                <option value="EWR">East West Rural Bank / Komo</option>
+                <option value="DBP">Development Bank of the Philippines</option>
+                {/* Add more options as needed */}
+              </select>
               <input
                 type="text"
                 name="account"
@@ -475,15 +488,28 @@ function BetsTable({ bets,updatedClientUP, navigate }: { bets: any[],updatedClie
         className="w-full p-2 border rounded mb-2"
       />
 
-      <input
-        type="text"
-        placeholder="Bank"
-        value={editingClient?.bank || ""}
-        onChange={(e) =>
-          setEditingClient({ ...editingClient, bank: e.target.value })
-        }
-        className="w-full p-2 border rounded mb-2"
-      />
+        <select
+          value={editingClient?.bank || ""}
+          onChange={(e) =>
+            setEditingClient({ ...editingClient, bank: e.target.value })
+          }
+          className="w-full p-2 border rounded mb-2"
+          required
+        >
+          <option value="" disabled>
+            Select Bank / Payment Method
+          </option>
+          <option value="GCASH">GCASH</option>
+          <option value="BDO">BDO Unibank, Inc.</option>
+          <option value="BPI">Bank of the Philippine Islands</option>
+          <option value="UBP">Union Bank of the Philippines</option>
+          <option value="MYW">Maya Philippines, Inc./Maya Wallet</option>
+          <option value="PNB">Philippine National Bank</option>
+          <option value="EWR">East West Rural Bank / Komo</option>
+          <option value="DBP">Development Bank of the Philippines</option>
+          {/* Add more as needed */}
+        </select>
+
 
       <input
         type="text"
