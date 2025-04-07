@@ -385,8 +385,6 @@ const removePlayer = () => {
             <Button className="bg-green-500 hover:bg-green-600" disabled>Cash Out</Button>
           </div>
 
-          {agent==="yes" && (
-              <>
               <br/>
               <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
                 <div>
@@ -418,9 +416,7 @@ const removePlayer = () => {
                 </div>
                 </>
               )}
-              </>
-            )
-          }
+            
         </div>
 
         
