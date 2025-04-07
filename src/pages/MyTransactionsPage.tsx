@@ -276,7 +276,6 @@ function BetsTable({ bets, navigate }: { bets: any[], navigate: (path: string) =
         <TableHeader>
           <TableRow>
             <TableHead className="text-center">Transaction ID</TableHead>
-            
             <TableHead className="text-center">Date & Time</TableHead>
             <TableHead className="text-center">Type</TableHead>
             <TableHead className="text-center">Amount Paid</TableHead>
@@ -289,6 +288,7 @@ function BetsTable({ bets, navigate }: { bets: any[], navigate: (path: string) =
           {bets.map((bet) => (
             <TableRow key={bet.id}>
               <TableCell className="font-medium text-center">{getTransCode(bet.date)}{bet.id}</TableCell>
+              
               <TableCell className="text-center">{bet.date}</TableCell>
               <TableCell className="text-center">{bet.trans_type}</TableCell>
               

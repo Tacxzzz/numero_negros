@@ -17,7 +17,7 @@ import { useClient } from "./ClientContext";
 export function GamePage() {
   const navigate = useNavigate();
   const { setUserID,userID } = useUser();
-  const { clientId } = useClient();
+  const { clientId, setClientId } = useClient();
   const [clientFullName, setClientFullName] = useState("");
   console.log(userID);
   const { gameId, gameType, drawId } = useParams();
@@ -39,6 +39,22 @@ export function GamePage() {
   const [gameDrawData, setGameDrawData] = useState<any[]>([]);
   const [gameTypesData, setGameTypesData] = useState<any[]>([]);
   const [gameDrawsData, setGameDrawsData] = useState<any[]>([]);
+  const [multiplier, setMultiplier] = useState(1);
+
+  const [betAllow, setBetAllow] = useState(true);
+
+  const handleMultiplierChange = (e) => {
+    const value = parseInt(e.target.value, 10);
+    setMultiplier(value);
+    if (!isNaN(value) && value > 0) {
+      setBetAllow(true);
+    } else {
+      setBetAllow(false);
+    }
+  };
+  
+  const adjustedBet = gameTypeData[0]?.bet * multiplier;
+  const adjustedWinnings = gameTypeData[0]?.jackpot * multiplier;
 
   const [loading, setLoading] = useState(true);
 
@@ -109,6 +125,11 @@ export function GamePage() {
             const clientData = await getBetClientData(clientId);
             setClientFullName(clientData.full_name);
           }
+          if (clientId==="null") {
+            setClientId(null);
+          }
+
+
           const data = await getGameByID(gameId);
           setGameData(data);
           setLengthStart(data[0].range_start);
@@ -227,6 +248,7 @@ export function GamePage() {
       setLoading(true);
       const formData = new FormData();
       formData.append("draw_id", drawId);
+      formData.append("multiplier", multiplier.toString());
       formData.append('userID', userID);
       formData.append('clientID', clientId || "");  
       formData.append('game_type', gameType);
@@ -236,7 +258,7 @@ export function GamePage() {
       
       if(data.authenticated)
       {
-        alert("Bet placed successfully!");
+        alert(data.message);
         setScores(Array.from({ length: digits }, () => ""));
         setLoading(false);
       }
@@ -568,7 +590,10 @@ const hasAllDistinctScores = (scores: string[]) => {
                       <h4>{gameData[0]?.name} {gameTypeData[0]?.game_type}</h4>
                       <h4>{gameDrawData[0]?.date} {gameDrawData[0]?.time}</h4>
                       <br/>
-                      <h4>Bet : {formatPeso(gameTypeData[0]?.bet)}<br/>Winnings : {formatPeso(gameTypeData[0]?.jackpot)}</h4>
+                      <h4>
+                        Bet : {formatPeso(adjustedBet)}<br />
+                        Winnings : {formatPeso(adjustedWinnings)}
+                      </h4> 
                       <p className="text-green-500 text-sm sm:text-base">
                         Time left: <CountdownTimer date={gameDrawData[0]?.date} time={gameDrawData[0]?.time} cutoffMinutes={gameDrawData[0]?.deadline} />
                       </p>
@@ -590,10 +615,25 @@ const hasAllDistinctScores = (scores: string[]) => {
                       </div>
                       </>
                       )} 
-                      
+                      <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg">
+                            <Label htmlFor="multiplier" className="text-pink-800 font-medium block mb-2">
+                              Bet Multiplier
+                            </Label>
+                            <input
+                              type="number"
+                              id="multiplier"
+                              value={multiplier}
+                              onChange={handleMultiplierChange}
+                              min={1}
+                              className="w-full p-2 rounded border border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-400 text-center font-bold text-pink-700"
+                            />
+                          </div>
+
+
+
                       <Button 
                         className="w-full bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-600 hover:to-orange-600 text-white rounded-full py-6 text-lg font-bold"
-                        disabled={balance < gameTypeData[0]?.bet}
+                        disabled={balance < gameTypeData[0]?.bet || betAllow===false}
                         onClick={handleBetConfirm}
                       >
                         CONFIRM BET
