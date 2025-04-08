@@ -448,7 +448,7 @@ const handleSubmit = async (e) => {
           <br/>
           <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
             <div>
-              <p className="text-gray-500 text-sm">YourCommissions</p>
+              <p className="text-gray-500 text-sm">Your Commissions</p>
               <p className="text-2xl font-bold text-gray-800">{formatPeso(commissions)}</p>
             </div>
             <Button className="bg-green-500 hover:bg-green-600" disabled>Cash Out</Button>
