@@ -20,7 +20,7 @@ import { FiCopy } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from "./UserContext";
-import { cashIn, cashInCashko, cashInCashkoPAID, confirmCreditPaidAll, fetchUserData, getBetClientData, getGames, getMyBetClientsCount, getReferrals, updatePassword } from '@/lib/apiCalls';
+import { addBetClients, cashIn, cashInCashko, cashInCashkoPAID, cashOutCashko, confirmCreditPaidAll, fetchUserData, getBetClientData, getGames, getMyBetClientsCount, getReferrals, updatePassword } from '@/lib/apiCalls';
 import { formatPeso } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -49,11 +49,18 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const [showAccountModal, setShowAccountModal] = useState(false);
   // const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showCashInDialog, setShowCashInDialog] = useState(false);
+  const [showCashOutDialog, setShowCashOutDialog] = useState(false);
   const [transLimit, setTransLimit] = useState(5000);
   const [cashInAmount, setCashInAmount] = useState(0);
   const [creditAmount, setCreditAmount] = useState(0);
   const [popularGames, setPopularGames] = useState<any[]>([]);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [newClient, setNewClient] = useState({
+    full_name: "",
+    bank: "",
+    account: "",
+  });
 
   const API_URL = import.meta.env.VITE_DATABASE_URL;
 
@@ -78,7 +85,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
         setReferral(data.referral);
         setStatus(data.status);
         setAgent(data.agent);
-        
+        setLoading(false);
 
         if(clientId)
         {
@@ -117,6 +124,12 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const handleCashIn = () => {
     setShowCashInDialog(false);
   };
+
+  const handleChangeClient = (e) => {
+    setNewClient({ ...newClient, [e.target.name]: e.target.value });
+  };
+
+
 
   const handleCloseModal = async () => {
     const data = await fetchUserData(userID);
@@ -170,6 +183,58 @@ const removePlayer = () => {
   
 };
 
+
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    setShowCashOutDialog(false);
+    setLoading(true);
+    const data = await cashOutCashko(userID,winnings.toString(),newClient.full_name,newClient.bank,newClient.account);
+    if(data.error){
+      alert(data.message);
+    }
+    else
+    {
+      alert("Payout request created successfully.");
+      setNewClient({ full_name: "", bank: "", account: "" });
+      const pendingTrans = await confirmCreditPaidAll(userID);
+      if (Array.isArray(pendingTrans) && pendingTrans.length > 0) 
+      {
+        pendingTrans.forEach(async (trans) => {
+          console.log("Processing transaction:", trans);
+          await cashInCashkoPAID(trans.trans_num);
+        });
+      }
+
+      const data = await fetchUserData(userID);
+      setBalance(data.balance);
+      setWinnings(data.wins);
+      setCommissions(data.commissions);
+      setMobile(data.mobile);
+      setReferral(data.referral);
+      setStatus(data.status);
+      setAgent(data.agent);
+
+      if(clientId)
+      {
+        const clientData = await getBetClientData(clientId);
+        setClientFullName(clientData.full_name);
+      }
+
+      if (clientId==="null") {
+        setClientId(null);
+      }
+
+
+      
+      
+    }
+    setLoading(false);
+  };
+
+
+  if (loading ) {
+    return <div>...</div>;
+  }
 
   const liveStreams = [
     { id: 1, title: "[LIVE] PCSO 2:00 PM Lotto Draw",live: true, viewers: 1243, streamer: "[Live] PCSO Lotto Draw", image: "https://www.youtube.com/embed/pO0BDYTq7zw?si=22s1k5ePuyKvgsy5" },
@@ -394,7 +459,7 @@ const removePlayer = () => {
               <p className="text-gray-500 text-sm">Your Winnings</p>
               <p className="text-2xl font-bold text-gray-800">{formatPeso(winnings)}</p>
             </div>
-            <Button className="bg-green-500 hover:bg-green-600" disabled>Cash Out</Button>
+            <Button className="bg-green-500 hover:bg-green-600" disabled={!winnings || winnings < 100} onClick={() => setShowCashOutDialog(true)}>Cash Out</Button>
           </div>
 
               <br/>
@@ -583,7 +648,131 @@ const removePlayer = () => {
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
+                
 
+
+                <Dialog open={showCashOutDialog} onOpenChange={setShowCashOutDialog}>
+                  <DialogContent className="bg-gray-200 border-[#34495e]">
+                    <DialogHeader>
+                      <DialogTitle className="text-xl text-blue-600">Cash Out</DialogTitle>
+                      <DialogDescription className="text-red-600">
+                      Please enter payout details carefully. PisoPlay is not responsible for misdirected funds due to incorrect information.
+            
+                      </DialogDescription>
+                    </DialogHeader>
+                    
+                    <div className="bg-gray-50 p-3 rounded-lg">
+                      <h4 className="font-medium mb-2">Withdraw Funds</h4>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between bg-white p-2 rounded border">
+                        <form onSubmit={handleSubmit} className="space-y-3">
+                          <div className="flex items-center">
+                            <div>
+                              <input
+                                value={winnings} 
+                                readOnly
+                                type="number" 
+                                className="border rounded p-1 text-sm w-full" 
+                                placeholder="Enter amount" 
+                                style={{ appearance: 'textfield' }}
+                              />
+                              <style>{`
+                                input[type=number]::-webkit-outer-spin-button,
+                                input[type=number]::-webkit-inner-spin-button {
+                                  -webkit-appearance: none;
+                                  margin: 0;
+                                }
+                                input[type=number] {
+                                  -moz-appearance: textfield;
+                                }
+                              `}</style>
+
+                            <br/><br/>
+                            <input
+                                type="text"
+                                name="full_name"
+                                placeholder="Full Name"
+                                value={newClient.full_name}
+                                onChange={handleChangeClient}
+                                className="w-full p-2 border rounded"
+                                required
+                              />
+                              <br/><br/>
+                              <select
+                                name="bank"
+                                value={newClient.bank}
+                                onChange={handleChangeClient}
+                                className="w-full p-2 border rounded"
+                                required
+                              >
+                                <option value="" disabled>
+                                  Select Payment Method
+                                </option>
+                                <option value="GCASH">GCASH</option>
+                                <option value="BDO">BDO Unibank, Inc.</option>
+                                <option value="BPI">Bank of the Philippine Islands</option>
+                                <option value="UBP">Union Bank of the Philippines</option>
+                                <option value="MYW">Maya Philippines, Inc./Maya Wallet</option>
+                                <option value="PNB">Philippine National Bank</option>
+                                <option value="EWR">East West Rural Bank / Komo</option>
+                                <option value="DBP">Development Bank of the Philippines</option>
+                                {/* Add more options as needed */}
+                              </select>
+
+                              <br/><br/>
+                              <input
+                                type="text"
+                                name="account"
+                                placeholder="Account Number"
+                                value={newClient.account}
+                                onChange={handleChangeClient}
+                                className="w-full p-2 border rounded"
+                                required
+                              />
+                            </div>
+
+
+                          </div>
+                          <Button 
+                            disabled={!winnings || winnings < 100 || !termsAccepted} 
+                            type="submit"
+                            variant="outline" 
+                            size="sm" 
+                            className="text-blue-500 bg-blue-100 hover:text-blue-700 hover:bg-green-50 rounded px-4 py-2"
+                          >
+                            <label>Cash Out</label>
+                          </Button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2 mt-4">
+                      <input 
+                        type="checkbox" 
+                        id="terms" 
+                        checked={termsAccepted}
+                        onChange={(e) => setTermsAccepted(e.target.checked)}
+                        className="h-4 w-4 text-pink-500 focus:ring-0"
+                        required
+                      />
+                      <span className="text-sm text-gray-700">
+                        I agree to the 
+                        <a href={API_URL +"/img/terms.pdf"} target='_blank' className="text-pink-500"> Terms and Conditions</a>
+                      </span>
+                    </div>
+                    
+                    <DialogFooter className="flex flex-col gap-2 sm:flex-row">
+                      <Button 
+                        variant="outline" 
+                        onClick={() => setShowCashOutDialog(false)}
+                        className="w-full sm:w-auto border-blue-500 text-blue-600 hover:bg-blue-900/20"
+                      >
+                        Cancel
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
 
         
         {/* Quick Access */}
