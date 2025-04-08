@@ -35,6 +35,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import pdfFile from '../files/PisoPlay Manual - Tagalog.pdf';
 
 export function SupportPage() {
   const navigate = useNavigate();
@@ -303,7 +304,7 @@ export function SupportPage() {
                       <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
                       <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
                     </svg>
-                    <span className="text-xs mt-1">Tournaments</span>
+                    <span className="text-xs mt-1">Draws</span>
               </Link>
               <Link to="/support" className="flex flex-col items-center p-2 text-blue-600">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -327,7 +328,7 @@ export function SupportPage() {
             <h1 className="text-2xl font-bold mb-2">How Can We Help You?</h1>
             <p className="mb-4 max-w-lg">Our support team is here to assist you with any questions or issues you may have.</p>
             <div className="flex gap-3">
-              <Button className="bg-white text-blue-600 hover:bg-gray-100 mb-6">
+              <Button className="bg-white text-blue-600 hover:bg-gray-100 mb-6" onClick={() => window.open('https://tawk.to/chat/67ec009ce808511907a28002/1inou4plh', '_blank', 'noopener,noreferrer')}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                 </svg>
@@ -652,7 +653,17 @@ export function SupportPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-gray-600 mb-4">Comprehensive guides to help you navigate our platform and make the most of your experience.</p>
-                <Button variant="outline" className="w-full">View Guides</Button>
+                {/* <Button variant="outline" className="w-full">View Guides</Button> */}
+                
+<a
+  href={pdfFile}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="w-full inline-block text-center bg-transparent border border-gray-300 text-gray-700 py-2 px-4 rounded hover:bg-gray-100 font-bold"
+>
+  View Guides
+</a>
+
               </CardContent>
             </Card>
             

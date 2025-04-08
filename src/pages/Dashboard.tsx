@@ -175,15 +175,15 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                     </svg>
                     Draws
                   </Link>
-                  {/* <Link to="/support" className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100">
+                  <Link to="/support" className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <circle cx="12" cy="12" r="10"></circle>
                       <line x1="12" y1="8" x2="12" y2="12"></line>
                       <line x1="12" y1="16" x2="12.01" y2="16"></line>
                     </svg>
                     Help & Support
-                  </Link> */}
-                  <a
+                  </Link>
+                  {/* <a
                     href="https://tawk.to/chat/67ec009ce808511907a28002/1inou4plh"
                     className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100"
                     target="_blank"
@@ -195,7 +195,7 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                       <line x1="12" y1="16" x2="12.01" y2="16"></line>
                     </svg>
                     Support
-                  </a>
+                  </a> */}
                   <Button onClick={onLogout}  className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100 text-red-500">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -223,15 +223,15 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             <Link to="/transactions" className="text-gray-600 hover:text-gray-900">My Transactions</Link>
             <Link to="/my-bets" className="text-gray-600 hover:text-gray-900">My Bets</Link>
             <Link to="/drawhistory" className="text-gray-600 hover:text-gray-900">Draws</Link>
-            {/* <Link to="/support" className="text-gray-600 hover:text-gray-900">Support</Link> */}
-            <a
+            <Link to="/support" className="text-gray-600 hover:text-gray-900">Support</Link>
+            {/* <a
   href="https://tawk.to/chat/67ec009ce808511907a28002/1inou4plh"
   className="text-gray-600 hover:text-gray-900"
   target="_blank"
   rel="noopener noreferrer"
 >
   Support
-</a>
+</a> */}
             <Link onClick={onLogout} className="text-gray-600 hover:text-gray-900" to={''}>Logout</Link>
           </nav>
           
@@ -290,7 +290,8 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                   <span>Draws</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="cursor-pointer" onClick={() => window.open('https://tawk.to/chat/67ec009ce808511907a28002/1inou4plh', '_blank', 'noopener,noreferrer')}>
+                {/* <DropdownMenuItem className="cursor-pointer" onClick={() => window.open('https://tawk.to/chat/67ec009ce808511907a28002/1inou4plh', '_blank', 'noopener,noreferrer')}> */}
+                <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/support')}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
                   <circle cx="12" cy="12" r="10"></circle>
                   <path d="M12 17h.01"></path>
@@ -538,7 +539,8 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
               </svg>
               <span className="text-xs mt-1">Draws</span>
             </Link>
-            <Link to="#" className="flex flex-col items-center p-2 text-gray-500" onClick={() => window.open('https://tawk.to/chat/67ec009ce808511907a28002/1inou4plh', '_blank', 'noopener,noreferrer')}>
+            {/* <Link to="#" className="flex flex-col items-center p-2 text-gray-500" onClick={() => window.open('https://tawk.to/chat/67ec009ce808511907a28002/1inou4plh', '_blank', 'noopener,noreferrer')}> */}
+            <Link to="/support" className="flex flex-col items-center p-2 text-gray-500" onClick={() => navigate('/support')}>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="10"></circle>
               <path d="M12 17h.01"></path>
