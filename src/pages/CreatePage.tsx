@@ -17,6 +17,10 @@ export function CreatePage() {
   const [otp, setOtp] = useState("");
   const [showOtp, setShowOtp] = useState(false);  
   const [isLoading, setIsLoading] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+
+  const API_URL = import.meta.env.VITE_DATABASE_URL;
+
   
   const params = new URLSearchParams(window.location.search);
   const encodedData = params.get("data"); // Get encoded data
@@ -153,8 +157,21 @@ export function CreatePage() {
                     required
                   />
                 </div>
-
-                <Button disabled={isLoading} type="submit" className="w-full bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-xl py-6 text-lg font-bold">
+                <div className="flex items-center space-x-2">
+                <input 
+                  type="checkbox" 
+                  id="terms" 
+                  checked={termsAccepted}
+                  onChange={(e) => setTermsAccepted(e.target.checked)}
+                  className="h-4 w-4 text-pink-500 focus:ring-0"
+                  required
+                />
+                <Label htmlFor="terms" className="text-sm text-gray-700">
+                  I agree to the 
+                  <a href={API_URL +"/img/terms.pdf"} target='_blank' className="text-pink-500"> Terms and Conditions</a>
+                </Label>
+              </div>
+                <Button disabled={isLoading || !termsAccepted} type="submit" className="w-full bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-xl py-6 text-lg font-bold">
                 {isLoading ? "Sending OTP..." : "Send OTP"}
                 </Button>
               </form>

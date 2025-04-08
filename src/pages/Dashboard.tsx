@@ -53,6 +53,9 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const [cashInAmount, setCashInAmount] = useState(0);
   const [creditAmount, setCreditAmount] = useState(0);
   const [popularGames, setPopularGames] = useState<any[]>([]);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+
+  const API_URL = import.meta.env.VITE_DATABASE_URL;
 
   useEffect(() => {
     if (userID) {
@@ -496,66 +499,83 @@ const removePlayer = () => {
         </Tabs>
 
               {/* Cash In Dialog */}
-      <Dialog open={showCashInDialog} onOpenChange={setShowCashInDialog}>
-        <DialogContent className="bg-gray-200 border-[#34495e]">
-          <DialogHeader>
-            <DialogTitle className="text-xl text-blue-600">Cash In</DialogTitle>
-            <DialogDescription className="text-black-300">
-              Add more coins to your balance to continue playing.
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="bg-gray-50 p-3 rounded-lg">
-                <h4 className="font-medium mb-2">Add Funds</h4>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between bg-white p-2 rounded border">
-                    <div className="flex items-center">
-                      <div>
-                        <input
-                        value={creditAmount} 
-                        onChange={handleChange}
-                        type="number" 
-                        className="border rounded p-1 text-sm w-full" 
-                        placeholder="Enter amount" 
-                        style={{ appearance: 'textfield' }}/>
-                        <style>{`
-                          input[type=number]::-webkit-outer-spin-button,
-                          input[type=number]::-webkit-inner-spin-button {
-                            -webkit-appearance: none;
-                            margin: 0;
-                          }
-                          input[type=number] {
-                            -moz-appearance: textfield;
-                          }
-                        `}</style>
-                        
+              <Dialog open={showCashInDialog} onOpenChange={setShowCashInDialog}>
+                  <DialogContent className="bg-gray-200 border-[#34495e]">
+                    <DialogHeader>
+                      <DialogTitle className="text-xl text-blue-600">Cash In</DialogTitle>
+                      <DialogDescription className="text-black-300">
+                        Add more coins to your balance to continue playing.
+                      </DialogDescription>
+                    </DialogHeader>
+                    
+                    <div className="bg-gray-50 p-3 rounded-lg">
+                      <h4 className="font-medium mb-2">Add Funds</h4>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between bg-white p-2 rounded border">
+                          <div className="flex items-center">
+                            <div>
+                              <input
+                                value={creditAmount} 
+                                onChange={handleChange}
+                                type="number" 
+                                className="border rounded p-1 text-sm w-full" 
+                                placeholder="Enter amount" 
+                                style={{ appearance: 'textfield' }}
+                              />
+                              <style>{`
+                                input[type=number]::-webkit-outer-spin-button,
+                                input[type=number]::-webkit-inner-spin-button {
+                                  -webkit-appearance: none;
+                                  margin: 0;
+                                }
+                                input[type=number] {
+                                  -moz-appearance: textfield;
+                                }
+                              `}</style>
+                            </div>
+                          </div>
+                          <Button 
+                            disabled={!cashInAmount || cashInAmount < 100 || !termsAccepted} 
+                            type="button"
+                            variant="outline" 
+                            size="sm"
+                            onClick={cashInSubmit}  
+                            className="text-blue-500 bg-blue-100 hover:text-blue-700 hover:bg-green-50 rounded px-4 py-2"
+                          >
+                            <label>Cash In</label>
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                    <Button 
-                    disabled={!cashInAmount || cashInAmount < 100} 
-                    type="button"
-                     variant="outline" 
-                     size="sm"
-                     onClick={cashInSubmit}  
-                    className="text-blue-500 bg-blue-100 hover:text-blue-700 hover:bg-green-50 rounded px-4 py-2">
-                      <label>Cash In</label>
-                    </Button>
-                  </div>
-                </div>
-              </div>
-          
-          <DialogFooter className="flex flex-col gap-2 sm:flex-row">
-            <Button 
-              variant="outline" 
-              onClick={() => setShowCashInDialog(false)}
-              className="w-full sm:w-auto border-blue-500 text-blue-600 hover:bg-blue-900/20"
-            >
-              Cancel
-            </Button>
+                    
+                    <div className="flex items-center space-x-2 mt-4">
+                      <input 
+                        type="checkbox" 
+                        id="terms" 
+                        checked={termsAccepted}
+                        onChange={(e) => setTermsAccepted(e.target.checked)}
+                        className="h-4 w-4 text-pink-500 focus:ring-0"
+                        required
+                      />
+                      <span className="text-sm text-gray-700">
+                        I agree to the 
+                        <a href={API_URL +"/img/terms.pdf"} target='_blank' className="text-pink-500"> Terms and Conditions</a>
+                      </span>
+                    </div>
+                    
+                    <DialogFooter className="flex flex-col gap-2 sm:flex-row">
+                      <Button 
+                        variant="outline" 
+                        onClick={() => setShowCashInDialog(false)}
+                        className="w-full sm:w-auto border-blue-500 text-blue-600 hover:bg-blue-900/20"
+                      >
+                        Cancel
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
 
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+
         
         {/* Quick Access */}
         {/* <section>
