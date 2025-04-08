@@ -152,7 +152,7 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   let value = parseFloat(e.target.value); // Convert to number
 
   // Set minimum value (e.g., 0 or any desired minimum value)
-  const minValue = 100; // You can change this to your desired minimum value
+  const minValue = 50; // You can change this to your desired minimum value
   const maxValue = transLimit; // The maximum value from your existing logic
 
   // Ensure the value is within the min and max range
@@ -383,8 +383,16 @@ const removePlayer = () => {
           <br/>
           <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
             <div>
-              <p className="text-gray-500 text-sm">Your Winnings and Commissions</p>
-              <p className="text-2xl font-bold text-gray-800">{formatPeso(winnings + commissions)}</p>
+              <p className="text-gray-500 text-sm">YourCommissions</p>
+              <p className="text-2xl font-bold text-gray-800">{formatPeso(commissions)}</p>
+            </div>
+            <Button className="bg-green-500 hover:bg-green-600" disabled>Cash Out</Button>
+          </div>
+          <br/>
+          <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
+            <div>
+              <p className="text-gray-500 text-sm">Your Winnings</p>
+              <p className="text-2xl font-bold text-gray-800">{formatPeso(winnings)}</p>
             </div>
             <Button className="bg-green-500 hover:bg-green-600" disabled>Cash Out</Button>
           </div>
@@ -536,7 +544,7 @@ const removePlayer = () => {
                             </div>
                           </div>
                           <Button 
-                            disabled={!cashInAmount || cashInAmount < 100 || !termsAccepted} 
+                            disabled={!cashInAmount || cashInAmount < 50 || !termsAccepted} 
                             type="button"
                             variant="outline" 
                             size="sm"
