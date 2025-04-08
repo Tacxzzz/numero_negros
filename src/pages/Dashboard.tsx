@@ -62,6 +62,8 @@ export function Dashboard({ onLogout }: SidebarProps) {
     account: "",
   });
 
+  const [channel, setChannel] = useState("GCASH_NATIVE");
+
   const API_URL = import.meta.env.VITE_DATABASE_URL;
 
   useEffect(() => {
@@ -144,7 +146,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const cashInSubmit =  async () => {
   
     console.log(userID);
-    const dataRemit = await cashInCashko(cashInAmount.toString(),creditAmount.toString(),userID);
+    const dataRemit = await cashInCashko(cashInAmount.toString(),creditAmount.toString(),userID,channel);
     if(dataRemit.error)
     {
         alert("Payment method is currently down. Please try again later.");
@@ -606,10 +608,36 @@ const handleSubmit = async (e) => {
                                   -moz-appearance: textfield;
                                 }
                               `}</style>
+                            <br/><br/>
+                            <label htmlFor="bank" className="block mb-1 font-medium">
+                            Payment Method
+                          </label>
+                              <select
+                                name="bank"
+                                value={channel}
+                                onChange={(e) => setChannel(e.target.value)}
+                                className="w-full p-2 border rounded"
+                                required
+                              >
+                                <option value="" disabled>
+                                  Select Payment Method
+                                </option>
+                                <option value="GCASH_NATIVE">GCASH</option>
+                                <option value="QRPH_SCAN">QRPH</option>
+                                <option value="MAYA_NATIVE">MAYA</option>
+                                {/* Add more options as needed */}
+                              </select>
+                            
                             </div>
+                            
+                            
                           </div>
                           <Button 
-                            disabled={!cashInAmount || cashInAmount < 50 || !termsAccepted} 
+                             disabled={
+                              !cashInAmount || 
+                              !termsAccepted || 
+                              (channel === "GCASH_NATIVE" ? cashInAmount < 100 : cashInAmount < 50)
+                            } 
                             type="button"
                             variant="outline" 
                             size="sm"

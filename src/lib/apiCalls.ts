@@ -717,7 +717,7 @@ export const getBetClientData = async (id: string) => {
 
 
 export const cashInCashko = async (
-  amountToPay: string, creditCashin: string, userID: string 
+  amountToPay: string, creditCashin: string, userID: string, channel:string 
 ) => {
   try {
     const timestamp = Date.now().toString();
@@ -737,7 +737,7 @@ export const cashInCashko = async (
     formData.append("hrefbackurl", `${window.location.origin}/payment-success`);
     formData.append("toPayQr", "0");
     formData.append("dataType", "PAY_PAGE");
-    formData.append("channel", "QRPH_SCAN");
+    formData.append("channel", channel);
     formData.append("sign", generateSign(clientCode, clientNo, timestamp, privateKey));
 
     const response = await axios.post(
