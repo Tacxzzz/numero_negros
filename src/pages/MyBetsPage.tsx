@@ -254,7 +254,7 @@ const winRate = Array.isArray(betsHistory) && betsHistory.length > 0
                         </svg>
                         <span className="text-xs mt-1">My Bets</span>
                       </Link>
-                      <Link to="/tournaments" className="flex flex-col items-center p-2 text-gray-500">
+                      <Link to="/drawhistory" className="flex flex-col items-center p-2 text-gray-500">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
                           <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>

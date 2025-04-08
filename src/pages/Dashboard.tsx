@@ -386,7 +386,7 @@ const handleSubmit = async (e) => {
                   </svg>
                   <span>My Account</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer">
+                <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/my-bets')}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
                   <ellipse cx="12" cy="5" rx="8" ry="3"></ellipse>
                   <path d="M4 5v6a8 3 0 0 0 16 0V5"></path>
