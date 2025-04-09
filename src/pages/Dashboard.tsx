@@ -762,8 +762,7 @@ const handleSubmit = async (e) => {
 
                           </div>
                           <Button 
-                            //disabled={!winnings || winnings < 100 || !termsAccepted} 
-                            disabled
+                            disabled={!winnings || winnings < 100 || !termsAccepted} 
                             type="submit"
                             variant="outline" 
                             size="sm" 
