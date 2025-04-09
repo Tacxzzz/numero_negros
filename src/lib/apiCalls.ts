@@ -804,7 +804,7 @@ export const cashInCashkoPAID = async (
     if (response.data && response.data.success && response.data.code === 200) {
       const { status, orderNo } = response.data.data;
 
-      if(status==="PAID")
+      if(status==="PAID" || status==="FINISH")
       {
         const res = await axios.post(`${API_URL}/main/confirmCreditPaid`, {clientNo, orderNo});
   
