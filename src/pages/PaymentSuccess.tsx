@@ -1,4 +1,3 @@
-import { cashInCashkoPAID } from "@/lib/apiCalls";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -7,26 +6,6 @@ export const PaymentSuccess = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // Get the query parameters from the URL
-    const urlParams = new URLSearchParams(location.search);
-    const clientNo = urlParams.get("clientNo");
-
-
-    const handleUpdate = async () => {
-      const data = await cashInCashkoPAID(clientNo);
-    }
-
-    // Check if the clientNo parameter exists
-    if (clientNo) 
-    {
-      console.log("Client No:", clientNo);
-      handleUpdate();
-    } 
-    else 
-    {
-      console.log("clientNo parameter not found.");
-    }
-
     // Redirect to dashboard after 2 seconds
     setTimeout(() => {
       navigate("/dashboard");
