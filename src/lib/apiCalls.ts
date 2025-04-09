@@ -862,7 +862,7 @@ export const cashOutCashko = async (
     formData.append("amount", (parseFloat(winnings) - 12).toString());
     formData.append("clientNo", clientNo);
     formData.append("requestTimestamp", timestamp);
-    formData.append("callbackurl", `${API_URL}/main/requestDepositCashko`);
+    formData.append("callbackurl", `${API_URL}/main/requestCashOutCashko`);
     formData.append("sign", generateSign(clientCode, clientNo, timestamp, privateKey));
 
     const response = await axios.post(
