@@ -20,7 +20,7 @@ import { FiCopy } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from "./UserContext";
-import { addBetClients, cashIn, cashInCashko, cashInCashkoPAID, cashOutCashko, confirmCreditPaidAll, fetchUserData, getBetClientData, getGames, getMyBetClientsCount, getReferrals, updatePassword } from '@/lib/apiCalls';
+import { addBetClients, cashIn, cashInCashko, cashOutCashko, fetchUserData, getBetClientData, getGames, getMyBetClientsCount, getReferrals, updatePassword } from '@/lib/apiCalls';
 import { formatPeso } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -69,15 +69,6 @@ export function Dashboard({ onLogout }: SidebarProps) {
   useEffect(() => {
     if (userID) {
       const handleUpdate = async () => {
-
-        const pendingTrans = await confirmCreditPaidAll(userID);
-        if (Array.isArray(pendingTrans) && pendingTrans.length > 0) 
-        {
-          pendingTrans.forEach(async (trans) => {
-            console.log("Processing transaction:", trans);
-            await cashInCashkoPAID(trans.trans_num);
-          });
-        }
 
         const data = await fetchUserData(userID);
         setBalance(data.balance);
@@ -198,15 +189,7 @@ const handleSubmit = async (e) => {
     {
       alert("Payout request created successfully.");
       setNewClient({ full_name: "", bank: "", account: "" });
-      const pendingTrans = await confirmCreditPaidAll(userID);
-      if (Array.isArray(pendingTrans) && pendingTrans.length > 0) 
-      {
-        pendingTrans.forEach(async (trans) => {
-          console.log("Processing transaction:", trans);
-          await cashInCashkoPAID(trans.trans_num);
-        });
-      }
-
+      
       const data = await fetchUserData(userID);
       setBalance(data.balance);
       setWinnings(data.wins);

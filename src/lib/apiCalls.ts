@@ -787,55 +787,6 @@ const generateSignPAID = (clientCode: string, clientNo: string, privateKey: stri
   return resultHash;
 };
 
-
-export const cashInCashkoPAID = async (
-  clientNo: string
-) => {
-  try {
-   
-
-    const clientCode = import.meta.env.VITE_CLIENT_CODE;
-    const privateKey = import.meta.env.VITE_PRIVATE_KEY;
-    const sign = generateSignPAID(clientCode, clientNo, privateKey);
-
-    const response = await axios.get(`https://gw01.ckogway.com/api/coin/pay/checkOrder?clientCode=${clientCode}&clientNo=${clientNo}&sign=${sign}`);
-    
-    console.log(response);
-    if (response.data && response.data.success && response.data.code === 200) {
-      const { status, orderNo } = response.data.data;
-
-      if(status==="PAID" || status==="FINISH")
-      {
-        const res = await axios.post(`${API_URL}/main/confirmCreditPaid`, {clientNo, orderNo});
-  
-        if (res.data && res.data.authenticated) {
-          return { authenticated: true };
-        } 
-        else 
-        {
-          return { authenticated: false };
-        }
-      }
-      else
-      {
-        return {error: true};
-      }
-
-      
-     
-    } 
-    else {
-      console.warn("Transaction response is missing expected data.");
-      return {error: true};
-    }
-  } catch (error) {
-    console.error("Cashko request failed:", error);
-    return {error: true};
-  }
-};
-
-
-
 export const cashOutCashko = async (
   userID: string,
   winnings: string,
@@ -909,19 +860,3 @@ export const cashOutCashko = async (
 
 
 
-
-
-export const confirmCreditPaidAll = async (userID: string) => {
-  try {
-    const response = await axios.post(`${API_URL}/main/confirmCreditPaidAll`, {userID });
-
-    if (Array.isArray(response.data)) {
-      return response.data;
-    } else if (response.data.error) {
-      return [];
-    }
-  } catch (error) {
-    console.error("Failed to fetch game types:", error);
-    return [];
-  }
-};
