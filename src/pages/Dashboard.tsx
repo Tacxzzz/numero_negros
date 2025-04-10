@@ -26,6 +26,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 import { useClient } from "./ClientContext";
+import AnnouncementsMarquee from '@/components/AnnouncementsMarque';
 
 interface SidebarProps {
   onLogout?: () => void;
@@ -65,6 +66,8 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const [channel, setChannel] = useState("GCASH_NATIVE");
 
   const API_URL = import.meta.env.VITE_DATABASE_URL;
+
+
 
   useEffect(() => {
     if (userID) {
@@ -414,6 +417,10 @@ const handleSubmit = async (e) => {
           </div>
         </div>
       </header>
+
+      <AnnouncementsMarquee />
+
+
 
       {/* Account Management Modal */}
         {showAccountModal && (

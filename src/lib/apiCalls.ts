@@ -860,3 +860,20 @@ export const cashOutCashko = async (
 
 
 
+export const getAnnouncements = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/main/getAnnouncements`);
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch games:", error);
+    return [];
+  }
+};
+
+
+
