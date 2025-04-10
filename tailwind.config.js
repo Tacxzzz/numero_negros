@@ -49,6 +49,15 @@ module.exports = {
         md: `calc(var(--radius) - 2px)`,
         sm: `calc(var(--radius) - 4px)`,
       },
+      animation: {
+        'marquee-loop': 'marqueeLoop 25s linear infinite',
+      },
+      keyframes: {
+        marqueeLoop: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-50%)' }, // Move half the width (2 sets side-by-side)
+        },
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
