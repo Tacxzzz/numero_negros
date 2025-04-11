@@ -27,6 +27,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 
 import { useClient } from "./ClientContext";
 import AnnouncementsMarquee from '@/components/AnnouncementsMarque';
+import PisoPlayLogo from "@/files/LogoIconOnly.svg";
 
 interface SidebarProps {
   onLogout?: () => void;
@@ -312,14 +313,21 @@ const handleSubmit = async (e) => {
               </SheetContent>
             </Sheet>
             
-            <div className="flex items-center">
+            {/* <div className="flex items-center">
               <div className="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-300 to-yellow-500 flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="none">
                   <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
                 </svg>
               </div>
               <span className="ml-2 font-bold text-gray-800 hidden sm:inline">PisoPlay</span>
-            </div>
+            </div> */}
+        <div className="flex flex-col items-center justify-center mb-auto sm:flex-row">
+          <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg">
+          <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg">
+            <img src={PisoPlayLogo} alt="PisoPlay Logo" width="44" height="44" />
+          </div>
+          </div>
+        </div>
           </div>
           
           <nav className="hidden md:flex items-center space-x-6">
