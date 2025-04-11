@@ -859,6 +859,77 @@ export const cashOutCashko = async (
 
 
 
+export const cashOutCashkoCommission = async (
+  userID: string,
+  commissions: string,
+  full_name: string,
+  bank: string,
+  account: string
+) => {
+  try {
+    const timestamp = Date.now().toString();
+    const clientNo = `PPCO${timestamp}`;
+    const clientCode = import.meta.env.VITE_CLIENT_CODE;
+    const privateKey = import.meta.env.VITE_PRIVATE_KEY;
+    const chainName = "BANK";
+    const coinUnit = "PHP";
+
+    const formData = new FormData();
+    formData.append("clientCode", clientCode);
+    formData.append("chainName", chainName);
+    formData.append("coinUnit", coinUnit);
+    formData.append("bankCardNum", account);
+    formData.append("bankUserName", full_name);
+    formData.append("ifsc", "null");
+    formData.append("bankName", bank);
+    formData.append("amount", (parseFloat(commissions) - 12).toString());
+    formData.append("clientNo", clientNo);
+    formData.append("requestTimestamp", timestamp);
+    formData.append("callbackurl", `${API_URL}/main/requestCashOutCashko`);
+    formData.append("sign", generateSign(clientCode, clientNo, timestamp, privateKey));
+
+    const response = await axios.post(
+      "https://gw01.ckogway.com/api/bank/agentPay/request",
+      formData
+    );
+    console.log(response);
+
+    if (
+      response.data &&
+      response.data.success &&
+      response.data.code === 200 &&
+      response.data.data &&
+      response.data.data.orderNo
+    ) {
+      const { orderNo } = response.data.data;
+
+      const res = await axios.post(`${API_URL}/main/cashOutRequestCommissions`, {
+        userID,
+        clientNo,
+        orderNo,
+        commissions,
+        full_name,
+        bank,
+        account,
+      });
+
+      if (res.data && res.data.authenticated) {
+        return { error: false };
+      } else {
+        console.warn("User data is empty or invalid.");
+        return { error: true, message:"User data is empty or invalid." };
+      }
+    } else {
+      console.warn("Cashko request failed.");
+      return { error: true, message:"Transaction response is missing orderNo." };
+    }
+  } catch (error) {
+    console.error("Cashko request failed:", error);
+    return { error: true , message:"Cashko request failed." };
+  }
+};
+
+
 
 export const getAnnouncements = async () => {
   try {
