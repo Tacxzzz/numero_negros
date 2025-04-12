@@ -378,7 +378,8 @@ const hasAllDistinctScores = (scores: string[]) => {
   <div className="flex justify-center space-x-4">
         <button 
           onClick={handleLuckyPick} 
-          disabled={!gameId || !gameType} 
+          //disabled={!gameId || !gameType} 
+          disabled
           className={`px-4 py-2 rounded-lg shadow-md text-white 
             ${!gameId || !gameType ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-600"}`}>
           🎲
