@@ -203,7 +203,7 @@ export function GamePage() {
           );
       }
       }
-      else if(Number(gameId)>4) {
+      else if(Number(gameId)>4 && Number(gameId)<8) {
         const uniqueNumbers = new Set<string>();
 
             while (uniqueNumbers.size < 3) {
@@ -211,7 +211,17 @@ export function GamePage() {
             }
 
             randomScores = Array.from(uniqueNumbers);
-    } 
+    }
+    else if(Number(gameId)>8) {
+      const uniqueNumbers = new Set<string>();
+
+          while (uniqueNumbers.size < 2) {
+            uniqueNumbers.add((Math.floor(Math.random() * (max - min + 1)) + min).toString());
+          }
+
+          randomScores = Array.from(uniqueNumbers);
+  }
+
         else {
             // Default: Random numbers as usual
             randomScores = Array.from({ length: scores.length }, () =>
@@ -378,8 +388,8 @@ const hasAllDistinctScores = (scores: string[]) => {
   <div className="flex justify-center space-x-4">
         <button 
           onClick={handleLuckyPick} 
-          //disabled={!gameId || !gameType} 
-          disabled
+          disabled={!gameId || !gameType} 
+          //disabled
           className={`px-4 py-2 rounded-lg shadow-md text-white 
             ${!gameId || !gameType ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-600"}`}>
           🎲
