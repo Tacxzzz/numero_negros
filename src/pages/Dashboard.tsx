@@ -459,7 +459,7 @@ const handleSubmit = async (e) => {
               <p className="text-gray-500 text-sm">Your Winnings</p>
               <p className="text-2xl font-bold text-gray-800">{formatPeso(winnings)}</p>
             </div>
-            <Button className="bg-green-500 hover:bg-green-600" disabled={!winnings || winnings < 112} onClick={() => setShowCashOutDialog(true)}>Cash Out</Button>
+            <Button className="bg-green-500 hover:bg-green-600" disabled={!winnings || winnings < 110} onClick={() => setShowCashOutDialog(true)}>Cash Out</Button>
           </div>
 
               <br/>
@@ -760,7 +760,7 @@ const handleSubmit = async (e) => {
 
                           </div>
                           <Button 
-                            disabled={!winnings || winnings < 112 || !termsAccepted} 
+                            disabled={!winnings || winnings < 110 || !termsAccepted} 
                             type="submit"
                             variant="outline" 
                             size="sm" 
