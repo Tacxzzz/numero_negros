@@ -28,6 +28,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useClient } from "./ClientContext";
 import AnnouncementsMarquee from '@/components/AnnouncementsMarque';
 import PisoPlayLogo from "@/files/LogoIconOnly.svg";
+import AdvertisementModal from '@/components/AdvertisementModal';
+import AdvertisementImage from "@/files/advertisement.svg";
 
 interface SidebarProps {
   onLogout?: () => void;
@@ -58,6 +60,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const [popularGames, setPopularGames] = useState<any[]>([]);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showAdModal, setShowAdModal] = useState(false);
   const [newClient, setNewClient] = useState({
     full_name: "",
     bank: "",
@@ -71,6 +74,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
 
 
   useEffect(() => {
+    setShowAdModal(true);
     if (userID) {
       const handleUpdate = async () => {
 
@@ -117,6 +121,10 @@ export function Dashboard({ onLogout }: SidebarProps) {
   // const handleCloseModal = () => {
   //   setShowSuccessModal(false);
   // };
+
+  const handleCloseAdModal = () => {
+    setShowAdModal(false);
+  };
 
   const handleCashIn = () => {
     setShowCashInDialog(false);
@@ -231,6 +239,14 @@ const handleSubmit = async (e) => {
   ];
   
   return (
+  <>
+      <AdvertisementModal
+        isOpen={showAdModal}
+        onClose={handleCloseAdModal}
+        title="Magandang Balita!"
+        description="Sa Isang Pindot, Isang Bente ₱20. Isang Libo kada Kita Araw-Araw!"
+        imageUrl={AdvertisementImage}// Replace with your ad image URL
+      />
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
       <header className="bg-white shadow-sm sticky top-0 z-10">
@@ -336,14 +352,14 @@ const handleSubmit = async (e) => {
             <Link to="/my-bets" className="text-gray-600 hover:text-gray-900">My Bets</Link>
             <Link to="/drawhistory" className="text-gray-600 hover:text-gray-900">Draws</Link>
             <Link to="/support" className="text-gray-600 hover:text-gray-900">Support</Link>
-            {/* <a
-  href="https://tawk.to/chat/67ec009ce808511907a28002/1inou4plh"
-  className="text-gray-600 hover:text-gray-900"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  Support
-</a> */}
+                      {/* <a
+            href="https://tawk.to/chat/67ec009ce808511907a28002/1inou4plh"
+            className="text-gray-600 hover:text-gray-900"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Support
+          </a> */}
             <Link onClick={onLogout} className="text-gray-600 hover:text-gray-900" to={''}>Logout</Link>
           </nav>
           
@@ -922,6 +938,7 @@ const handleSubmit = async (e) => {
 
       
     </div>
+    </>
   );
 }
 
