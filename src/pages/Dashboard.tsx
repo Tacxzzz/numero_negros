@@ -747,14 +747,20 @@ const handleSubmit = async (e) => {
 
                               <br/><br/>
                               <input
-                                type="text"
-                                name="account"
-                                placeholder="Account Number"
-                                value={newClient.account}
-                                onChange={handleChangeClient}
-                                className="w-full p-2 border rounded"
-                                required
-                              />
+                                  type="text"
+                                  name="account"
+                                  placeholder="Account Number"
+                                  value={newClient.account}
+                                  onChange={(e) => {
+                                    const onlyDigits = e.target.value.replace(/\D/g, "");
+                                    handleChangeClient({ target: { name: "account", value: onlyDigits } });
+                                  }}
+                                  inputMode="numeric"
+                                  pattern="[0-9]*"
+                                  className="w-full p-2 border rounded"
+                                  required
+                                />
+
                             </div>
 
 
