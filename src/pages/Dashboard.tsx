@@ -961,7 +961,7 @@ const handleSubmit = async (e) => {
                       <h4 className="font-medium mb-2">Withdraw Funds</h4>
                       <div className="space-y-2">
                         <div className="flex items-center justify-between bg-white p-2 rounded border">
-                        <form onSubmit={handleSubmit} className="space-y-3">
+                        <form onSubmit={handleSubmitComm} className="space-y-3">
                           <div className="flex items-center">
                             <div>
                               <input
