@@ -308,14 +308,17 @@ export const fetchUserData = async (id: string) => {
         referral: userData.referral ?? "",
         status: userData.status ?? "pending",
         agent: userData.agent ?? "",
+        quota: userData.quota ?? "",
+        quotaTime: userData.quota_time ?? "",
+        quotaAllow: userData.quota_allow ?? "",
       };
     } else {
       console.warn("User data is empty or invalid.");
-      return { balance: 0,mobile: "",referral: "", status: "none", agent: "" };
+      return { balance: 0,mobile: "",referral: "", status: "none", agent: "",quota: "",quotaTime: "" };
     }
   } catch (error) {
     console.error("Failed to fetch user data:", error);
-    return { balance: 0,mobile: "",referral: "", status: "none", agent: "" };
+    return { balance: 0,mobile: "",referral: "", status: "none", agent: "",quota: "",quotaTime: ""  };
   }
 };
 
@@ -946,5 +949,42 @@ export const getAnnouncements = async () => {
   }
 };
 
+
+
+
+export const getCommissions = async (
+  id: string
+) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getCommissions`, { userID:id });
+
+    if (response.data) {
+      if(response.data.authenticated)
+      {
+        const userData = response.data;
+        return {
+          authenticated: userData.authenticated,
+          total_amount: userData.total_amount,
+        };
+      }
+      else
+      {
+        const userData = response.data;
+        return {
+          authenticated: userData.authenticated,
+          message: userData.message
+        };
+      }
+      
+    } else {
+      console.warn("User data is empty or invalid.");
+      return { authenticated: false, message: "no response on the api" };
+    }
+    
+  } catch (error) {
+    console.error("Failed to send remittance:", error);
+    return {  authenticated: false,message: "no response on the api" };
+  }
+};
 
 

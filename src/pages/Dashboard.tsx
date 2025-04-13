@@ -20,7 +20,7 @@ import { FiCopy } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from "./UserContext";
-import { addBetClients, cashIn, cashInCashko, cashOutCashko, fetchUserData, getBetClientData, getGames, getMyBetClientsCount, getReferrals, updatePassword } from '@/lib/apiCalls';
+import { addBetClients, cashIn, cashInCashko, cashOutCashko, cashOutCashkoCommission, fetchUserData, getBetClientData, getCommissions, getGames, getMyBetClientsCount, getReferrals, updatePassword } from '@/lib/apiCalls';
 import { formatPeso } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -38,11 +38,15 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const { setUserID,userID } = useUser();
   const { clientId, setClientId } = useClient();
   const [clientFullName, setClientFullName] = useState("");
-  console.log(userID);
-  console.log("playing as : "+clientId);
+  //console.log(userID);
+  //console.log("playing as : "+clientId);
   const [balance, setBalance] = useState(0);
   const [winnings, setWinnings] = useState(0);
+  const [quota, setQuota] = useState(0);
+  const [quotaTime, setQuotaTime] = useState("");
+  const [quotaAllow, setQuotaAllow] = useState("");
   const [commissions, setCommissions] = useState(0);
+  const [unclaimedCommissions, setUnclaimedCommissions] = useState(0);
   const [mobile, setMobile] = useState("");
   const [referral, setReferral] = useState("");
   const [status,setStatus] = useState("");
@@ -52,7 +56,9 @@ export function Dashboard({ onLogout }: SidebarProps) {
   // const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showCashInDialog, setShowCashInDialog] = useState(false);
   const [showCashOutDialog, setShowCashOutDialog] = useState(false);
+  const [showCashOutComDialog, setShowCashOutComDialog] = useState(false);
   const [transLimit, setTransLimit] = useState(5000);
+  const [commissionsCashout, setCommissionsCashout] = useState(0);
   const [cashInAmount, setCashInAmount] = useState(0);
   const [creditAmount, setCreditAmount] = useState(0);
   const [popularGames, setPopularGames] = useState<any[]>([]);
@@ -78,11 +84,23 @@ export function Dashboard({ onLogout }: SidebarProps) {
         setBalance(data.balance);
         setWinnings(data.wins);
         setCommissions(data.commissions);
+        setQuota(data.quota);
+        setQuotaTime(data.quotaTime);
+        setQuotaAllow(data.quotaAllow);
         setMobile(data.mobile);
         setReferral(data.referral);
         setStatus(data.status);
         setAgent(data.agent);
         setLoading(false);
+
+
+        const commData = await getCommissions(userID);
+        if(commData.authenticated)
+        {
+          setUnclaimedCommissions(commData.total_amount);
+        }
+        
+
 
         if(clientId)
         {
@@ -131,9 +149,15 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const handleCloseModal = async () => {
     const data = await fetchUserData(userID);
     setBalance(data.balance);
+    setWinnings(data.wins);
+    setCommissions(data.commissions);
+    setQuota(data.quota);
+    setQuotaTime(data.quotaTime);
+    setQuotaAllow(data.quotaAllow);
     setMobile(data.mobile);
     setReferral(data.referral);
     setStatus(data.status);
+    setAgent(data.agent);
     console.log(data.mobile);
     setShowAccountModal(false);
   };
@@ -152,10 +176,20 @@ export function Dashboard({ onLogout }: SidebarProps) {
     setBalance(data.balance);
     setWinnings(data.wins);
     setCommissions(data.commissions);
+    setQuota(data.quota);
+    setQuotaTime(data.quotaTime);
+    setQuotaAllow(data.quotaAllow);
     setMobile(data.mobile);
     setReferral(data.referral);
     setStatus(data.status);
-    console.log(data.mobile);
+    setAgent(data.agent);
+    setLoading(false);
+
+    const commData = await getCommissions(userID);
+    if(commData.authenticated)
+    {
+      setUnclaimedCommissions(commData.total_amount);
+    }
 };
 
 const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -171,6 +205,22 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
   setCashInAmount(value);
   setCreditAmount(value);
+  
+};
+
+
+const handleChangeCom = (e: React.ChangeEvent<HTMLInputElement>) => {
+  let value = parseFloat(e.target.value); // Convert to number
+
+  // Set minimum value (e.g., 0 or any desired minimum value)
+  const minValue = 112; // You can change this to your desired minimum value
+  const maxValue = commissions; // The maximum value from your existing logic
+
+  // Ensure the value is within the min and max range
+  //if (value < minValue) value = minValue; 
+  if (value > maxValue) value = maxValue;
+
+  setCommissionsCashout(value);
   
 };
 
@@ -198,6 +248,53 @@ const handleSubmit = async (e) => {
       setBalance(data.balance);
       setWinnings(data.wins);
       setCommissions(data.commissions);
+      setQuota(data.quota);
+      setQuotaTime(data.quotaTime);
+      setQuotaAllow(data.quotaAllow);
+      setMobile(data.mobile);
+      setReferral(data.referral);
+      setStatus(data.status);
+      setAgent(data.agent);
+
+      if(clientId)
+      {
+        const clientData = await getBetClientData(clientId);
+        setClientFullName(clientData.full_name);
+      }
+
+      if (clientId==="null") {
+        setClientId(null);
+      }
+
+
+      
+      
+    }
+    setLoading(false);
+  };
+
+
+
+  const handleSubmitComm = async (e) => {
+    e.preventDefault();
+    setShowCashOutDialog(false);
+    setLoading(true);
+    const data = await cashOutCashkoCommission(userID,commissionsCashout.toString(),newClient.full_name,newClient.bank,newClient.account);
+    if(data.error){
+      alert(data.message);
+    }
+    else
+    {
+      alert("Payout request created successfully.");
+      setNewClient({ full_name: "", bank: "", account: "" });
+      
+      const data = await fetchUserData(userID);
+      setBalance(data.balance);
+      setWinnings(data.wins);
+      setCommissions(data.commissions);
+      setQuota(data.quota);
+      setQuotaTime(data.quotaTime);
+      setQuotaAllow(data.quotaAllow);
       setMobile(data.mobile);
       setReferral(data.referral);
       setStatus(data.status);
@@ -438,6 +535,7 @@ const handleSubmit = async (e) => {
       <main className="container mx-auto px-4 py-6">
         {/* Balance Card (Mobile) */}
         <div >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
             <div>
               <p className="text-gray-500 text-sm">Your Balance</p>
@@ -445,15 +543,7 @@ const handleSubmit = async (e) => {
             </div>
             <Button className="bg-green-500 hover:bg-green-600" onClick={() => setShowCashInDialog(true)}>Cash In</Button>
           </div>
-          <br/>
-          <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
-            <div>
-              <p className="text-gray-500 text-sm">Your Commissions</p>
-              <p className="text-2xl font-bold text-gray-800">{formatPeso(commissions)}</p>
-            </div>
-            <Button className="bg-green-500 hover:bg-green-600" disabled>Cash Out</Button>
-          </div>
-          <br/>
+
           <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
             <div>
               <p className="text-gray-500 text-sm">Your Winnings</p>
@@ -461,6 +551,54 @@ const handleSubmit = async (e) => {
             </div>
             <Button className="bg-green-500 hover:bg-green-600" disabled={!winnings || winnings < 110} onClick={() => setShowCashOutDialog(true)}>Cash Out</Button>
           </div>
+        </div>
+          <br/>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  {/* Box 1 */}
+  {quotaAllow==="no" && (
+  <div className="bg-white rounded-xl shadow p-4 flex flex-col justify-between">
+    <div>
+          <p
+        className={`text-sm ${
+          unclaimedCommissions >= quota ? 'text-gray-500' : 'text-red-500'
+        }`}
+      >
+        {unclaimedCommissions >= quota
+          ? `Commissions will now be in your withdrawable balance (${quotaTime})`
+          : `Below Quota (${quotaTime})`}
+      </p>
+
+      <p
+        className={`text-2xl font-bold ${
+          unclaimedCommissions >= quota ? 'text-green-600' : 'text-red-600'
+        }`}
+      >
+        {formatPeso(unclaimedCommissions)} / {formatPeso(quota)}
+      </p>
+
+    </div>
+  </div>)
+}
+  {/* Box 2 */}
+  <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
+    <div>
+      <p className="text-gray-500 text-sm">Your withdrawable Commissions</p>
+      <p className="text-2xl font-bold text-gray-800">{formatPeso(commissions)}</p>
+    </div>
+    <Button className="bg-green-500 hover:bg-green-600" disabled={!commissions || commissions < 110} 
+    onClick={() => {
+      setShowCashOutComDialog(true);
+      setCommissionsCashout(commissions); // Add your second function here
+    }}
+    >
+      Cash Out
+    </Button>
+  </div>
+</div>
+
+          
+          <br/>
+          
 
               <br/>
               <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
@@ -798,6 +936,138 @@ const handleSubmit = async (e) => {
                       <Button 
                         variant="outline" 
                         onClick={() => setShowCashOutDialog(false)}
+                        className="w-full sm:w-auto border-blue-500 text-blue-600 hover:bg-blue-900/20"
+                      >
+                        Cancel
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+
+
+
+
+                <Dialog open={showCashOutComDialog} onOpenChange={setShowCashOutComDialog}>
+                  <DialogContent className="bg-gray-200 border-[#34495e]">
+                    <DialogHeader>
+                      <DialogTitle className="text-xl text-blue-600">Cash Out Commission</DialogTitle>
+                      <DialogDescription className="text-red-600">
+                      Please enter payout details carefully. PisoPlay is not responsible for misdirected funds due to incorrect information.
+            
+                      </DialogDescription>
+                    </DialogHeader>
+                    
+                    <div className="bg-gray-50 p-3 rounded-lg">
+                      <h4 className="font-medium mb-2">Withdraw Funds</h4>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between bg-white p-2 rounded border">
+                        <form onSubmit={handleSubmit} className="space-y-3">
+                          <div className="flex items-center">
+                            <div>
+                              <input
+                                value={commissionsCashout} 
+                                onChange={handleChangeCom}
+                                type="number" 
+                                className="border rounded p-1 text-sm w-full" 
+                                placeholder="Enter amount" 
+                                style={{ appearance: 'textfield' }}
+                              />
+                              <style>{`
+                                input[type=number]::-webkit-outer-spin-button,
+                                input[type=number]::-webkit-inner-spin-button {
+                                  -webkit-appearance: none;
+                                  margin: 0;
+                                }
+                                input[type=number] {
+                                  -moz-appearance: textfield;
+                                }
+                              `}</style>
+
+                            <br/><br/>
+                            <input
+                                type="text"
+                                name="full_name"
+                                placeholder="Full Name"
+                                value={newClient.full_name}
+                                onChange={handleChangeClient}
+                                className="w-full p-2 border rounded"
+                                required
+                              />
+                              <br/><br/>
+                              <select
+                                name="bank"
+                                value={newClient.bank}
+                                onChange={handleChangeClient}
+                                className="w-full p-2 border rounded"
+                                required
+                              >
+                                <option value="" disabled>
+                                  Select Payment Method
+                                </option>
+                                <option value="GCASH">GCASH</option>
+                                <option value="BDO">BDO Unibank, Inc.</option>
+                                <option value="BPI">Bank of the Philippine Islands</option>
+                                <option value="UBP">Union Bank of the Philippines</option>
+                                <option value="MYW">Maya Philippines, Inc./Maya Wallet</option>
+                                <option value="PNB">Philippine National Bank</option>
+                                <option value="EWR">East West Rural Bank / Komo</option>
+                                <option value="DBP">Development Bank of the Philippines</option>
+                                {/* Add more options as needed */}
+                              </select>
+
+                              <br/><br/>
+                              <input
+                                  type="text"
+                                  name="account"
+                                  placeholder="Account Number"
+                                  value={newClient.account}
+                                  onChange={(e) => {
+                                    const onlyDigits = e.target.value.replace(/\D/g, "");
+                                    handleChangeClient({ target: { name: "account", value: onlyDigits } });
+                                  }}
+                                  inputMode="numeric"
+                                  pattern="[0-9]*"
+                                  className="w-full p-2 border rounded"
+                                  required
+                                />
+
+                            </div>
+
+
+                          </div>
+                          <Button 
+                            disabled={!commissionsCashout || commissionsCashout < 110 || !termsAccepted} 
+                            type="submit"
+                            variant="outline" 
+                            size="sm" 
+                            className="text-blue-500 bg-blue-100 hover:text-blue-700 hover:bg-green-50 rounded px-4 py-2"
+                          >
+                            <label>Cash Out</label>
+                          </Button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2 mt-4">
+                      <input 
+                        type="checkbox" 
+                        id="terms" 
+                        checked={termsAccepted}
+                        onChange={(e) => setTermsAccepted(e.target.checked)}
+                        className="h-4 w-4 text-pink-500 focus:ring-0"
+                        required
+                      />
+                      <span className="text-sm text-gray-700">
+                        I agree to the 
+                        <a href={API_URL +"/img/terms.pdf"} target='_blank' className="text-pink-500"> Terms and Conditions</a>
+                      </span>
+                    </div>
+                    
+                    <DialogFooter className="flex flex-col gap-2 sm:flex-row">
+                      <Button 
+                        variant="outline" 
+                        onClick={() => setShowCashOutComDialog(false)}
                         className="w-full sm:w-auto border-blue-500 text-blue-600 hover:bg-blue-900/20"
                       >
                         Cancel
