@@ -287,7 +287,7 @@ const handleSubmit = async (e) => {
     {
       alert("Payout request created successfully.");
       setNewClient({ full_name: "", bank: "", account: "" });
-      
+      setCommissionsCashout(0);
       const data = await fetchUserData(userID);
       setBalance(data.balance);
       setWinnings(data.wins);
