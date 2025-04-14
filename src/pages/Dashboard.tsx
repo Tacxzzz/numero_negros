@@ -585,7 +585,7 @@ const handleSubmit = async (e) => {
       <p className="text-gray-500 text-sm">Your withdrawable Commissions</p>
       <p className="text-2xl font-bold text-gray-800">{formatPeso(commissions)}</p>
     </div>
-    <Button className="bg-green-500 hover:bg-green-600" disabled={!commissions || commissions < 110} 
+    <Button className="bg-green-500 hover:bg-green-600" disabled //disabled={!commissions || commissions < 110} 
     onClick={() => {
       setShowCashOutComDialog(true);
       setCommissionsCashout(commissions); // Add your second function here
