@@ -13,6 +13,7 @@ import { DrawHistoryPage } from "./pages/DrawHistoryPage";
 import { PaymentSuccess } from "./pages/PaymentSuccess";
 import { BetClientsPage } from "./pages/BetClientsPage";
 import { ClientProvider } from "./pages/ClientContext";
+import PisoPlaysGuide from "./pages/PisoPlaysGuide";
 
 const isAuthenticated = () => {
   const token = localStorage.getItem("authToken");
@@ -65,6 +66,7 @@ function App() {
           <Route path="/drawhistory" element={<DrawHistoryPage />} />
           <Route path="/betclients" element={<BetClientsPage />} />
           <Route path="/payment-success" element={<ProtectedRoute element={<PaymentSuccess />} />} />
+          <Route path="/pisoplaysguide" element={<PisoPlaysGuide />} />
         </Routes>
       </Router>
       </ClientProvider>
