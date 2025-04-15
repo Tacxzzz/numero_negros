@@ -624,7 +624,7 @@ const handleSubmit = async (e) => {
       >
         {unclaimedCommissions >= quota
           ? `Commissions will now be in your withdrawable balance (${quotaTime})`
-          : `Below Quota (${quotaTime})`}
+          : `Below Bet Quota (${quotaTime})`}
       </p>
 
       <p
