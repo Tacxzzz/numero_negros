@@ -84,6 +84,13 @@ export function Dashboard({ onLogout }: SidebarProps) {
     if (userID) {
       const handleUpdate = async () => {
 
+        const commData = await getCommissions(userID);
+        if(commData.authenticated)
+        {
+          setUnclaimedCommissions(commData.total_amount);
+        }
+
+
         const data = await fetchUserData(userID);
         setBalance(data.balance);
         setWinnings(data.wins);
@@ -98,11 +105,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
         setLoading(false);
 
 
-        const commData = await getCommissions(userID);
-        if(commData.authenticated)
-        {
-          setUnclaimedCommissions(commData.total_amount);
-        }
+        
         
 
 
@@ -155,6 +158,13 @@ export function Dashboard({ onLogout }: SidebarProps) {
 
 
   const handleCloseModal = async () => {
+
+    const commData = await getCommissions(userID);
+    if(commData.authenticated)
+    {
+      setUnclaimedCommissions(commData.total_amount);
+    }
+
     const data = await fetchUserData(userID);
     setBalance(data.balance);
     setWinnings(data.wins);
@@ -180,6 +190,13 @@ export function Dashboard({ onLogout }: SidebarProps) {
     }
     setCashInAmount(0);
     setCreditAmount(0);
+
+    const commData = await getCommissions(userID);
+    if(commData.authenticated)
+    {
+      setUnclaimedCommissions(commData.total_amount);
+    }
+
     const data = await fetchUserData(userID);
     setBalance(data.balance);
     setWinnings(data.wins);
@@ -193,11 +210,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
     setAgent(data.agent);
     setLoading(false);
 
-    const commData = await getCommissions(userID);
-    if(commData.authenticated)
-    {
-      setUnclaimedCommissions(commData.total_amount);
-    }
+    
 };
 
 const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -252,6 +265,12 @@ const handleSubmit = async (e) => {
       alert("Payout request created successfully.");
       setNewClient({ full_name: "", bank: "", account: "" });
       
+      const commData = await getCommissions(userID);
+      if(commData.authenticated)
+      {
+        setUnclaimedCommissions(commData.total_amount);
+      }
+
       const data = await fetchUserData(userID);
       setBalance(data.balance);
       setWinnings(data.wins);
@@ -296,6 +315,13 @@ const handleSubmit = async (e) => {
       alert("Payout request created successfully.");
       setNewClient({ full_name: "", bank: "", account: "" });
       setCommissionsCashout(0);
+
+      const commData = await getCommissions(userID);
+      if(commData.authenticated)
+      {
+        setUnclaimedCommissions(commData.total_amount);
+      }
+
       const data = await fetchUserData(userID);
       setBalance(data.balance);
       setWinnings(data.wins);
