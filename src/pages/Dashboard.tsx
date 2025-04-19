@@ -77,7 +77,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
 
   const API_URL = import.meta.env.VITE_DATABASE_URL;
 
-
+  
 
   useEffect(() => {
     setShowAdModal(true);
@@ -805,18 +805,31 @@ const handleSubmit = async (e) => {
                               `}</style>
                               <br/><br/>
                               <div className="flex flex-wrap gap-2">
-                                {[100, 200, 300, 500, 1000, 2000, 3000, 5000, 10000, 20000, 30000, 50000].map((value) => (
-                                  <button
-                                    key={value}
-                                    onClick={() => handleChange({ target: { value: value.toString() } } as React.ChangeEvent<HTMLInputElement>)}
-                                    className={`border rounded p-2 text-sm w-20 text-center ${
-                                      creditAmount.toString() === value.toString() ? 'bg-blue-500 text-white' : 'bg-gray-100 hover:bg-gray-200'
-                                    }`}
-                                  >
-                                    {value}
-                                  </button>
-                                ))}
-                              </div>
+                                  {[
+                                    channel === "GCASH_NATIVE" ? 100 : 50,
+                                    100, 200, 300, 500, 1000, 2000, 3000, 5000,
+                                  ]
+                                    .filter((v, i, arr) => arr.indexOf(v) === i) // remove duplicates
+                                    .map((value) => (
+                                      <button
+                                        key={value}
+                                        onClick={() =>
+                                          handleChange({
+                                            target: { value: value.toString() },
+                                          } as React.ChangeEvent<HTMLInputElement>)
+                                        }
+                                        className={`border rounded p-2 text-sm w-20 text-center ${
+                                          creditAmount.toString() === value.toString()
+                                            ? 'bg-blue-500 text-white'
+                                            : 'bg-gray-100 hover:bg-gray-200'
+                                        }`}
+                                      >
+                                        {value}
+                                      </button>
+                                    ))}
+                                </div>
+
+
                             <br/><br/>
                             <label htmlFor="bank" className="block mb-1 font-medium">
                             Payment Method
