@@ -30,6 +30,7 @@ import AnnouncementsMarquee from '@/components/AnnouncementsMarque';
 import PisoPlayLogo from "@/files/LogoIconOnly.svg";
 import AdvertisementModal from '@/components/AdvertisementModal';
 import AdvertisementImage from "@/files/advertisement.svg";
+import AddToHomeScreen from '@/components/AddToHomeScreen';
 
 interface SidebarProps {
   onLogout?: () => void;
@@ -456,6 +457,8 @@ const handleSubmit = async (e) => {
                     </svg>
                     Logout
                   </Button>
+
+                  <AddToHomeScreen />
                 </nav>
               </SheetContent>
             </Sheet>

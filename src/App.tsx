@@ -14,7 +14,6 @@ import { PaymentSuccess } from "./pages/PaymentSuccess";
 import { BetClientsPage } from "./pages/BetClientsPage";
 import { ClientProvider } from "./pages/ClientContext";
 import PisoPlaysGuide from "./pages/PisoPlaysGuide";
-import AddToHomeScreen from "./components/AddToHomeScreen";
 
 const isAuthenticated = () => {
   const token = localStorage.getItem("authToken");
@@ -70,7 +69,7 @@ function App() {
           <Route path="/pisoplaysguide" element={<PisoPlaysGuide />} />
         </Routes>
       </Router>
-      <AddToHomeScreen />
+      
       </ClientProvider>
     </UserProvider>
   );
