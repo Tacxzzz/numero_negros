@@ -771,7 +771,7 @@ const handleSubmit = async (e) => {
 
               {/* Cash In Dialog */}
               <Dialog open={showCashInDialog} onOpenChange={setShowCashInDialog}>
-                  <DialogContent className="bg-gray-200 border-[#34495e]">
+                  <DialogContent className="bg-gray-200 border-[#34495e] max-h-[100vh] overflow-y-auto">
                     <DialogHeader>
                       <DialogTitle className="text-xl text-blue-600">Cash In</DialogTitle>
                       <DialogDescription className="text-black-300">
@@ -785,7 +785,7 @@ const handleSubmit = async (e) => {
                         <div className="flex items-center justify-between bg-white p-2 rounded border">
                           <div className="flex items-center">
                             <div>
-                              {/* <input
+                              <input
                                 value={creditAmount} 
                                 onChange={handleChange}
                                 type="number" 
@@ -802,8 +802,8 @@ const handleSubmit = async (e) => {
                                 input[type=number] {
                                   -moz-appearance: textfield;
                                 }
-                              `}</style> */}
-
+                              `}</style>
+                              <br/><br/>
                               <div className="flex flex-wrap gap-2">
                                 {[100, 200, 300, 500, 1000, 2000, 3000, 5000, 10000, 20000, 30000, 50000].map((value) => (
                                   <button
