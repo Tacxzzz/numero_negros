@@ -785,7 +785,7 @@ const handleSubmit = async (e) => {
                         <div className="flex items-center justify-between bg-white p-2 rounded border">
                           <div className="flex items-center">
                             <div>
-                              <input
+                              {/* <input
                                 value={creditAmount} 
                                 onChange={handleChange}
                                 type="number" 
@@ -802,7 +802,21 @@ const handleSubmit = async (e) => {
                                 input[type=number] {
                                   -moz-appearance: textfield;
                                 }
-                              `}</style>
+                              `}</style> */}
+
+                              <div className="flex flex-wrap gap-2">
+                                {[100, 200, 300, 500, 1000, 2000, 3000, 5000, 10000, 20000, 30000, 50000].map((value) => (
+                                  <button
+                                    key={value}
+                                    onClick={() => handleChange({ target: { value: value.toString() } } as React.ChangeEvent<HTMLInputElement>)}
+                                    className={`border rounded p-2 text-sm w-20 text-center ${
+                                      creditAmount.toString() === value.toString() ? 'bg-blue-500 text-white' : 'bg-gray-100 hover:bg-gray-200'
+                                    }`}
+                                  >
+                                    {value}
+                                  </button>
+                                ))}
+                              </div>
                             <br/><br/>
                             <label htmlFor="bank" className="block mb-1 font-medium">
                             Payment Method
@@ -822,24 +836,23 @@ const handleSubmit = async (e) => {
                                 <option value="MAYA_NATIVE">MAYA</option>
                                 {/* Add more options as needed */}
                               </select>
-                            
                             </div>
-                            
-                            
                           </div>
+                        </div>
+                        <div>
                           <Button 
-                             disabled={
-                              !cashInAmount || 
-                              !termsAccepted || 
-                              (channel === "GCASH_NATIVE" ? cashInAmount < 100 : cashInAmount < 50)
-                            } 
-                            type="button"
-                            variant="outline" 
-                            size="sm"
-                            onClick={cashInSubmit}  
-                            className="text-blue-500 bg-blue-100 hover:text-blue-700 hover:bg-green-50 rounded px-4 py-2"
-                          >
-                            <label>Cash In</label>
+                              disabled={
+                                !cashInAmount || 
+                                !termsAccepted || 
+                                (channel === "GCASH_NATIVE" ? cashInAmount < 100 : cashInAmount < 50)
+                              } 
+                              type="button"
+                              variant="outline" 
+                              size="sm"
+                              onClick={cashInSubmit}  
+                              className="w-full text-blue-500 bg-blue-100 hover:text-blue-700 hover:bg-green-50 rounded px-4 py-2"
+                            >
+                              <label>Cash In</label>
                           </Button>
                         </div>
                       </div>
