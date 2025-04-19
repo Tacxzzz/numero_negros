@@ -34,11 +34,12 @@ const AddToHomeScreen = () => {
 
   return (
     <button
-      onClick={handleClick}
-      className="fixed bottom-4 right-4 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md"
+    onClick={handleClick}
+    className="fixed bottom-4 right-4 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md z-50"
     >
-      Add to Home Screen
+    Add to Home Screen
     </button>
+
   )
 }
 
