@@ -314,6 +314,14 @@ export function SupportPage() {
                 </svg>
                 <span className="text-xs mt-1">Support</span>
               </Link>
+              <Link to="/pisoplaysguide" className="flex flex-col items-center p-2 text-gray-500" onClick={() => navigate('/pisoplaysguide')}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-book-heart-icon lucide-book-heart">
+              <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/>
+              <path d="M12 17h.01"></path>
+              <path d="M10 8a2 2 0 1 1 2 2c0 1-2 1.5-0 3"></path>
+              </svg>
+                <span className="text-xs mt-1">Help Guide</span>
+              </Link>
           </div>
         </div>
 
@@ -655,14 +663,14 @@ export function SupportPage() {
                 <p className="text-sm text-gray-600 mb-4">Comprehensive guides to help you navigate our platform and make the most of your experience.</p>
                 {/* <Button variant="outline" className="w-full">View Guides</Button> */}
                 
-<a
-  href={pdfFile}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="w-full inline-block text-center bg-transparent border border-gray-300 text-gray-700 py-2 px-4 rounded hover:bg-gray-100 font-bold"
->
-  View Guides
-</a>
+                  <a
+                    href={pdfFile}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full inline-block text-center bg-transparent border border-gray-300 text-gray-700 py-2 px-4 rounded hover:bg-gray-100 font-bold"
+                  >
+                    View Guides
+                  </a>
 
               </CardContent>
             </Card>
