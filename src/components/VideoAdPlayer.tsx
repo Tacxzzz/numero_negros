@@ -51,7 +51,7 @@ export function VideoAdPlayer() {
           <div className="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 font-bold">
             P
           </div>
-          <span className="ml-2 text-sm font-medium">PisoPlay</span>
+          <span className="ml-2 text-sm font-medium">Paano Kikita sa PisoPlay?</span>
         </div>
 
         <Button
