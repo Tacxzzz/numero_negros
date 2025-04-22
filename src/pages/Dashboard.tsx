@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { GameCard } from '@/components/GameCard';
 import { LiveStream } from '@/components/LiveStream';
+import { VideoAdPlayer } from '@/components/VideoAdPlayer';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -695,11 +696,11 @@ const handleSubmit = async (e) => {
 
         
         {/* Live Streams */}
-        <section className="mb-8">
-          <h2 className="text-xl font-bold mb-4 text-gray-800">Live Now</h2>
+        <section className="mb-8"><br/>
+          {/* <h2 className="text-xl font-bold mb-4 text-gray-800">Live Now</h2> */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {liveStreams.map(stream => (
-              <LiveStream key={stream.id} stream={stream} />
+              <VideoAdPlayer  />
             ))}
 
 
