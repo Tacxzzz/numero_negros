@@ -40,7 +40,7 @@ export function VideoAdPlayer() {
 
         {overlayVisible && (
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 transition-opacity duration-200">
-            <h3 className="font-bold text-white text-lg">PisoPlay Video Ad</h3>
+            <h3 className="font-bold text-white text-lg">Paano Kikita sa PisoPlay?</h3>
             <p className="text-white/80 text-sm">Enjoy this sponsored content</p>
           </div>
         )}
