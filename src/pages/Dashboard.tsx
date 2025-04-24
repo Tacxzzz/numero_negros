@@ -9,6 +9,9 @@ import { Input } from '@/components/ui/input';
 import { GameCard } from '@/components/GameCard';
 import { LiveStream } from '@/components/LiveStream';
 import { VideoAdPlayer } from '@/components/VideoAdPlayer';
+import { DashboardCarousel } from '@/components/DashboardCarousel';
+import { YouTubeEmbed } from '@/components/YouTubeEmbed';
+import { YouTubeEmbedCard } from '@/components/YouTubeEmbedCard';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -358,8 +361,32 @@ const handleSubmit = async (e) => {
   }
 
   const liveStreams = [
-    { id: 1, title: "[LIVE] PCSO 2:00 PM Lotto Draw",live: true, viewers: 1243, streamer: "[Live] PCSO Lotto Draw", image: "https://www.youtube.com/embed/pO0BDYTq7zw?si=22s1k5ePuyKvgsy5" },
+    { id: 1, title: "Game Mechanics",live: true, viewers: 1243, streamer: "[Live] PCSO Lotto Draw", image: "https://www.youtube.com/embed/pO0BDYTq7zw?si=22s1k5ePuyKvgsy5" },
    /*  { id: 2, title: "PCSO 2:00 PM Lotto Draw - September 17, 2024",live:false, viewers: 876, streamer: "PCSO Lotto Draw - September 17, 2024", image: "https://www.youtube.com/embed/-V27j5M_GNM?si=gZY1bCopPs6xKCMa" }, */
+  ];
+  
+  // Prepare carousel slides
+  const carouselSlides = [
+    ...liveStreams.map((stream) => ({ type: "live" as const, stream })),
+    { type: "ad" as const }, // Standard ad slide
+    // { 
+    //   type: "ad" as const, // Use 'ad' type to fit CarouselSlide
+    //   adContent: (
+    //     <YouTubeEmbedCard
+    //       videoId="4ai4e66qF24"
+    //       title="PCSO Lotto Draw Live"
+    //     />
+    //   )
+    // },
+    { 
+      type: "ad" as const, // Use 'ad' type to fit CarouselSlide
+      adContent: (
+        <YouTubeEmbedCard
+          videoId="4ai4e66qF24"
+          title="Piso Play Game Play"
+        />
+      )
+    }
   ];
   
   return (
@@ -699,35 +726,32 @@ const handleSubmit = async (e) => {
         <section className="mb-8"><br/>
           {/* <h2 className="text-xl font-bold mb-4 text-gray-800">Live Now</h2> */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {liveStreams.map(stream => (
-              <VideoAdPlayer  />
-            ))}
-
-
+            {/* Left column: Carousel */}
+            <div>
+              <DashboardCarousel slides={carouselSlides} />
+            </div>
+            
+            {/* Right column: Preserved Play button block */}
             <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow">
-                  <div className="relative">
-                  <iframe
-                    src="https://pisogame.com/pages/home/download/android/index?code=VI6KxuLZb"
-                    className="w-full h-48 object-cover"
-                    allowFullScreen
-                  ></iframe>
-                    
-                  </div>
-                  <div className="p-3 flex justify-between items-center">
-                  <div className="flex items-center">
-                  </div>
-        
-                  
-                  <Button 
-                    size="sm" 
-                    className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
-                    onClick={() => window.open('https://pisogame.com/pages/home/download/android/index?code=VI6KxuLZb', '_blank')}
-                  >
-                    Play
-                  </Button>
+              <div className="relative">
+                <iframe
+                  src="https://pisogame.com/pages/home/download/android/index?code=VI6KxuLZb"
+                  className="w-full h-48 object-cover"
+                  allowFullScreen
+                ></iframe>
+              </div>
+              <div className="p-3 flex justify-between items-center">
+                <div className="flex items-center">
                 </div>
-                  
-                </div>
+                <Button 
+                  size="sm" 
+                  className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
+                  onClick={() => window.open('https://pisogame.com/pages/home/download/android/index?code=VI6KxuLZb', '_blank')}
+                >
+                  Play
+                </Button>
+              </div>
+            </div>
           </div>
         </section>
         
