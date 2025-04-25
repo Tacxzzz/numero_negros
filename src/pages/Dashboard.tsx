@@ -367,7 +367,7 @@ const handleSubmit = async (e) => {
   
   // Prepare carousel slides
   const carouselSlides = [
-    ...liveStreams.map((stream) => ({ type: "live" as const, stream })),
+    //...liveStreams.map((stream) => ({ type: "live" as const, stream })),
     { type: "ad" as const }, // Standard ad slide
     // { 
     //   type: "ad" as const, // Use 'ad' type to fit CarouselSlide
