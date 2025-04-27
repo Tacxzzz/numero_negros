@@ -15,6 +15,8 @@ import { BetClientsPage } from "./pages/BetClientsPage";
 import { ClientProvider } from "./pages/ClientContext";
 import PisoPlaysGuide from "./pages/PisoPlaysGuide";
 import AddToHomeScreen from "./components/AddToHomeScreen";
+import { ManageReferrals } from "./pages/ManageReferrals";
+import { AllowReferrer } from "./pages/AllowReferrer";
 
 const isAuthenticated = () => {
   const token = localStorage.getItem("authToken");
@@ -68,6 +70,8 @@ function App() {
           <Route path="/betclients" element={<BetClientsPage />} />
           <Route path="/payment-success" element={<ProtectedRoute element={<PaymentSuccess />} />} />
           <Route path="/pisoplaysguide" element={<PisoPlaysGuide />} />
+          <Route path="/manageTeam" element={<ManageReferrals />} />
+          <Route path="/allowReferrer" element={<AllowReferrer />} />
         </Routes>
       </Router>
       <AddToHomeScreen />

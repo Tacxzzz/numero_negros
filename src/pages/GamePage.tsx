@@ -113,7 +113,7 @@ export function GamePage() {
       if (userID) {
         const handleUpdate = async () => {
           const userData = await fetchUserData(userID);
-          setBalance(userData.balance);
+          setBalance(userData[0].balance);
           const dataFave = await readMyFavorite(userID,gameId);
           if(dataFave.authenticated)
           {

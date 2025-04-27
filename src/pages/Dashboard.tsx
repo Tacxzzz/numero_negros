@@ -81,7 +81,8 @@ export function Dashboard({ onLogout }: SidebarProps) {
 
   const API_URL = import.meta.env.VITE_DATABASE_URL;
 
-  
+  const [level1,setLevel1] = useState(0);
+  const [level2,setLevel2] = useState(0);
 
   useEffect(() => {
     setShowAdModal(true);
@@ -94,18 +95,21 @@ export function Dashboard({ onLogout }: SidebarProps) {
           setUnclaimedCommissions(commData.total_amount);
         }
 
+        const dataRef = await getReferrals(userID);
+        setLevel1(dataRef.level1);
+        setLevel2(dataRef.level2);
 
         const data = await fetchUserData(userID);
-        setBalance(data.balance);
-        setWinnings(data.wins);
-        setCommissions(data.commissions);
-        setQuota(data.quota);
-        setQuotaTime(data.quotaTime);
-        setQuotaAllow(data.quotaAllow);
-        setMobile(data.mobile);
-        setReferral(data.referral);
-        setStatus(data.status);
-        setAgent(data.agent);
+        setBalance(data[0].balance);
+        setWinnings(data[0].wins);
+        setCommissions(data[0].commissions);
+        setQuota(data[0].quota);
+        setQuotaTime(data[0].quota_time);
+        setQuotaAllow(data[0].quota_allow);
+        setMobile(data[0].mobile);
+        setReferral(data[0].referral);
+        setStatus(data[0].status);
+        setAgent(data[0].agent);
         setLoading(false);
 
 
@@ -169,18 +173,21 @@ export function Dashboard({ onLogout }: SidebarProps) {
       setUnclaimedCommissions(commData.total_amount);
     }
 
+    const dataRef = await getReferrals(userID);
+    setLevel1(dataRef.level1);
+    setLevel2(dataRef.level2);
+
     const data = await fetchUserData(userID);
-    setBalance(data.balance);
-    setWinnings(data.wins);
-    setCommissions(data.commissions);
-    setQuota(data.quota);
-    setQuotaTime(data.quotaTime);
-    setQuotaAllow(data.quotaAllow);
-    setMobile(data.mobile);
-    setReferral(data.referral);
-    setStatus(data.status);
-    setAgent(data.agent);
-    console.log(data.mobile);
+    setBalance(data[0].balance);
+    setWinnings(data[0].wins);
+    setCommissions(data[0].commissions);
+    setQuota(data[0].quota);
+    setQuotaTime(data[0].quota_time);
+    setQuotaAllow(data[0].quota_allow);
+    setMobile(data[0].mobile);
+    setReferral(data[0].referral);
+    setStatus(data[0].status);
+    setAgent(data[0].agent);
     setShowAccountModal(false);
   };
 
@@ -201,17 +208,21 @@ export function Dashboard({ onLogout }: SidebarProps) {
       setUnclaimedCommissions(commData.total_amount);
     }
 
+    const dataRef = await getReferrals(userID);
+    setLevel1(dataRef.level1);
+    setLevel2(dataRef.level2);
+
     const data = await fetchUserData(userID);
-    setBalance(data.balance);
-    setWinnings(data.wins);
-    setCommissions(data.commissions);
-    setQuota(data.quota);
-    setQuotaTime(data.quotaTime);
-    setQuotaAllow(data.quotaAllow);
-    setMobile(data.mobile);
-    setReferral(data.referral);
-    setStatus(data.status);
-    setAgent(data.agent);
+    setBalance(data[0].balance);
+    setWinnings(data[0].wins);
+    setCommissions(data[0].commissions);
+    setQuota(data[0].quota);
+    setQuotaTime(data[0].quota_time);
+    setQuotaAllow(data[0].quota_allow);
+    setMobile(data[0].mobile);
+    setReferral(data[0].referral);
+    setStatus(data[0].status);
+    setAgent(data[0].agent);
     setLoading(false);
 
     
@@ -275,17 +286,21 @@ const handleSubmit = async (e) => {
         setUnclaimedCommissions(commData.total_amount);
       }
 
+      const dataRef = await getReferrals(userID);
+      setLevel1(dataRef.level1);
+      setLevel2(dataRef.level2);
+
       const data = await fetchUserData(userID);
-      setBalance(data.balance);
-      setWinnings(data.wins);
-      setCommissions(data.commissions);
-      setQuota(data.quota);
-      setQuotaTime(data.quotaTime);
-      setQuotaAllow(data.quotaAllow);
-      setMobile(data.mobile);
-      setReferral(data.referral);
-      setStatus(data.status);
-      setAgent(data.agent);
+      setBalance(data[0].balance);
+      setWinnings(data[0].wins);
+      setCommissions(data[0].commissions);
+      setQuota(data[0].quota);
+      setQuotaTime(data[0].quota_time);
+      setQuotaAllow(data[0].quota_allow);
+      setMobile(data[0].mobile);
+      setReferral(data[0].referral);
+      setStatus(data[0].status);
+      setAgent(data[0].agent);
 
       if(clientId)
       {
@@ -326,17 +341,21 @@ const handleSubmit = async (e) => {
         setUnclaimedCommissions(commData.total_amount);
       }
 
+      const dataRef = await getReferrals(userID);
+      setLevel1(dataRef.level1);
+      setLevel2(dataRef.level2);
+
       const data = await fetchUserData(userID);
-      setBalance(data.balance);
-      setWinnings(data.wins);
-      setCommissions(data.commissions);
-      setQuota(data.quota);
-      setQuotaTime(data.quotaTime);
-      setQuotaAllow(data.quotaAllow);
-      setMobile(data.mobile);
-      setReferral(data.referral);
-      setStatus(data.status);
-      setAgent(data.agent);
+      setBalance(data[0].balance);
+      setWinnings(data[0].wins);
+      setCommissions(data[0].commissions);
+      setQuota(data[0].quota);
+      setQuotaTime(data[0].quota_time);
+      setQuotaAllow(data[0].quota_allow);
+      setMobile(data[0].mobile);
+      setReferral(data[0].referral);
+      setStatus(data[0].status);
+      setAgent(data[0].agent);
 
       if(clientId)
       {
@@ -682,12 +701,27 @@ const handleSubmit = async (e) => {
     </Button>
   </div>
 </div>
-
-          
-          <br/>
-          
-
-              <br/>
+                <br/>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
+                  <div>
+                    
+                      <p className="text-gray-500 text-sm">Referrals</p>
+                      <p className="text-2xl font-bold text-gray-800">{level1+level2}</p>
+                    
+                  </div>
+                  {referral && (<Button
+                  onClick={() => {
+                    navigate('/allowReferrer');
+                  }} 
+                  className="bg-blue-500 hover:bg-blue-600"  >Set Referrer Access</Button>
+                )}
+                  <Button
+                  onClick={() => {
+                    navigate('/manageTeam');
+                  }} 
+                  className="bg-blue-500 hover:bg-blue-600"  >Dashboard</Button>
+                </div>
               <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
                 <div>
                   <p className="text-gray-500 text-sm">Betting Clients</p>
@@ -699,6 +733,7 @@ const handleSubmit = async (e) => {
                   navigate('/betclients');
                 }} 
                 className="bg-green-500 hover:bg-green-600"  >Manage</Button>
+              </div>
               </div>
               {clientId && (
                 <>
@@ -1398,10 +1433,9 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
     if (userID) {
       const handleUpdate = async () => {
         const data = await fetchUserData(userID);
-        setMobile(data.mobile);
-        setReferral(data.referral);
-        setStatus(data.status);
-        console.log(data.mobile);
+        setMobile(data[0].mobile);
+        setReferral(data[0].referral);
+        setStatus(data[0].status);
 
         const dataRef = await getReferrals(userID);
         setLevel1(dataRef.level1);
