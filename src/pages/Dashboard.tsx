@@ -655,7 +655,7 @@ const handleSubmit = async (e) => {
               <p className="text-gray-500 text-sm">Your Winnings</p>
               <p className="text-2xl font-bold text-gray-800">{formatPeso(winnings)}</p>
             </div>
-            <Button className="bg-green-500 hover:bg-green-600" disabled={!winnings || winnings < 106.5} onClick={() => setShowCashOutDialog(true)}>Cash Out</Button>
+            <Button className="bg-green-500 hover:bg-green-600" disabled={!winnings || winnings < 106} onClick={() => setShowCashOutDialog(true)}>Cash Out</Button>
           </div>
         </div>
           <br/>
@@ -691,7 +691,7 @@ const handleSubmit = async (e) => {
       <p className="text-gray-500 text-sm">Your withdrawable Commissions</p>
       <p className="text-2xl font-bold text-gray-800">{formatPeso(commissions)}</p>
     </div>
-    <Button className="bg-green-500 hover:bg-green-600" disabled={!commissions || commissions < 106.5} 
+    <Button className="bg-green-500 hover:bg-green-600" disabled={!commissions || commissions < 106} 
     onClick={() => {
       setShowCashOutComDialog(true);
       setCommissionsCashout(commissions); // Add your second function here
@@ -1060,7 +1060,7 @@ const handleSubmit = async (e) => {
 
                           </div>
                           <Button 
-                            disabled={!winnings || winnings < 106.5 || !termsAccepted} 
+                            disabled={!winnings || winnings < 106 || !termsAccepted} 
                             type="submit"
                             variant="outline" 
                             size="sm" 
@@ -1192,7 +1192,7 @@ const handleSubmit = async (e) => {
 
                           </div>
                           <Button 
-                            disabled={!commissionsCashout || commissionsCashout < 106.5 || !termsAccepted} 
+                            disabled={!commissionsCashout || commissionsCashout < 106 || !termsAccepted} 
                             type="submit"
                             variant="outline" 
                             size="sm" 
