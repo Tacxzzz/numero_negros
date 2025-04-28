@@ -7,9 +7,6 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      workbox: {
-        maximumFileSizeToCacheInBytes: 5000000 // ← 5MB (increase from 2MB)
-      },
       registerType: 'autoUpdate',
       manifest: {
         name: 'PisoPlay',
