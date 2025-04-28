@@ -710,17 +710,28 @@ const handleSubmit = async (e) => {
                       <p className="text-2xl font-bold text-gray-800">{level1+level2}</p>
                     
                   </div>
-                  {referral && (<Button
-                  onClick={() => {
-                    navigate('/allowReferrer');
-                  }} 
-                  className="bg-blue-500 hover:bg-blue-600"  >Set Referrer Access</Button>
-                )}
-                  <Button
-                  onClick={() => {
-                    navigate('/manageTeam');
-                  }} 
-                  className="bg-blue-500 hover:bg-blue-600"  >Dashboard</Button>
+                  <div className="flex flex-col gap-2">
+                    {referral && (
+                      <Button
+                        onClick={() => {
+                          navigate('/allowReferrer');
+                        }} 
+                        className="bg-blue-500 hover:bg-blue-600"
+                      >
+                        Set Referrer Access
+                      </Button>
+                    )}
+                    
+                    <Button
+                      onClick={() => {
+                        navigate('/manageTeam');
+                      }} 
+                      className="bg-blue-500 hover:bg-blue-600"
+                    >
+                      Dashboard
+                    </Button>
+                  </div>
+
                 </div>
               <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
                 <div>
