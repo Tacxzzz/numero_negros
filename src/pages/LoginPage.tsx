@@ -7,7 +7,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useUser } from "./UserContext";
 import { loginAccount, sendOTPForReset, verifyOTPForgot, verifyOTPLogin } from '@/lib/apiCalls';
 import { useClient } from "./ClientContext";
-import PisoPlayLogo from "@/files/LogoWithName.svg"; 
+import PisoPlayLogo from "@/files/LogoWithName.svg";
+import { PhoneIcon, LockIcon } from "lucide-react"; 
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -144,8 +145,16 @@ export function LoginPage() {
   
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sky-400 to-sky-300 flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md">
+        {/* Top promotional banner - only shown when not in OTP input mode */}
+        {!showOtpInput && !forgotPass && !openOTPforgot && (
+          <div className="w-full bg-blue-500 text-white text-center py-4 px-6 rounded-xl mb-5">
+            <h2 className="text-xl font-bold">Sign Up and Get your free ₱15 credits</h2>
+          </div>
+        )}
+
+
         {/* Logo */}
         {/* <div className="flex justify-center mb-6">
           <div className="w-20 h-20 rounded-full bg-gradient-to-r from-yellow-300 to-yellow-500 flex items-center justify-center shadow-lg">
@@ -158,38 +167,37 @@ export function LoginPage() {
         </div> */}
 
 
-        <div className="flex justify-center mb-6">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg">
+<div className="flex justify-center">
+        <img src={PisoPlayLogo} alt="PisoPlay Logo" width="100" height="100" />
+          {/* <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg"> */}
               {/* <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-500">
                 <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
               </svg> */}
-
-              <img src={PisoPlayLogo} alt="PisoPlay Logo" width="65" height="65" />
+              {/* <img src={PisoPlayLogo} alt="PisoPlay Logo" width="65" height="65" />
             </div>
-          </div>
+          </div> */}
         </div>
 
         
         
         {/* Login Form */}
-        <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
+        <div className="overflow-hidden">
           <div className="p-8">
-            <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Welcome Back!</h2>
-
             {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
 
-
             {!showOtpInput && !forgotPass && !openOTPforgot ? (
+            <>
+            <h2 className="text-2xl font-bold text-center mb-4 text-blue-600 uppercase">Welcome Back!</h2>
             <form onSubmit={handleLogin} className="space-y-4">
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
                 <Label htmlFor="mobile" className="text-gray-700">Mobile Number</Label>
-                <div className="flex items-center space-x-2 border rounded-xl p-2 bg-gray-100">
+                <div className="flex items-center space-x-2 border rounded-xl p-2 bg-gray-100"> */}
                   {/* Fixed +63 country code */}
-                  <span className="text-gray-700 font-semibold">+63</span>
+                  {/* <span className="text-gray-700 font-semibold">+63</span> */}
 
                   {/* Mobile Input */}
-                  <Input 
+                  {/* <Input 
                     id="mobile" 
                     type="tel" 
                     placeholder="9XXXXXXXXX" 
@@ -200,9 +208,22 @@ export function LoginPage() {
                     required
                   />
                 </div>
+              </div> */}
+
+              <div className="flex">
+                <div className="bg-gray-400 w-16 h-14 flex items-center justify-center">
+                  <PhoneIcon className="h-6 w-6 text-white" />
+                </div>
+                <Input
+                  type="tel"
+                  value={mobile}
+                  onChange={(e) => setMobile(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                  placeholder="9*********"
+                  className="flex-1 h-14 bg-gray-200 border-0 rounded-none text-lg"
+                />
               </div>
               
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <div className="flex justify-between items-center">
                   <Label htmlFor="password" className="text-gray-700">Password</Label>
                   <a 
@@ -222,6 +243,21 @@ export function LoginPage() {
                   className="rounded-xl"
                   required
                 />
+              </div> */}
+
+              <div className="mb-6">
+                <div className="flex">
+                  <div className="bg-gray-400 w-16 h-14 flex items-center justify-center">
+                    <LockIcon className="h-6 w-6 text-white" />
+                  </div>
+                  <Input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Password"
+                    className="flex-1 h-14 bg-gray-200 border-0 rounded-none text-lg"
+                  />
+                </div>
               </div>
               
               <div className="flex items-center space-x-2 mb-4">
@@ -240,16 +276,18 @@ export function LoginPage() {
               <Button 
                 type="submit" 
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-600 hover:to-orange-600 text-white rounded-xl py-6 text-lg font-bold"
+                className="w-full custom-signup-button"
               >
                 {isLoading ? "Logging in..." : "Sign in"}
               </Button>
 
              
             </form>
+            </>
             ) :
             forgotPass ? (
               <form onSubmit={handleMobile} className="space-y-4">
+              <h2 className="text-2xl font-bold text-center mb-4 text-blue-600 uppercase">Forgot Password</h2>
               <Label htmlFor="otp" className="text-gray-700">Enter Mobile number</Label>
               
               <div className="flex items-center space-x-2 border rounded-xl p-2 bg-gray-100">
@@ -276,6 +314,7 @@ export function LoginPage() {
             :
             openOTPforgot ? (
               <form onSubmit={handleOtpReset} className="space-y-4">
+              <h2 className="text-2xl font-bold text-center mb-4 text-blue-600 uppercase">Reset Password</h2>
               <Label htmlFor="otp" className="text-gray-700">Enter OTP to reset password</Label>
               <p style={{ color: 'red' }}>Your temporary password will be sent to you via sms. You can then change your password once logged in.</p>
               <Input 
@@ -288,7 +327,7 @@ export function LoginPage() {
                 placeholder="Enter 8-digit OTP"
                 required
               />
-              <Button  disabled={isLoading} type="submit" className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-4 rounded-xl">
+              <Button  disabled={isLoading} type="submit" className="w-full custom-signup-button">
               {isLoading ? "Resetting Password..." : "Verify OTP"} 
               </Button>
             </form>
@@ -297,8 +336,9 @@ export function LoginPage() {
             (
             // 👇 OTP input form
             <form onSubmit={handleOtpVerify} className="space-y-4">
-              <Label htmlFor="otp" className="text-gray-700">Enter OTP</Label>
-              <Input 
+              <h2 className="text-2xl font-bold text-center mb-4 text-blue-600 uppercase">OTP Code</h2>
+              <Label htmlFor="otp" className="text-gray-700 text-center block w-full">Please type the OTP Verification code sent to <b>(+63){mobile}</b> </Label>
+              {/* <Input 
                 id="otp"
                 type="text"
                 value={otp}
@@ -307,9 +347,21 @@ export function LoginPage() {
                 pattern="[0-9]{8}"
                 placeholder="Enter 8-digit OTP"
                 required
+              /> */}
+
+              <Input
+                type="text"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                maxLength={8}
+                pattern="[0-9]{8}"
+                placeholder="Enter 8-digit OTP"
+                className="flex-1 h-14 bg-gray-200 border-0 rounded-none text-lg"
+                required
               />
-              <Button type="submit" className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-4 rounded-xl">
-                Verify OTP
+
+              <Button type="submit" className="w-full custom-signup-button">
+                Verify Code
               </Button>
             </form>
           )}

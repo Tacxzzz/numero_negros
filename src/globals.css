@@ -67,3 +67,19 @@
     @apply font-sans antialiased bg-background text-foreground;
   }
 }
+
+.custom-signup-button {
+  background: linear-gradient(to right, #002a6e, #485ebd, #348df3cf); /* blue gradient */
+  color: white;
+  padding: 12px 32px;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  border-radius: 999px; /* pill shape */
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.custom-signup-button:hover {
+  background: linear-gradient(to right, #0041c4, #3454e0, #5fa6f0);
+}

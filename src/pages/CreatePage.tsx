@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { createAccount, verifyOTP } from '@/lib/apiCalls';
 import { useUser } from "./UserContext";
 import PisoPlayLogo from "@/files/LogoWithName.svg"; 
+import { PhoneIcon, LockIcon } from "lucide-react";
 
 export function CreatePage() {
   const navigate = useNavigate();
@@ -92,30 +93,35 @@ export function CreatePage() {
   };
   
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sky-400 to-sky-300 flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md">
+        {/* Top promotional banner */}
+        <div className="w-full bg-blue-500 text-white text-center py-4 px-6 rounded-xl mb-5">
+          <h2 className="text-xl font-bold">Sign Up and Get your free ₱15 credits</h2>
+        </div>
         {/* Logo */}
-        <div className="flex justify-center mb-6">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg">
+        <div className="flex justify-center">
+        <img src={PisoPlayLogo} alt="PisoPlay Logo" width="100" height="100" />
+          {/* <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg"> */}
               {/* <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-500">
                 <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
               </svg> */}
-              <img src={PisoPlayLogo} alt="PisoPlay Logo" width="65" height="65" />
+              {/* <img src={PisoPlayLogo} alt="PisoPlay Logo" width="65" height="65" />
             </div>
-          </div>
+          </div> */}
         </div>
         
         {/* Login Form */}
-        <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
+        {/* <div className="bg-white rounded-3xl shadow-xl overflow-hidden"> */}
           <div className="p-8">
-            <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Create an Account</h2>
+            <h2 className="text-2xl font-bold text-center mb-4 text-blue-600 uppercase">Create an Account</h2>
             {error && <p className="text-red-500 text-sm text-center mt-2">{error}</p>}
             {!showOtp ? (
               <form onSubmit={handleLogin} className="space-y-4">
                 <Input type="hidden" value={decodedRef} name="referral" />
 
-                <div className="space-y-2">
+                {/* <div className="space-y-2">
                   <Label htmlFor="mobile" className="text-gray-700">Mobile Number</Label>
                   <div className="flex items-center space-x-2 border rounded-xl p-2 bg-gray-100">
                     <span className="text-gray-700 font-semibold">+63</span>
@@ -130,9 +136,22 @@ export function CreatePage() {
                       required
                     />
                   </div>
-                </div>
+                </div> */}
 
-                <div className="space-y-2">
+          <div className="flex">
+            <div className="bg-gray-400 w-16 h-14 flex items-center justify-center">
+              <PhoneIcon className="h-6 w-6 text-white" />
+            </div>
+            <Input
+              type="tel"
+              value={mobile}
+              onChange={(e) => setMobile(e.target.value.replace(/\D/g, '').slice(0, 10))}
+              placeholder="9*********"
+              className="flex-1 h-14 bg-gray-200 border-0 rounded-none text-lg"
+            />
+          </div>
+
+                {/* <div className="space-y-2">
                   <Label htmlFor="password" className="text-gray-700">Password</Label>
                   <Input 
                     id="password" 
@@ -144,9 +163,24 @@ export function CreatePage() {
                     className="rounded-xl"
                     required
                   />
+                </div> */}
+
+                <div className="mb-6">
+                  <div className="flex">
+                    <div className="bg-gray-400 w-16 h-14 flex items-center justify-center">
+                      <LockIcon className="h-6 w-6 text-white" />
+                    </div>
+                    <Input
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Password"
+                      className="flex-1 h-14 bg-gray-200 border-0 rounded-none text-lg"
+                    />
+                  </div>
                 </div>
 
-                <div className="space-y-2">
+                {/* <div className="space-y-2">
                   <Label htmlFor="confirm-password" className="text-gray-700">Confirm Password</Label>
                   <Input 
                     id="confirm-password" 
@@ -158,7 +192,25 @@ export function CreatePage() {
                     className="rounded-xl"
                     required
                   />
+                </div> */}
+
+                <div className="mb-6">
+                  <div className="flex">
+                    <div className="bg-gray-400 w-16 h-14 flex items-center justify-center">
+                      <LockIcon className="h-6 w-6 text-white" />
+                    </div>
+                    <Input
+                      type="password"
+                      name="con_password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="Password"
+                      className="flex-1 h-14 bg-gray-200 border-0 rounded-none text-lg"
+                    />
+                  </div>
                 </div>
+
+
                 <div className="flex items-center space-x-2">
                 <input 
                   type="checkbox" 
@@ -173,8 +225,9 @@ export function CreatePage() {
                   <a href={API_URL +"/img/terms.pdf"} target='_blank' className="text-pink-500"> Terms and Conditions</a>
                 </Label>
               </div>
-                <Button disabled={isLoading || !termsAccepted} type="submit" className="w-full bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-xl py-6 text-lg font-bold">
-                {isLoading ? "Sending OTP..." : "Send OTP"}
+              <br/>
+                <Button disabled={isLoading || !termsAccepted} type="submit" className="w-full custom-signup-button">
+                {isLoading ? "Sending OTP..." : "Sign Up"}
                 </Button>
               </form>
             ) : (
@@ -194,19 +247,44 @@ export function CreatePage() {
                   />
                 </div>
 
-                <Button type="submit" className="w-full bg-green-500 hover:bg-green-600 text-white rounded-xl py-6 text-lg font-bold">
+                <Button type="submit" className="w-full custom-signup-button">
                   Verify OTP & Create Account
                 </Button>
               </form>
             )}
 
             
-            <div className="mt-6 text-center">
+            <div className="mt-2 text-center">
             Already have an account?{" "}
             <a href="/" className="text-blue-500 hover:underline">Sign In</a>
             </div>
             
+          {/* </div> */}
+
+          <div className="mt-8 flex items-center justify-between">
+            <div className="bg-gray-200 rounded-full py-3 px-6 flex items-center">
+            <a 
+                href="#" 
+                className="flex items-center text-black-600 hover:text-blue-600 hover:underline"
+              >
+              <span className="mr-2 font-bold ">Click here to learn how to earn more</span>
+                <div className="flex">
+                  {/* <div className="w-6 h-6 bg-yellow-400 rounded-full -mr-1"></div>
+                  <div className="w-6 h-6 bg-yellow-400 rounded-full -mr-1"></div>
+                  <div className="w-6 h-6 bg-yellow-400 rounded-full"></div> */}
+                  {/* <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-500">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+                  </svg> */}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-3 -3 32 32" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-500">
+                    <ellipse cx="10" cy="7" rx="6" ry="2.5" />
+                    <path d="M4 7v6c0 1.5 2.7 2.5 6 2.5s6-1 6-2.5V7" />
+                    <path d="M4 13v6c0 1.5 2.7 2.5 6 2.5s6-1 6-2.5v-6" />
+                  </svg>
+                </div>
+                </a>
+              </div>
           </div>
+
         </div>
       </div>
     </div>
