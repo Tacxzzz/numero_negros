@@ -1234,3 +1234,95 @@ export const removeAccessReferrer = async (
     return {  authenticated: false };
   }
 };
+
+
+
+export const getDownlinesTable = async (userID: string, type:string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getDownlinesTable`, { userID, type });
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch recipients:", error);
+    return [];
+  }
+};
+
+export const getBetsEarnedTeamTable = async (userID: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getBetsEarnedTeamTable`, { userID });
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch recipients:", error);
+    return [];
+  }
+};
+
+export const getWinsTeamTable = async (userID: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getWinsTeamTable`, { userID });
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch recipients:", error);
+    return [];
+  }
+};
+
+export const getCommissionsTeamTable = async (userID: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getCommissionsTeamTable`, { userID });
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch recipients:", error);
+    return [];
+  }
+};
+
+export const totalCashinTeamTable = async (userID: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/totalCashinTeamTable`, { userID });
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch recipients:", error);
+    return [];
+  }
+};
+
+export const totalCashoutTeamTable = async (userID: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/totalCashoutTeamTable`, { userID });
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch recipients:", error);
+    return [];
+  }
+};

@@ -724,7 +724,7 @@ const handleSubmit = async (e) => {
                     
                     <Button
                       onClick={() => {
-                        navigate('/manageTeam');
+                        navigate('/manageTeam', { state: { userID: userID } });
                       }} 
                       className="bg-blue-500 hover:bg-blue-600"
                     >

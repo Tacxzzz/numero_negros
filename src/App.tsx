@@ -3,6 +3,10 @@ import { lazy, Suspense } from "react";
 import { UserProvider } from "./pages/UserContext";
 import { ClientProvider } from "./pages/ClientContext";
 import AddToHomeScreen from "./components/AddToHomeScreen";
+import { PlayerCommissions } from "./pages/PlayerCommissions";
+import { PlayerCashin } from "./pages/PlayerCashin";
+import { PlayerCashout } from "./pages/PlayerCashout";
+
 
 // Correct lazy imports: 
 const LoginPage = lazy(() => import("./pages/LoginPage").then(module => ({ default: module.LoginPage })));
@@ -20,6 +24,12 @@ const BetClientsPage = lazy(() => import("./pages/BetClientsPage").then(module =
 const PisoPlaysGuide = lazy(() => import("./pages/PisoPlaysGuide").then(module => ({ default: module.default })));
 const ManageReferrals = lazy(() => import("./pages/ManageReferrals").then(module => ({ default: module.ManageReferrals })));
 const AllowReferrer = lazy(() => import("./pages/AllowReferrer").then(module => ({ default: module.AllowReferrer })));
+const Players = lazy(() => import("./pages/Players").then(module => ({ default: module.Players })));
+const PlayerBets = lazy(() => import("./pages/PlayerBets").then(module => ({ default: module.PlayerBets })));
+const PlayerWins = lazy(() => import("./pages/PlayerWins").then(module => ({ default: module.PlayerWins })));
+const PlayerBalances = lazy(() => import("./pages/PlayerBalances").then(module => ({ default: module.PlayerBalances })));
+
+
 
 const isAuthenticated = (): boolean => {
   return !!localStorage.getItem("authToken");
@@ -61,6 +71,13 @@ function App() {
               <Route path="/pisoplaysguide" element={<PisoPlaysGuide />} />
               <Route path="/manageTeam" element={<ManageReferrals />} />
               <Route path="/allowReferrer" element={<AllowReferrer />} />
+              <Route path="/team" element={<Players />} />
+              <Route path="/teambets" element={<PlayerBets />} />
+              <Route path="/teamwins" element={<PlayerWins />} />
+              <Route path="/teambalances" element={<PlayerBalances />} />
+              <Route path="/teamcommissions" element={<PlayerCommissions />} />
+              <Route path="/teamcashins" element={<PlayerCashin />} />
+              <Route path="/teamcashouts" element={<PlayerCashout />} />
               <Route path="/test" element={<div>Test Page Works!</div>} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

@@ -26,7 +26,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { useUser } from "./UserContext";
-import { getGameByID, getMyBets, countBetsEarnedTeam, getRateChartDataTeam, totalBalancePlayersTeam, totalCashinTeam, totalCashOutTeam, totalClientsTeam, totalCommissionsTeam, totalPlayersTeam, totalWinsTeam} from '@/lib/apiCalls';
+import { getGameByID, getMyBets, countBetsEarnedTeam, getRateChartDataTeam, totalBalancePlayersTeam, totalCashinTeam, totalCashOutTeam, totalClientsTeam, totalCommissionsTeam, totalPlayersTeam, totalWinsTeam, fetchUserData} from '@/lib/apiCalls';
 import { formatPeso, getTransCode } from '@/lib/utils';
 
 
@@ -34,13 +34,14 @@ import { formatPeso, getTransCode } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { HandIcon , HandMetalIcon, ShoppingCart, Users, Boxes, Wallet, CoinsIcon, Wallet2, BookAIcon, BookCheck, BookHeart, Banknote } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-
+import { useLocation } from 'react-router-dom';
 
 
 
 export function ManageReferrals() {
+  const location = useLocation();
   const navigate = useNavigate();
-  const { setUserID,userID } = useUser();
+  const userID = location.state?.userID;
   console.log(userID);
   const [loading, setLoading] = useState(true);
   const [totalRemitAmount, setTotalRemitAmount] = useState(0);
@@ -52,6 +53,7 @@ export function ManageReferrals() {
   const [totalCashins, setTotalCashins] = useState(0);
   const [totalCashouts, setTotalCashouts] = useState(0);
   const [rateChartData, setRateChartData] = useState<any[]>([]);
+  const [mobile, setMobile] = useState('');
 
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
@@ -99,7 +101,9 @@ export function ManageReferrals() {
       if (userID) {
         const handleUpdate = async () => {
           
-  
+            const dataUSer = await fetchUserData(userID);
+            setMobile(dataUSer[0].mobile);
+
             const initialStartDate = new Date();
             initialStartDate.setDate(initialStartDate.getDate() - 20); // Subtract 20 days from the current date
   
@@ -166,41 +170,49 @@ export function ManageReferrals() {
     
   const stats = [
     {
+      nav: "/teambets",
       title: "Total Bets Wagered",
       value: formatPeso(totalRemitAmount),
       icon: CoinsIcon,
     },
     {
+      nav: "/teamwins",
       title: "Total Wins",
       value: formatPeso(totalRedeemAmount),
       icon: CoinsIcon,
     },
     {
+      nav: "/teambalances",
       title: "Total Balance From Players",
       value: formatPeso(totalBalance),
       icon: BookCheck,
     },
     {
+      nav: "/teamcommissions",
       title: "Total Commision",
       value: formatPeso(totalComm),
       icon: BookHeart,
     },
     {
-      title: "Players",
+      nav: "/team",
+      title: "Referrals",
       value: totalPlayersAmount,
       icon: Users,
     },
     {
+      nav: "",
       title: "Betting Clients",
       value: totalNonRegisteredPlayers,
       icon: Users,
     },
     {
+      nav: "/teamcashins",
       title: "Cash In",
       value: formatPeso(totalCashins),
       icon: Banknote,
     },
     {
+      nav: "/teamcashouts",
       title: "Cash Out",
       value: formatPeso(totalCashouts),
       icon: Banknote,
@@ -241,7 +253,7 @@ export function ManageReferrals() {
 <main className="container mx-auto px-4 py-6">
 <div className="p-4 md:p-6 space-y-6">
 <div className="lg:mb-4 flex flex-wrap justify-between items-center gap-4">
-  <h2 className="text-2xl md:text-3xl font-bold text-left">My Team Dashboard</h2>
+  <h2 className="text-2xl md:text-3xl font-bold text-left">(+63){mobile} <br/>Referrals Dashboard </h2>
   <div className="flex flex-wrap justify-end items-center gap-4">
     <div className="w-full sm:w-auto">
       <label htmlFor="startDate" className="block text-sm font-medium">
@@ -281,7 +293,7 @@ export function ManageReferrals() {
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
           <Card key={stat.title}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardHeader onClick={() => navigate(`${stat.nav}`, { state: { userID: userID } })} style={{ cursor: "pointer" }} className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
                 {stat.title}
               </CardTitle>
