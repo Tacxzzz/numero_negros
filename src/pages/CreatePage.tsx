@@ -204,7 +204,7 @@ export function CreatePage() {
                       name="con_password"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="Password"
+                      placeholder="Confirm Password"
                       className="flex-1 h-14 bg-gray-200 border-0 rounded-none text-lg"
                     />
                   </div>
