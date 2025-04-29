@@ -3,9 +3,6 @@ import { lazy, Suspense } from "react";
 import { UserProvider } from "./pages/UserContext";
 import { ClientProvider } from "./pages/ClientContext";
 import AddToHomeScreen from "./components/AddToHomeScreen";
-import { PlayerCommissions } from "./pages/PlayerCommissions";
-import { PlayerCashin } from "./pages/PlayerCashin";
-import { PlayerCashout } from "./pages/PlayerCashout";
 
 
 // Correct lazy imports: 
@@ -28,6 +25,9 @@ const Players = lazy(() => import("./pages/Players").then(module => ({ default: 
 const PlayerBets = lazy(() => import("./pages/PlayerBets").then(module => ({ default: module.PlayerBets })));
 const PlayerWins = lazy(() => import("./pages/PlayerWins").then(module => ({ default: module.PlayerWins })));
 const PlayerBalances = lazy(() => import("./pages/PlayerBalances").then(module => ({ default: module.PlayerBalances })));
+const PlayerCommissions = lazy(() => import("./pages/PlayerCommissions").then(module => ({ default: module.PlayerCommissions })));
+const PlayerCashin = lazy(() => import("./pages/PlayerCashin").then(module => ({ default: module.PlayerCashin })));
+const PlayerCashout = lazy(() => import("./pages/PlayerCashout").then(module => ({ default: module.PlayerCashout })));
 
 
 
