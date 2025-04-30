@@ -53,10 +53,9 @@ const AutoScrollWinnersCarousel = () => {
             className="min-w-[250px] bg-white rounded-xl shadow p-4 flex-shrink-0 text-center"
           >
             <p className="text-sm text-gray-500">{winner.game_name}</p>
-            <p className="text-xs text-gray-400">{winner.draw_date}<br/>{winner.draw_time}</p>
-            <p className="font-bold text-lg">{winner.bets}</p>
-            <p className="text-sm text-gray-500">Winner : (+63){winner.user_mobile}</p>
-            <p className="text-green-600 font-semibold mt-1">{formatPeso(winner.jackpot)}</p>
+            <p className="text-xs text-gray-400">{winner.date}<br/>{winner.time}</p>
+            <p className="font-bold text-lg">{winner.results}</p>
+            <p className="text-sm text-gray-500">Winners : {winner.total_winners}</p>
             
           </div>
         ))}
