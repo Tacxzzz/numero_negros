@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 
 type GameCardProps = {
   game: {
+    description: any;
     id: number;
     name: string;
     status: string;
@@ -41,7 +42,12 @@ export function GameCard({ game }: GameCardProps) {
           <span>Min: P {game.minBet}</span>
           <span>Max: P {game.maxBet}</span>
         </div> */}
-        
+
+         {/* Game Description */}
+         {game.description && (
+          <p className="text-sm text-gray-600 mb-3">{game.description}</p>
+        )}
+
         <div className="flex gap-2">
           <Button 
             variant="outline" 

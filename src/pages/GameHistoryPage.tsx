@@ -45,22 +45,33 @@ export function GameHistoryPage() {
   const [betsData, setBetsData] = useState<any[]>([]);
   const [filter, setFilter] = useState('all');
   const API_URL = import.meta.env.VITE_DATABASE_URL;
-
-  const [selectedDate, setSelectedDate] = useState<string>('');
+  const today = new Date().toISOString().split('T')[0];
+  const [selectedDate, setSelectedDate] = useState(today);
   const [filteredDateDraws, setFilteredDateDraws] = useState<any[]>([]);
   const [totalBets, setTotalBets] = useState<{ [key: string]: number }>({});
 
-// Handle date change and filter draws
-const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  const selectedDate = event.target.value;
-  setSelectedDate(selectedDate);
 
-  const filtered = draws.filter((draw) => {
-    const drawDate = draw.date.split(' ')[0]; // Get only the date part
-    return drawDate === formatDate(selectedDate); // Compare with formatted date
-  });
-  setFilteredDateDraws(filtered);
-};
+
+
+  useEffect(() => {
+    if (draws.length > 0 && selectedDate) {
+      filterDrawsByDate(selectedDate);
+    }
+  }, [draws, selectedDate]);
+  
+  const filterDrawsByDate = (date: string) => {
+    const filtered = draws.filter((draw) => {
+      const drawDate = draw.date.split(' ')[0];
+      return drawDate === formatDate(date);
+    });
+    setFilteredDateDraws(filtered);
+  };
+  
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = event.target.value;
+    setSelectedDate(selected);
+    filterDrawsByDate(selected);
+  };
 
 // Format date to match draw.date format (mm/dd/yyyy)
 const formatDate = (dateString: string) => {
@@ -70,6 +81,7 @@ const formatDate = (dateString: string) => {
   const year = date.getFullYear();
   return `${month}/${day}/${year}`;
 };
+
 
 useEffect(() => {
     const handleUpdate = async () => {
@@ -104,6 +116,9 @@ useEffect(() => {
 
       const gameBetData = await getBetsByUserAndDraw(gameId,userID);
       setBetsData(gameBetData);
+
+      
+
       };
       handleUpdate();
   }, [gameId]);

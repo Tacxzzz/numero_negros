@@ -334,6 +334,35 @@ export const getReferrals = async (id: string
 };
 
 
+export const getBetsWinners = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/main/getBetsWinners`);
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch games:", error);
+    return [];
+  }
+};
+
+export const getGamesToday = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/main/getGamesToday`);
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch games:", error);
+    return [];
+  }
+};
 
 export const getGames = async () => {
   try {

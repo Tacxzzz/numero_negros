@@ -24,7 +24,7 @@ import { FiCopy } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from "./UserContext";
-import { addBetClients, cashIn, cashInCashko, cashOutCashko, cashOutCashkoCommission, fetchUserData, getBetClientData, getCommissions, getGames, getMyBetClientsCount, getReferrals, updatePassword } from '@/lib/apiCalls';
+import { addBetClients, cashIn, cashInCashko, cashOutCashko, cashOutCashkoCommission, fetchUserData, getBetClientData, getCommissions, getGames, getGamesToday, getMyBetClientsCount, getReferrals, updatePassword } from '@/lib/apiCalls';
 import { formatPeso } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -34,6 +34,7 @@ import AnnouncementsMarquee from '@/components/AnnouncementsMarque';
 import PisoPlayLogo from "@/files/LogoIconOnly.svg";
 import AdvertisementModal from '@/components/AdvertisementModal';
 import AdvertisementImage from "@/files/advertisement.svg";
+import AutoScrollWinnersCarousel from '@/components/winnersScroll';
 
 interface SidebarProps {
   onLogout?: () => void;
@@ -67,6 +68,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const [commissionsCashout, setCommissionsCashout] = useState(0);
   const [cashInAmount, setCashInAmount] = useState(0);
   const [creditAmount, setCreditAmount] = useState(0);
+  const [todayGames, setTodayGames] = useState<any[]>([]);
   const [popularGames, setPopularGames] = useState<any[]>([]);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -135,7 +137,8 @@ export function Dashboard({ onLogout }: SidebarProps) {
         const gamesData = await getGames();
         setPopularGames(gamesData);
 
-        
+        const gamesDataToday = await getGamesToday();
+        setTodayGames(gamesDataToday);
 
       };
       handleUpdate();
@@ -631,7 +634,7 @@ const handleSubmit = async (e) => {
 
       <AnnouncementsMarquee />
 
-
+      <AutoScrollWinnersCarousel />
 
       {/* Account Management Modal */}
         {showAccountModal && (
@@ -802,16 +805,23 @@ const handleSubmit = async (e) => {
         </section>
         
         {/* Games Tabs */}
-        <Tabs defaultValue="popular" className="mb-8">
+        <Tabs defaultValue="today" className="mb-8">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-gray-800">Games</h2>
             <TabsList>
-              <TabsTrigger value="popular">Popular</TabsTrigger>
+            <TabsTrigger value="today">Today</TabsTrigger>
+              <TabsTrigger value="popular">All Games</TabsTrigger>
              {/*  <TabsTrigger value="new">New</TabsTrigger> */}
               <TabsTrigger value="favorites">Favorites</TabsTrigger>
             </TabsList>
           </div>
-          
+          <TabsContent value="today" className="mt-0">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {todayGames.map(game => (
+                <GameCard key={game.id} game={game} />
+              ))}
+            </div>
+          </TabsContent>
           <TabsContent value="popular" className="mt-0">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {popularGames.map(game => (
