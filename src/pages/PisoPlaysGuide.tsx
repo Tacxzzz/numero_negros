@@ -257,6 +257,17 @@ const PisoPlayGuide = () => {
           </CardHeader>
           <CardContent className="flex flex-col items-center text-center">
             <ol className="list-decimal list-inside space-y-2">
+
+            Watch Video {" "}
+                <a
+                  href="https://www.youtube.com/shorts/mgf559LgRXU?feature=share  "
+                  className="text-blue-600 underline"
+                  target="_blank"
+                >
+                  How to Place Your Bets  
+                </a>{" "}
+                or follow the <b>Instruction Steps</b> below.
+
               <li>On the homepage, scroll down to the <b>Games</b> section, <b>select the game</b> <p>you want to 
               play, and click <b>“Play”</b>.</p></li>
               <img src={manual_17} alt="Select Draw Date" className="rounded-lg w-full" /><br />
