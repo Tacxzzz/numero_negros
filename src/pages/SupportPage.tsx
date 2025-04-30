@@ -333,48 +333,14 @@ export function SupportPage() {
                 </svg>
                 Live Chat
               </Button>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="outline" className="bg-transparent border-white text-white hover:bg-white/10 mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
-                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                      <polyline points="22,6 12,13 2,6"></polyline>
-                    </svg>
-                    Contact Us
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>Contact Support</DialogTitle>
-                  </DialogHeader>
-                  <form className="space-y-4">
-                    <div className="space-y-2">
-                      <label htmlFor="dialog-email" className="text-sm font-medium">Email Address</label>
-                      <Input id="dialog-email" type="email" placeholder="your@email.com" required />
-                    </div>
-                    <div className="space-y-2">
-                      <label htmlFor="dialog-subject" className="text-sm font-medium">Subject</label>
-                      <Input id="dialog-subject" placeholder="Brief description of your issue" required />
-                    </div>
-                    <div className="space-y-2">
-                      <label htmlFor="dialog-message" className="text-sm font-medium">Message</label>
-                      <Textarea id="dialog-message" placeholder="Please provide details about your inquiry or issue..." rows={4} required />
-                    </div>
-                    <DialogFooter>
-                      <Button type="submit">Send Message</Button>
-                    </DialogFooter>
-                  </form>
-                </DialogContent>
-              </Dialog>
             </div>
           </div>
         </div>
         
         {/* Support Tabs */}
         <Tabs defaultValue="faq" className="mb-6" value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-1">
             <TabsTrigger value="faq">FAQ</TabsTrigger>
-            <TabsTrigger value="contact">Contact Us</TabsTrigger>
           </TabsList>
           
           <TabsContent value="faq">
@@ -409,7 +375,7 @@ export function SupportPage() {
               </CardContent>
               <CardFooter className="flex justify-between">
                 <p className="text-sm text-gray-500">Can't find what you're looking for?</p>
-                <Button variant="outline" onClick={() => setActiveTab('contact')}>Contact Support</Button>
+                <Button variant="outline" onClick={() =>  window.open('https://tawk.to/chat/67f4c61c846b7b190fd1ea14/1ioa2bnq9', '_blank', 'noopener,noreferrer')}>Contact Support</Button>
               </CardFooter>
             </Card>
           </TabsContent>
