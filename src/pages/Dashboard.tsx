@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState,lazy } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -30,11 +30,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 import { useClient } from "./ClientContext";
-import AnnouncementsMarquee from '@/components/AnnouncementsMarque';
 import PisoPlayLogo from "@/files/LogoIconOnly.svg";
 import AdvertisementModal from '@/components/AdvertisementModal';
 import AdvertisementImage from "@/files/advertisement.svg";
-import AutoScrollWinnersCarousel from '@/components/AutoScrollWinnersCarousel';
+
+const AnnouncementsMarquee = lazy(() => import("@/components/AnnouncementsMarque"));
+const AutoScrollWinnersCarousel = lazy(() => import("@/components/AutoScrollWinnersCarousel"));
+
 
 interface SidebarProps {
   onLogout?: () => void;
