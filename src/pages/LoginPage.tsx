@@ -246,10 +246,20 @@ export function LoginPage() {
               </div> */}
 
               <div className="mb-6">
+              <a 
+                  href="#" 
+                  className="text-sm text-blue-500 hover:underline"
+                  onClick={(e) => {
+                    e.preventDefault(); // prevents the page from jumping to the top
+                    setForgotPass(true); // sets your state
+                  }}>Forgot Password?</a>
                 <div className="flex">
+                  
                   <div className="bg-gray-400 w-16 h-14 flex items-center justify-center">
                     <LockIcon className="h-6 w-6 text-white" />
+                    
                   </div>
+                  
                   <Input
                     type="password"
                     value={password}
@@ -306,7 +316,7 @@ export function LoginPage() {
                     required
                   />
                 </div>
-              <Button disabled={isLoading} type="submit" className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-4 rounded-xl">
+              <Button disabled={isLoading} type="submit" className="w-full custom-signup-button">
               {isLoading ? "Sending OTP..." : "Verify First to reset password"} 
               </Button>
             </form>
