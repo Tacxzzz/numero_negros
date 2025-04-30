@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { checkCurrentBetsTotal, getBetsByUserAndDraw, getDrawsByID, getGameByID, getGames, getGameTypeByID, getGameTypesByID } from '@/lib/apiCalls';
-import { formatPeso, getTransCode } from '@/lib/utils';
+import { formatPeso, getPhilippineDate, getTransCode } from '@/lib/utils';
 import { useUser } from "./UserContext";
 // import { popularGames } from './Dashboard';
 
@@ -45,8 +45,7 @@ export function GameHistoryPage() {
   const [betsData, setBetsData] = useState<any[]>([]);
   const [filter, setFilter] = useState('all');
   const API_URL = import.meta.env.VITE_DATABASE_URL;
-  const today = new Date().toISOString().split('T')[0];
-  const [selectedDate, setSelectedDate] = useState(today);
+  const [selectedDate, setSelectedDate] = useState(getPhilippineDate());
   const [filteredDateDraws, setFilteredDateDraws] = useState<any[]>([]);
   const [totalBets, setTotalBets] = useState<{ [key: string]: number }>({});
 
