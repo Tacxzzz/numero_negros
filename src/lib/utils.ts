@@ -92,8 +92,9 @@ export const parseDateTime = (date, time) => {
 
 export const getPhilippineDate = () => {
   const now = new Date();
-  // Convert to Philippine Time (UTC+8)
-  const utc = now.getTime() + now.getTimezoneOffset() * 60000;
-  const pht = new Date(utc + 3600000 * 8);
-  return pht.toISOString().split('T')[0]; // YYYY-MM-DD
+
+  // Get date in 'en-PH' locale (Philippine timezone) using UTC+8
+  return now.toLocaleDateString('en-CA', {
+    timeZone: 'Asia/Manila',
+  }); // 'YYYY-MM-DD' format
 };
