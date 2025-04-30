@@ -688,7 +688,7 @@ const handleSubmit = async (e) => {
   {/* Box 2 */}
   <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
     <div>
-      <p className="text-gray-500 text-sm">Your withdrawable Commissions</p>
+      <p className="text-gray-500 text-sm">Withdrawable Commissions</p>
       <p className="text-2xl font-bold text-gray-800">{formatPeso(commissions)}</p>
     </div>
     <Button className="bg-green-500 hover:bg-green-600" disabled={!commissions || commissions < 106} 
