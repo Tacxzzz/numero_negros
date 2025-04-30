@@ -34,7 +34,7 @@ import AnnouncementsMarquee from '@/components/AnnouncementsMarque';
 import PisoPlayLogo from "@/files/LogoIconOnly.svg";
 import AdvertisementModal from '@/components/AdvertisementModal';
 import AdvertisementImage from "@/files/advertisement.svg";
-import AutoScrollWinnersCarousel from '@/components/winnersScroll';
+import AutoScrollWinnersCarousel from '@/components/AutoScrollWinnersCarousel';
 
 interface SidebarProps {
   onLogout?: () => void;
