@@ -161,17 +161,12 @@ export function SupportPage() {
         {
           id: 'q1',
           question: 'How do I create an account?',
-          answer: 'To create an account, click on the "Sign Up" button in the top right corner of the homepage. Fill in your personal details, create a username and password, and agree to our terms and conditions. Once you\'ve completed these steps, your account will be created.'
+          answer: 'To create an account, click the "Sign Up" button located below the "Sign In" button. Enter your mobile number and password, agree to our terms and conditions, and verify your mobile number using an OTP (One-Time Password). Once completed, your account will be successfully created.'
         },
         {
           id: 'q2',
-          question: 'Why do I need to verify my account?',
-          answer: 'Account verification is required to comply with regulatory requirements and to ensure the security of your account. Verification helps prevent fraud and money laundering, and allows us to protect your account and funds.'
-        },
-        {
-          id: 'q3',
           question: 'How do I reset my password?',
-          answer: 'To reset your password, click on the "Forgot Password" link on the login page. Enter the email address associated with your account, and we\'ll send you a password reset link. Follow the instructions in the email to create a new password.'
+          answer: "Click on the 'Forgot Password' link on the login page. Enter the mobile number associated with your account, and we’ll send you an OTP to verify your identity. Once verified, you'll be able to set a new password."
         }
       ]
     },
@@ -182,17 +177,17 @@ export function SupportPage() {
         {
           id: 'q4',
           question: 'What payment methods are available?',
-          answer: 'We accept various payment methods including credit/debit cards (Visa, Mastercard), e-wallets (PayPal, Skrill, Neteller), bank transfers, and cryptocurrencies (Bitcoin, Ethereum). Available methods may vary depending on your location.'
+          answer: 'We accept various payment methods, including credit/debit cards (BDO, BPI, PNB, RCBC, CBC) and e-wallets (GCash, Maya).'
         },
         {
           id: 'q5',
           question: 'How long do withdrawals take?',
-          answer: 'Withdrawal processing times vary depending on the payment method. E-wallets typically process within 24 hours, credit/debit cards within 3-5 business days, and bank transfers within 5-7 business days. Cryptocurrency withdrawals are usually processed within a few hours.'
+          answer: 'Withdrawals are usually processed immediately or within a few minutes.'
         },
         {
           id: 'q6',
           question: 'Is there a minimum or maximum withdrawal amount?',
-          answer: 'Yes, the minimum withdrawal amount is $10 for most payment methods. Maximum withdrawal limits vary depending on your account level and payment method. You can view your specific limits in the Cashier section of your account.'
+          answer: 'Yes, the minimum withdrawal amount is ₱100, with an additional ₱6 withdrawal charge.'
         }
       ]
     },
@@ -200,11 +195,7 @@ export function SupportPage() {
       id: 'games',
       title: 'Games & Betting',
       questions: [
-        {
-          id: 'q7',
-          question: 'How do I join a tournament?',
-          answer: 'To join a tournament, navigate to the Tournaments section from the main menu. Browse available tournaments and click on the one you\'re interested in. Review the tournament details, entry fee, and rules, then click the "Register" or "Join" button to participate.'
-        },
+        
         {
           id: 'q8',
           question: 'What happens if I lose connection during a game?',
@@ -213,7 +204,7 @@ export function SupportPage() {
         {
           id: 'q9',
           question: 'Are the games fair?',
-          answer: 'Yes, all our games use certified Random Number Generators (RNGs) to ensure fair and random outcomes. Our platform is regularly audited by independent testing agencies to verify the fairness and integrity of our games. You can view our certification details in the footer of our website.'
+          answer: 'Yes, all our games are based on the official PCSO draw, ensuring fairness and transparency in every result.'
         }
       ]
     }
@@ -381,9 +372,8 @@ export function SupportPage() {
         
         {/* Support Tabs */}
         <Tabs defaultValue="faq" className="mb-6" value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="faq">FAQ</TabsTrigger>
-            <TabsTrigger value="tickets">My Tickets</TabsTrigger>
             <TabsTrigger value="contact">Contact Us</TabsTrigger>
           </TabsList>
           
@@ -424,165 +414,6 @@ export function SupportPage() {
             </Card>
           </TabsContent>
           
-          <TabsContent value="tickets">
-            <Card>
-              <CardHeader>
-                <CardTitle>My Support Tickets</CardTitle>
-                <CardDescription>View and manage your support requests</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {supportTickets.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {/* Ticket List */}
-                    <div className="md:col-span-1 border rounded-lg overflow-hidden">
-                      <div className="bg-gray-50 p-3 border-b">
-                        <h3 className="font-medium">Ticket History</h3>
-                      </div>
-                      <ScrollArea className="h-[400px]">
-                        <div className="divide-y">
-                          {supportTickets.map(ticket => (
-                            <div 
-                              key={ticket.id}
-                              className={`p-3 cursor-pointer hover:bg-gray-50 transition-colors ${activeTicket === ticket.id ? 'bg-blue-50' : ''}`}
-                              onClick={() => setActiveTicket(ticket.id)}
-                            >
-                              <div className="flex justify-between items-start mb-1">
-                                <h4 className="font-medium">{ticket.subject}</h4>
-                                <Badge 
-                                  className={
-                                    ticket.status === 'open' 
-                                      ? 'bg-green-100 text-green-800' 
-                                      : ticket.status === 'pending'
-                                      ? 'bg-yellow-100 text-yellow-800'
-                                      : 'bg-gray-100 text-gray-800'
-                                  }
-                                >
-                                  {ticket.status}
-                                </Badge>
-                              </div>
-                              <div className="text-sm text-gray-500 mb-1">
-                                ID: {ticket.id} • {ticket.date}
-                              </div>
-                              <div className="text-xs text-gray-400">
-                                Last updated: {ticket.lastUpdate}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </ScrollArea>
-                    </div>
-
-
-                    
-                    {/* Ticket Details */}
-                    <div className="md:col-span-2 border rounded-lg overflow-hidden">
-                      {activeTicket ? (
-                        <>
-                          {(() => {
-                            const ticket = supportTickets.find(t => t.id === activeTicket);
-                            if (!ticket) return null;
-                            
-                            return (
-                              <>
-                                <div className="bg-gray-50 p-3 border-b flex justify-between items-center">
-                                  <div>
-                                    <h3 className="font-medium">{ticket.subject}</h3>
-                                    <div className="text-sm text-gray-500">
-                                      {ticket.id} • {ticket.date} {ticket.time}
-                                    </div>
-                                  </div>
-                                  <Badge 
-                                    className={
-                                      ticket.status === 'open' 
-                                        ? 'bg-green-100 text-green-800' 
-                                        : ticket.status === 'pending'
-                                        ? 'bg-yellow-100 text-yellow-800'
-                                        : 'bg-gray-100 text-gray-800'
-                                    }
-                                  >
-                                    {ticket.status}
-                                  </Badge>
-                                </div>
-                                
-                                <ScrollArea className="h-[300px] p-4">
-                                  <div className="space-y-4">
-                                    {ticket.messages.map((msg, idx) => (
-                                      <div 
-                                        key={idx} 
-                                        className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                                      >
-                                        <div 
-                                          className={`max-w-[80%] rounded-lg p-3 ${
-                                            msg.sender === 'user' 
-                                              ? 'bg-blue-100 text-blue-800' 
-                                              : 'bg-gray-100 text-gray-800'
-                                          }`}
-                                        >
-                                          <div className="flex items-center gap-2 mb-1">
-                                            <Avatar className="h-6 w-6">
-                                              <AvatarImage src={msg.avatar} alt={msg.name} />
-                                              <AvatarFallback>{msg.name.charAt(0)}</AvatarFallback>
-                                            </Avatar>
-                                            <span className="text-sm font-medium">{msg.name}</span>
-                                            <span className="text-xs text-gray-500">{msg.timestamp}</span>
-                                          </div>
-                                          <p className="text-sm">{msg.message}</p>
-                                        </div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </ScrollArea>
-                                
-                                {ticket.status !== 'closed' && (
-                                  <div className="p-3 border-t">
-                                    <form className="flex gap-2">
-                                      <Textarea 
-                                        placeholder="Type your reply..." 
-                                        className="min-h-[60px]"
-                                      />
-                                      <Button type="submit" className="shrink-0">
-                                        Send
-                                      </Button>
-                                    </form>
-                                  </div>
-                                )}
-                              </>
-                            );
-                          })()}
-                        </>
-                      ) : (
-                        <div className="h-full flex flex-col items-center justify-center p-6 text-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 mb-4">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                          </svg>
-                          <h3 className="text-lg font-medium text-gray-700 mb-2">Select a Ticket</h3>
-                          <p className="text-gray-500">Choose a ticket from the list to view its details</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="text-center py-12">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-auto text-gray-400 mb-4">
-                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                    </svg>
-                    <h3 className="text-lg font-medium text-gray-700 mb-2">No Support Tickets</h3>
-                    <p className="text-gray-500 mb-4">You haven't created any support tickets yet</p>
-                    <Button onClick={() => setActiveTab('contact')}>Create a Ticket</Button>
-                  </div>
-                )}
-              </CardContent>
-              <CardFooter className="border-t">
-                <Button 
-                  variant="outline" 
-                  className="w-full"
-                  onClick={() => setActiveTab('contact')}
-                >
-                  Create New Ticket
-                </Button>
-              </CardFooter>
-            </Card>
-          </TabsContent>
           
           <TabsContent value="contact">
             <Card>
