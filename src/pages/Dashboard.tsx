@@ -24,7 +24,7 @@ import { FiCopy } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from "./UserContext";
-import { addBetClients, cashIn, cashInCashko, cashOutCashko, cashOutCashkoCommission, fetchUserData, getBetClientData, getCommissions, getGames, getGamesToday, getMyBetClientsCount, getReferrals, updatePassword } from '@/lib/apiCalls';
+import { addBetClients, cashIn, cashInCashko, cashOutCashko, cashOutCashkoCommission, convertCommissionsToBalance, convertWinsToBalance, fetchUserData, getBetClientData, getCommissions, getGames, getGamesToday, getMyBetClientsCount, getReferrals, updatePassword } from '@/lib/apiCalls';
 import { formatPeso } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -51,10 +51,12 @@ export function Dashboard({ onLogout }: SidebarProps) {
   //console.log("playing as : "+clientId);
   const [balance, setBalance] = useState(0);
   const [winnings, setWinnings] = useState(0);
+  const [winningsConvert, setWinningsConvert] = useState(0);
   const [quota, setQuota] = useState(0);
   const [quotaTime, setQuotaTime] = useState("");
   const [quotaAllow, setQuotaAllow] = useState("");
   const [commissions, setCommissions] = useState(0);
+  const [commissionsConvert, setCommissionsConvert] = useState(0);
   const [unclaimedCommissions, setUnclaimedCommissions] = useState(0);
   const [mobile, setMobile] = useState("");
   const [referral, setReferral] = useState("");
@@ -66,6 +68,9 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const [showCashInDialog, setShowCashInDialog] = useState(false);
   const [showCashOutDialog, setShowCashOutDialog] = useState(false);
   const [showCashOutComDialog, setShowCashOutComDialog] = useState(false);
+  const [showWinConvertDialog, setShowWinConvertDialog] = useState(false);
+  const [showComConvertDialog, setShowComConvertDialog] = useState(false);
+
   const [transLimit, setTransLimit] = useState(5000);
   const [commissionsCashout, setCommissionsCashout] = useState(0);
   const [cashInAmount, setCashInAmount] = useState(0);
@@ -250,15 +255,33 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 };
 
 
+const handleChangeWinConvert = (e: React.ChangeEvent<HTMLInputElement>) => {
+  let value = parseFloat(e.target.value); // Convert to number
+
+  const maxValue = winnings; // The maximum value from your existing logic
+
+  if (value > maxValue) value = maxValue;
+
+  setWinningsConvert(value);
+  
+};
+
+const handleChangeComConvert = (e: React.ChangeEvent<HTMLInputElement>) => {
+  let value = parseFloat(e.target.value); // Convert to number
+
+  const maxValue = commissions; // The maximum value from your existing logic
+
+  if (value > maxValue) value = maxValue;
+
+  setCommissionsConvert(value);
+  
+};
+
 const handleChangeCom = (e: React.ChangeEvent<HTMLInputElement>) => {
   let value = parseFloat(e.target.value); // Convert to number
 
-  // Set minimum value (e.g., 0 or any desired minimum value)
-  const minValue = 112; // You can change this to your desired minimum value
   const maxValue = commissions; // The maximum value from your existing logic
 
-  // Ensure the value is within the min and max range
-  //if (value < minValue) value = minValue; 
   if (value > maxValue) value = maxValue;
 
   setCommissionsCashout(value);
@@ -326,9 +349,112 @@ const handleSubmit = async (e) => {
 
 
 
+  const handleSubmitWinConvert = async (e) => {
+    e.preventDefault();
+    setShowWinConvertDialog(false);
+    setLoading(true);
+    const data = await convertWinsToBalance(userID,winningsConvert.toString());
+    if(data.error){
+      alert(data.message);
+    }
+    else
+    {
+      alert("Winnings converted successfully.");
+      setWinningsConvert(0);
+
+      const commData = await getCommissions(userID);
+      if(commData.authenticated)
+      {
+        setUnclaimedCommissions(commData.total_amount);
+      }
+
+      const dataRef = await getReferrals(userID);
+      setLevel1(dataRef.level1);
+      setLevel2(dataRef.level2);
+
+      const data = await fetchUserData(userID);
+      setBalance(data[0].balance);
+      setWinnings(data[0].wins);
+      setCommissions(data[0].commissions);
+      setQuota(data[0].quota);
+      setQuotaTime(data[0].quota_time);
+      setQuotaAllow(data[0].quota_allow);
+      setMobile(data[0].mobile);
+      setReferral(data[0].referral);
+      setStatus(data[0].status);
+      setAgent(data[0].agent);
+
+      if(clientId)
+      {
+        const clientData = await getBetClientData(clientId);
+        setClientFullName(clientData.full_name);
+      }
+
+      if (clientId==="null") {
+        setClientId(null);
+      }
+
+      
+    }
+    setLoading(false);
+  };
+
+
+
+  const handleSubmitComConvert = async (e) => {
+    e.preventDefault();
+    setShowComConvertDialog(false);
+    setLoading(true);
+    const data = await convertCommissionsToBalance(userID,commissionsConvert.toString());
+    if(data.error){
+      alert(data.message);
+    }
+    else
+    {
+      alert("Commissions converted successfully.");
+      setCommissionsConvert(0);
+
+      const commData = await getCommissions(userID);
+      if(commData.authenticated)
+      {
+        setUnclaimedCommissions(commData.total_amount);
+      }
+
+      const dataRef = await getReferrals(userID);
+      setLevel1(dataRef.level1);
+      setLevel2(dataRef.level2);
+
+      const data = await fetchUserData(userID);
+      setBalance(data[0].balance);
+      setWinnings(data[0].wins);
+      setCommissions(data[0].commissions);
+      setQuota(data[0].quota);
+      setQuotaTime(data[0].quota_time);
+      setQuotaAllow(data[0].quota_allow);
+      setMobile(data[0].mobile);
+      setReferral(data[0].referral);
+      setStatus(data[0].status);
+      setAgent(data[0].agent);
+
+      if(clientId)
+      {
+        const clientData = await getBetClientData(clientId);
+        setClientFullName(clientData.full_name);
+      }
+
+      if (clientId==="null") {
+        setClientId(null);
+      }
+
+      
+    }
+    setLoading(false);
+  };
+
+
   const handleSubmitComm = async (e) => {
     e.preventDefault();
-    setShowCashOutDialog(false);
+    setShowCashOutComDialog(false);
     setLoading(true);
     const data = await cashOutCashkoCommission(userID,commissionsCashout.toString(),newClient.full_name,newClient.bank,newClient.account);
     if(data.error){
@@ -660,7 +786,17 @@ const handleSubmit = async (e) => {
               <p className="text-gray-500 text-sm">Your Winnings</p>
               <p className="text-2xl font-bold text-gray-800">{formatPeso(winnings)}</p>
             </div>
-            <Button className="bg-green-500 hover:bg-green-600" disabled={!winnings || winnings < 106} onClick={() => setShowCashOutDialog(true)}>Cash Out</Button>
+            <div className="flex flex-col gap-2">
+                    <Button className="bg-green-500 hover:bg-green-600" 
+                    disabled={!winnings || winnings < 50} 
+                    onClick={() => {
+                      setShowWinConvertDialog(true);
+                      setWinningsConvert(winnings); // Add your second function here
+                    }}
+                    >Convert</Button>
+                    <Button className="bg-green-500 hover:bg-green-600" disabled={!winnings || winnings < 106} onClick={() => setShowCashOutDialog(true)}>Cash Out</Button>
+                  </div>
+            
           </div>
         </div>
           <br/>
@@ -696,14 +832,27 @@ const handleSubmit = async (e) => {
       <p className="text-gray-500 text-sm">Withdrawable Commissions</p>
       <p className="text-2xl font-bold text-gray-800">{formatPeso(commissions)}</p>
     </div>
-    <Button className="bg-green-500 hover:bg-green-600" disabled={!commissions || commissions < 106} 
+    <div className="flex flex-col gap-2">
+    <Button className="bg-green-500 hover:bg-green-600" 
+    disabled={!commissions || commissions < 50} 
     onClick={() => {
-      setShowCashOutComDialog(true);
-      setCommissionsCashout(commissions); // Add your second function here
+      setShowComConvertDialog(true);
+      setCommissionsConvert(commissions); // Add your second function here
     }}
+    >Convert</Button>
+     <Button className="bg-green-500 hover:bg-green-600" 
+     disabled={!commissions || commissions < 106} 
+      onClick={() => {
+        setShowCashOutComDialog(true);
+        setCommissionsCashout(commissions); // Add your second function here
+      }}
     >
       Cash Out
     </Button>
+  </div>
+
+
+   
   </div>
 </div>
                 <br/>
@@ -1018,7 +1167,7 @@ const handleSubmit = async (e) => {
                                   -moz-appearance: textfield;
                                 }
                               `}</style>
-
+                                <small className="text-xs text-gray-500">Min: 106 | Max: ₱5000</small>
                             <br/><br/>
                             <input
                                 type="text"
@@ -1112,7 +1261,90 @@ const handleSubmit = async (e) => {
                   </DialogContent>
                 </Dialog>
 
+              
+                <Dialog open={showWinConvertDialog} onOpenChange={setShowWinConvertDialog}>
+                  <DialogContent className="bg-gray-200 border-[#34495e]">
+                    <DialogHeader>
+                      <DialogTitle className="text-xl text-blue-600">Add to Balance</DialogTitle>
+                      <DialogDescription className="text-red-600">
+                          Once you add this wins to balance, you will not be able cash out it again
+                      </DialogDescription>
+                    </DialogHeader>
+                    
+                    <div className="bg-gray-50 p-3 rounded-lg">
+                      <h4 className="font-medium mb-2">Add to Balance</h4>
+                      <div className="space-y-2">
 
+                        <div className="flex items-center justify-between bg-white p-2 rounded border">
+                        <form onSubmit={handleSubmitWinConvert} className="space-y-3">
+                          <div className="flex items-center">
+                            <div>
+                              <input
+                                value={winningsConvert}
+                                onChange={handleChangeWinConvert}
+                                type="number" 
+                                className="border rounded p-1 text-sm w-full" 
+                                placeholder="Enter amount" 
+                                style={{ appearance: 'textfield' }}
+                              />
+                              <style>{`
+                                input[type=number]::-webkit-outer-spin-button,
+                                input[type=number]::-webkit-inner-spin-button {
+                                  -webkit-appearance: none;
+                                  margin: 0;
+                                }
+                                input[type=number] {
+                                  -moz-appearance: textfield;
+                                }
+                              `}</style>
+
+                            <small className="text-xs text-gray-500">Min: ₱50 | Max: ₱5000</small>
+                            </div>
+
+
+                          </div>
+                          <Button 
+                            disabled={!winningsConvert || winningsConvert < 50 || !termsAccepted} 
+                            type="submit"
+                            variant="outline" 
+                            size="sm" 
+                            className="text-blue-500 bg-blue-100 hover:text-blue-700 hover:bg-green-50 rounded px-4 py-2"
+                          >
+                            <label>Add to Balance</label>
+                          </Button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2 mt-4">
+                      <input 
+                        type="checkbox" 
+                        id="terms" 
+                        checked={termsAccepted}
+                        onChange={(e) => setTermsAccepted(e.target.checked)}
+                        className="h-4 w-4 text-pink-500 focus:ring-0"
+                        required
+                      />
+                      <span className="text-sm text-gray-700">
+                        I agree to the 
+                        <a href={API_URL +"/img/terms.pdf"} target='_blank' className="text-pink-500"> Terms and Conditions</a>
+                      </span>
+                    </div>
+                    
+                    <DialogFooter className="flex flex-col gap-2 sm:flex-row">
+                      <Button 
+                        variant="outline" 
+                        onClick={() => setShowWinConvertDialog(false)}
+                        className="w-full sm:w-auto border-blue-500 text-blue-600 hover:bg-blue-900/20"
+                      >
+                        Cancel
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+
+                              
 
 
                 <Dialog open={showCashOutComDialog} onOpenChange={setShowCashOutComDialog}>
@@ -1150,7 +1382,7 @@ const handleSubmit = async (e) => {
                                   -moz-appearance: textfield;
                                 }
                               `}</style>
-
+                                <small className="text-xs text-gray-500">Min: 106 | Max: ₱5000</small>
                             <br/><br/>
                             <input
                                 type="text"
@@ -1236,6 +1468,88 @@ const handleSubmit = async (e) => {
                       <Button 
                         variant="outline" 
                         onClick={() => setShowCashOutComDialog(false)}
+                        className="w-full sm:w-auto border-blue-500 text-blue-600 hover:bg-blue-900/20"
+                      >
+                        Cancel
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+
+
+                <Dialog open={showComConvertDialog} onOpenChange={setShowComConvertDialog}>
+                  <DialogContent className="bg-gray-200 border-[#34495e]">
+                    <DialogHeader>
+                      <DialogTitle className="text-xl text-blue-600">Add to Balance</DialogTitle>
+                      <DialogDescription className="text-red-600">
+                          Once you add this commissions to balance, you will not be able cash out it again
+                      </DialogDescription>
+                    </DialogHeader>
+                    
+                    <div className="bg-gray-50 p-3 rounded-lg">
+                      <h4 className="font-medium mb-2">Add to Balance</h4>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between bg-white p-2 rounded border">
+                        <form onSubmit={handleSubmitComConvert} className="space-y-3">
+                          <div className="flex items-center">
+                            <div>
+                              <input
+                                value={commissionsConvert}
+                                onChange={handleChangeComConvert}
+                                type="number" 
+                                className="border rounded p-1 text-sm w-full" 
+                                placeholder="Enter amount" 
+                                style={{ appearance: 'textfield' }}
+                              />
+                              <style>{`
+                                input[type=number]::-webkit-outer-spin-button,
+                                input[type=number]::-webkit-inner-spin-button {
+                                  -webkit-appearance: none;
+                                  margin: 0;
+                                }
+                                input[type=number] {
+                                  -moz-appearance: textfield;
+                                }
+                              `}</style>
+                              <small className="text-xs text-gray-500">Min: ₱50 | Max: ₱5000</small>
+                            
+                            </div>
+
+
+                          </div>
+                          <Button 
+                            disabled={!commissionsConvert || commissionsConvert < 50 || !termsAccepted} 
+                            type="submit"
+                            variant="outline" 
+                            size="sm" 
+                            className="text-blue-500 bg-blue-100 hover:text-blue-700 hover:bg-green-50 rounded px-4 py-2"
+                          >
+                            <label>Add to Balance</label>
+                          </Button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2 mt-4">
+                      <input 
+                        type="checkbox" 
+                        id="terms" 
+                        checked={termsAccepted}
+                        onChange={(e) => setTermsAccepted(e.target.checked)}
+                        className="h-4 w-4 text-pink-500 focus:ring-0"
+                        required
+                      />
+                      <span className="text-sm text-gray-700">
+                        I agree to the 
+                        <a href={API_URL +"/img/terms.pdf"} target='_blank' className="text-pink-500"> Terms and Conditions</a>
+                      </span>
+                    </div>
+                    
+                    <DialogFooter className="flex flex-col gap-2 sm:flex-row">
+                      <Button 
+                        variant="outline" 
+                        onClick={() => setShowComConvertDialog(false)}
                         className="w-full sm:w-auto border-blue-500 text-blue-600 hover:bg-blue-900/20"
                       >
                         Cancel

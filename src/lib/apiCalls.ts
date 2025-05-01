@@ -1355,3 +1355,52 @@ export const totalCashoutTeamTable = async (userID: string) => {
     return [];
   }
 };
+
+
+
+
+export const convertWinsToBalance = async (
+  userID: string,
+  amount: string,
+) => {
+  try {
+
+      const res = await axios.post(`${API_URL}/main/convertWinsToBalance`, {
+        userID,amount
+      });
+
+      if (res.data && res.data.authenticated) {
+        return { error: false };
+      } else {
+        console.warn("User data is empty or invalid.");
+        return { error: true, message:"User data is empty or invalid." };
+      }
+    
+  } catch (error) {
+    console.error("Cashko request failed:", error);
+    return { error: true , message:"conversion failed." };
+  }
+};
+
+export const convertCommissionsToBalance = async (
+  userID: string,
+  amount: string,
+) => {
+  try {
+
+      const res = await axios.post(`${API_URL}/main/convertCommissionsToBalance`, {
+        userID,amount
+      });
+
+      if (res.data && res.data.authenticated) {
+        return { error: false };
+      } else {
+        console.warn("User data is empty or invalid.");
+        return { error: true, message:"User data is empty or invalid." };
+      }
+    
+  } catch (error) {
+    console.error("Cashko request failed:", error);
+    return { error: true , message:"conversion failed." };
+  }
+};
