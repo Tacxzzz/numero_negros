@@ -1267,7 +1267,7 @@ const handleSubmit = async (e) => {
                     <DialogHeader>
                       <DialogTitle className="text-xl text-blue-600">Add to Balance</DialogTitle>
                       <DialogDescription className="text-red-600">
-                          Once you add this wins to balance, you will not be able cash out it again
+                      Note: Please be advised that commissions or winnings converted to bet credits are not eligible for cash-out.
                       </DialogDescription>
                     </DialogHeader>
                     
@@ -1482,7 +1482,7 @@ const handleSubmit = async (e) => {
                     <DialogHeader>
                       <DialogTitle className="text-xl text-blue-600">Add to Balance</DialogTitle>
                       <DialogDescription className="text-red-600">
-                          Once you add this commissions to balance, you will not be able cash out it again
+                      Note: Please be advised that commissions or winnings converted to bet credits are not eligible for cash-out.
                       </DialogDescription>
                     </DialogHeader>
                     
