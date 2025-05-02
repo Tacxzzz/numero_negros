@@ -1,4 +1,4 @@
-import { useEffect, useState,lazy } from 'react';
+import { useEffect, useState, lazy } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -37,6 +37,43 @@ import AdvertisementImage from "@/files/advertisement.svg";
 const AnnouncementsMarquee = lazy(() => import("@/components/AnnouncementsMarque"));
 const AutoScrollWinnersCarousel = lazy(() => import("@/components/AutoScrollWinnersCarousel"));
 
+// Tawk.to configuration
+const TAWK_SRC = "https://embed.tawk.to/67f4c61c846b7b190fd1ea14/1ioa2bnq9";
+
+function setTawkWidgetLeftMarginAndZIndex(pixels: number, zIndex: number) {
+  const applyStyles = () => {
+    const iframe = document.querySelector('iframe[title="chat widget"]') as HTMLIFrameElement | null;
+    if (iframe) {
+      iframe.style.left = pixels + "px";
+      iframe.style.zIndex = String(zIndex);
+    }
+  };
+  
+  // Apply styles immediately
+  applyStyles();
+
+  // Create observer to watch for DOM changes and reapply styles
+  const observer = new MutationObserver(() => {
+    applyStyles();
+  });
+
+  // Start observing the document body for changes
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+
+  // Return cleanup function to disconnect observer
+  return () => observer.disconnect();
+}
+
+
+// Add TypeScript declaration for Tawk_API global
+declare global {
+  interface Window {
+    Tawk_API?: any;
+  }
+}
 
 interface SidebarProps {
   onLogout?: () => void;
@@ -92,6 +129,44 @@ export function Dashboard({ onLogout }: SidebarProps) {
 
   const [level1,setLevel1] = useState(0);
   const [level2,setLevel2] = useState(0);
+
+  useEffect(() => {
+    // Load Tawk.to widget
+    if (!document.getElementById("tawk-to-script")) {
+      const script = document.createElement("script");
+      script.id = "tawk-to-script";
+      script.async = true;
+      script.src = TAWK_SRC;
+      script.charset = "UTF-8";
+      script.setAttribute("crossorigin", "*");
+      
+      document.body.appendChild(script);
+      
+      // Store cleanup function reference
+      let observerCleanup: (() => void) | null = null;
+
+      script.onload = () => {
+        // Apply styles and keep them enforced with MutationObserver
+        observerCleanup = setTawkWidgetLeftMarginAndZIndex(12, 1000);
+      };
+    }
+    
+    // Cleanup function to remove Tawk.to widget when component unmounts
+    return () => {
+      const script = document.getElementById("tawk-to-script");
+      if (script) script.remove();
+      
+      const iframe = document.querySelector('iframe[title="chat widget"]');
+      if (iframe && iframe.parentNode) {
+        iframe.parentNode.removeChild(iframe);
+      }
+      
+      // Remove Tawk_API global if needed
+      if (window.Tawk_API) {
+        delete window.Tawk_API;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     setShowAdModal(true);
@@ -552,8 +627,8 @@ const handleSubmit = async (e) => {
       {/* Header */}
       <header className="bg-white shadow-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <Sheet>
+          <div className="mx-auto flex items-center space-x-2 w-max ml-28 md:ml-18">
+            {/* <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="md:hidden">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -565,12 +640,19 @@ const handleSubmit = async (e) => {
               </SheetTrigger>
               <SheetContent side="left" className="w-[250px] sm:w-[300px]">
                 <nav className="flex flex-col gap-4 mt-8">
-                  <Link to="/dashboard" className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-50 text-blue-600">
+                  <Link 
+                    to="/dashboard" 
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-50 text-blue-600"
+                    onClick={e => {
+                      e.preventDefault();
+                      window.location.href = "/dashboard";
+                    }}
+                  >
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                       <polyline points="9 22 9 12 15 12 15 22"></polyline>
                     </svg>
-                    Home
+                    Home1
                   </Link>
                   <Link to="/transactions" className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -612,7 +694,7 @@ const handleSubmit = async (e) => {
                       <line x1="12" y1="16" x2="12.01" y2="16"></line>
                     </svg>
                     Help Manual
-                  </Link>
+                  </Link> */}
                   {/* <a
                     href="https://tawk.to/chat/67ec009ce808511907a28002/1inou4plh"
                     className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100"
@@ -626,7 +708,7 @@ const handleSubmit = async (e) => {
                     </svg>
                     Support
                   </a> */}
-                  <Button onClick={onLogout}  className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100 text-red-500">
+                  {/* <Button onClick={onLogout}  className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100 text-red-500">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                       <polyline points="16 17 21 12 16 7"></polyline>
@@ -636,7 +718,7 @@ const handleSubmit = async (e) => {
                   </Button>
                 </nav>
               </SheetContent>
-            </Sheet>
+            </Sheet> */}
             
             {/* <div className="flex items-center">
               <div className="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-300 to-yellow-500 flex items-center justify-center">
@@ -656,7 +738,14 @@ const handleSubmit = async (e) => {
           </div>
           
           <nav className="hidden md:flex items-center space-x-6">
-            <Link to="/dashboard" className="text-blue-600 font-medium">Home</Link>
+            <Link 
+              to="/dashboard" 
+              className="text-blue-600 font-medium"
+              onClick={e => {
+                e.preventDefault();
+                window.location.href = "/dashboard";
+              }}
+            >Home</Link>
             <Link to="/transactions" className="text-gray-600 hover:text-gray-900">My Transactions</Link>
             <Link to="/my-bets" className="text-gray-600 hover:text-gray-900">My Bets</Link>
             <Link to="/drawhistory" className="text-gray-600 hover:text-gray-900">Draws</Link>
@@ -682,7 +771,7 @@ const handleSubmit = async (e) => {
                 <DropdownMenuTrigger asChild>
                 <button className="focus:outline-none">
                   <Avatar className="cursor-pointer hover:ring-2 hover:ring-blue-400 transition-all">
-                    <AvatarImage src="https://picsum.photos/id/823/100/100" />
+                    <AvatarImage src="https://merlinmentors.org/wp-content/uploads/2022/02/generic-headshot-avatar.jpg" />
                     <AvatarFallback></AvatarFallback>
                   </Avatar>
                 </button>
@@ -690,7 +779,7 @@ const handleSubmit = async (e) => {
               <DropdownMenuContent align="end" className="w-56">
                 <div className="flex items-center p-2">
                   <Avatar className="h-8 w-8 mr-2">
-                    <AvatarImage src="https://picsum.photos/id/823/100/100" />
+                    <AvatarImage src="https://merlinmentors.org/wp-content/uploads/2022/02/generic-headshot-avatar.jpg" />
                     <AvatarFallback></AvatarFallback>
                   </Avatar>
                   <div>
@@ -707,6 +796,14 @@ const handleSubmit = async (e) => {
                     <circle cx="12" cy="7" r="4"></circle>
                   </svg>
                   <span>My Account</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/transactions')}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
+                  <ellipse cx="12" cy="5" rx="8" ry="3"></ellipse>
+                      <path d="M4 5v6a8 3 0 0 0 16 0V5"></path>
+                      <path d="M4 11v6a8 3 0 0 0 16 0v-6"></path>
+                  </svg>
+                  <span>My Transactions</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/my-bets')}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
@@ -1602,7 +1699,14 @@ const handleSubmit = async (e) => {
       {/* Mobile Navigation */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-10">
           <div className="flex justify-around items-center py-2">
-            <Link to="/dashboard" className="flex flex-col items-center p-2 text-blue-600">
+            <Link 
+              to="/dashboard" 
+              className="flex flex-col items-center p-2 text-blue-600"
+              onClick={e => {
+                e.preventDefault();
+                window.location.href = "/dashboard";
+              }}
+            >
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
@@ -1853,7 +1957,7 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
               <div className="flex flex-col items-center">
                 <div className="relative">
                   <Avatar className="h-20 w-20">
-                    <AvatarImage src="https://picsum.photos/id/823/100/100" />
+                    <AvatarImage src="https://merlinmentors.org/wp-content/uploads/2022/02/generic-headshot-avatar.jpg" />
                     <AvatarFallback></AvatarFallback>
                   </Avatar>
                   <button className="absolute bottom-0 right-0 bg-blue-500 text-white p-1 rounded-full">
