@@ -94,7 +94,10 @@ export function AllowReferrer() {
       <header className="bg-white shadow-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <button 
-            onClick={() => navigate('/dashboard')}
+            onClick={e => {
+            e.preventDefault();
+            window.location.href = "/dashboard";
+            }}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

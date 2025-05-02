@@ -314,7 +314,11 @@ const hasAllDistinctScores = (scores: string[]) => {
           <div className="min-h-screen bg-gray-100 flex items-center justify-center">
             <div className="bg-white p-8 rounded-xl shadow-md">
               <h2 className="text-xl font-bold mb-4">Game Loading..</h2>
-              <Button onClick={() => navigate('/dashboard')}>Back to Dashboard</Button>
+              <Button             
+              onClick={e => {
+              e.preventDefault();
+              window.location.href = "/dashboard";
+              }}>Back to Dashboard</Button>
             </div>
           </div>
         );

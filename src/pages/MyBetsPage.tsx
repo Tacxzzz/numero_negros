@@ -342,7 +342,11 @@ function BetsTable({ bets, navigate }: { bets: any[], navigate: (path: string) =
         </svg>
         <h3 className="text-lg font-medium text-gray-700 mb-2">No bets found</h3>
         <p className="text-gray-500 mb-4">Try adjusting your filters or place some bets!</p>
-        <Button onClick={() => navigate('/dashboard')}>Browse Games</Button>
+        <Button             
+            onClick={e => {
+            e.preventDefault();
+            window.location.href = "/dashboard";
+            }}>Browse Games</Button>
       </div>
     );
   }

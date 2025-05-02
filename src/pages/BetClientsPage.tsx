@@ -162,7 +162,10 @@ export function BetClientsPage() {
       <header className="bg-white shadow-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <button 
-            onClick={() => navigate('/dashboard')}
+            onClick={e => {
+              e.preventDefault();
+              window.location.href = "/dashboard";
+              }}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -242,9 +245,16 @@ export function BetClientsPage() {
           </div> */}
 
           {/* Mobile Navigation */}
-                  <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-10">
+                  {/* <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-10">
                     <div className="flex justify-around items-center py-2">
-                      <Link to="/dashboard" className="flex flex-col items-center p-2 text-gray-500">
+                      <Link 
+                        to="/dashboard" 
+                        className="flex flex-col items-center p-2 text-gray-500"
+                        onClick={e => {
+                          e.preventDefault();
+                          window.location.href = "/dashboard";
+                        }}
+                      >
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                           <polyline points="9 22 9 12 15 12 15 22"></polyline>
@@ -259,7 +269,7 @@ export function BetClientsPage() {
                         </svg>
                         <span className="text-xs mt-1">My Bets</span>
                       </Link>
-                      <Link to="/tournaments" className="flex flex-col items-center p-2 text-gray-500">
+                      <Link to="/drawhistory" className="flex flex-col items-center p-2 text-gray-500">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
                           <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
@@ -268,7 +278,7 @@ export function BetClientsPage() {
                           <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
                           <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
                         </svg>
-                        <span className="text-xs mt-1">Tournaments</span>
+                        <span className="text-xs mt-1">Draws</span>
                       </Link>
                       <Link to="/support" className="flex flex-col items-center p-2 text-gray-500">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -278,8 +288,16 @@ export function BetClientsPage() {
                         </svg>
                         <span className="text-xs mt-1">Support</span>
                       </Link>
+                      <Link to="/pisoplaysguide" className="flex flex-col items-center p-2 text-gray-500" onClick={() => navigate('/pisoplaysguide')}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-book-heart-icon lucide-book-heart">
+                      <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/>
+                      <path d="M12 17h.01"></path>
+                      <path d="M10 8a2 2 0 1 1 2 2c0 1-2 1.5-0 3"></path>
+                      </svg>
+                        <span className="text-xs mt-1">Help Guide</span>
+                      </Link>
                     </div>
-                  </div>
+                  </div> */}
                   <div className="flex justify-between items-center mb-4">
               <button
                 onClick={() => setShowForm(!showForm)}
@@ -377,7 +395,11 @@ function BetsTable({ bets,updatedClientUP, navigate }: { bets: any[],updatedClie
         </svg>
         <h3 className="text-lg font-medium text-gray-700 mb-2">No clients found</h3>
         <p className="text-gray-500 mb-4">Try adjusting your filters or place some bets!</p>
-        <Button onClick={() => navigate('/dashboard')}>Browse Games</Button>
+        <Button             
+            onClick={e => {
+            e.preventDefault();
+            window.location.href = "/dashboard";
+            }}>Browse Games</Button>
       </div>
     );
   }
