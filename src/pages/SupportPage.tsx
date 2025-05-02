@@ -251,7 +251,10 @@ export function SupportPage() {
       <header className="bg-white shadow-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <button 
-            onClick={() => navigate('/dashboard')}
+            onClick={e => {
+            e.preventDefault();
+            window.location.href = "/dashboard";
+            }}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -271,7 +274,14 @@ export function SupportPage() {
         {/* Mobile Navigation */}
         <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-10">
           <div className="flex justify-around items-center py-2">
-              <Link to="/dashboard" className="flex flex-col items-center p-2 text-gray-500">
+              <Link 
+                  to="/dashboard" 
+                  className="flex flex-col items-center p-2 text-gray-500"
+                  onClick={e => {
+                  e.preventDefault();
+                  window.location.href = "/dashboard";
+                  }}
+              >
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                     <polyline points="9 22 9 12 15 12 15 22"></polyline>

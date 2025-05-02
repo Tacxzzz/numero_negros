@@ -1,0 +1,16 @@
+<!-- Place this after your Tawk.to embed script -->
+<script>
+  // Wait for the widget to load, then adjust its bottom margin
+  function setTawkWidgetLeftMargin(pixels) {
+    var interval = setInterval(function() {
+      var iframe = document.querySelector('iframe[title="chat widget"]');
+      if (iframe) {
+        iframe.style.left = pixels + 'px';
+        clearInterval(interval);
+      }
+    }, 100);
+  }
+
+  // Example: Move widget 40px up from the bottom
+  setTawkWidgetLeftMargin(80);
+</script>
