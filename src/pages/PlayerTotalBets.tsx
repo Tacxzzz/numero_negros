@@ -265,8 +265,8 @@ export function PlayerTotalBets() {
                     <TableRow key={bet.id}>
                       <TableCell className="text-center">{bet.created}</TableCell>
                       <TableCell className="text-center">{bet.mobile}</TableCell>
-                      <TableCell className="text-center">{formatPeso(bet.total_pending)}</TableCell>
                       <TableCell className="text-center">{formatPeso(bet.total_bets)}</TableCell>
+                      <TableCell className="text-center">{formatPeso(bet.total_pending)}</TableCell>
                       <TableCell className="text-center">{formatPeso(bet.total_wins)}</TableCell>
                       <TableCell className="text-center">{formatPeso(bet.total_loss)}</TableCell>
                       <TableCell className="text-center">{formatPeso(bet.total_jackpot)}</TableCell>
