@@ -214,6 +214,17 @@ const PisoPlayGuide = () => {
           </CardHeader>
           <CardContent className="flex flex-col items-center text-center">
           <ol className="list-decimal list-inside space-y-2">
+
+          Watch Video {" "}
+                <a
+                  href="https://www.youtube.com/shorts/lTGTs5M4geE?feature=share"
+                  className="text-blue-600 underline"
+                  target="_blank"
+                >
+                  How to Share Your Referral Link 
+                </a>{" "}
+                or follow the <b>Instruction Steps</b> below.
+
             <li>Tap your <b>profile</b> picture located at the top right corner and click <b>“My Account”</b>.</li><br />
             <img src={manual_9} alt="Copy Referral Link" className="rounded-lg w-full" /><br />
             <li>Copy the <b>referral link</b> and share it to make a referral.</li><br />

@@ -36,6 +36,7 @@ import AdvertisementImage from "@/files/advertisement.svg";
 
 const AnnouncementsMarquee = lazy(() => import("@/components/AnnouncementsMarque"));
 const AutoScrollWinnersCarousel = lazy(() => import("@/components/AutoScrollWinnersCarousel"));
+import { setTawkWidgetVisible } from '@/lib/tawkWidgetUtils';
 
 // Tawk.to configuration
 const TAWK_SRC = "https://embed.tawk.to/67f4c61c846b7b190fd1ea14/1ioa2bnq9";
@@ -147,7 +148,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
 
       script.onload = () => {
         // Apply styles and keep them enforced with MutationObserver
-        observerCleanup = setTawkWidgetLeftMarginAndZIndex(12, 1000);
+        observerCleanup = setTawkWidgetLeftMarginAndZIndex(12, 50);
       };
     }
     
@@ -238,7 +239,10 @@ export function Dashboard({ onLogout }: SidebarProps) {
 
   const handleCloseAdModal = () => {
     setShowAdModal(false);
+    // setTawkWidgetVisible(true);
   };
+
+  
 
   const handleCashIn = () => {
     setShowCashInDialog(false);
@@ -620,7 +624,12 @@ const handleSubmit = async (e) => {
         isOpen={showAdModal}
         onClose={handleCloseAdModal}
         title="Magandang Balita!"
-        description="Sa Isang Pindot, Isang Bente ₱20. Isang Libo kada Kita Araw-Araw!"
+        // description="Sa Isang Pindot, Isang Bente ₱20. Isang Libo kada Kita Araw-Araw!"
+        description={
+          <>
+            Paano kumita ang Referral System sa PisoPlay panoorin ang videong eto <a href="https://www.youtube.com/shorts/lTGTs5M4geE?feature=share" className="text-blue-600 underline" target="_blank" rel="noopener noreferrer">PisoPlay Referral System</a>
+          </>
+        }
         imageUrl={AdvertisementImage}// Replace with your ad image URL
       />
     <div className="min-h-screen bg-gray-100">

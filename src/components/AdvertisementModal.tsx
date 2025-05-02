@@ -7,7 +7,7 @@ interface AdvertisementModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  description: string;
+  description: React.ReactNode;
   imageUrl: string;
 }
 
