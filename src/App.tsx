@@ -23,6 +23,8 @@ const ManageReferrals = lazy(() => import("./pages/ManageReferrals").then(module
 const AllowReferrer = lazy(() => import("./pages/AllowReferrer").then(module => ({ default: module.AllowReferrer })));
 const Players = lazy(() => import("./pages/Players").then(module => ({ default: module.Players })));
 const PlayerBets = lazy(() => import("./pages/PlayerBets").then(module => ({ default: module.PlayerBets })));
+const PlayerTotalBets = lazy(() => import("./pages/PlayerTotalBets").then(module => ({ default: module.PlayerTotalBets })));
+
 const PlayerWins = lazy(() => import("./pages/PlayerWins").then(module => ({ default: module.PlayerWins })));
 const PlayerBalances = lazy(() => import("./pages/PlayerBalances").then(module => ({ default: module.PlayerBalances })));
 const PlayerCommissions = lazy(() => import("./pages/PlayerCommissions").then(module => ({ default: module.PlayerCommissions })));
@@ -72,7 +74,8 @@ function App() {
               <Route path="/manageTeam" element={<ManageReferrals />} />
               <Route path="/allowReferrer" element={<AllowReferrer />} />
               <Route path="/team" element={<Players />} />
-              <Route path="/teambets" element={<PlayerBets />} />
+              <Route path="/teambets" element={<PlayerTotalBets />} />
+              <Route path="/playerbets" element={<PlayerBets />} />
               <Route path="/teamwins" element={<PlayerWins />} />
               <Route path="/teambalances" element={<PlayerBalances />} />
               <Route path="/teamcommissions" element={<PlayerCommissions />} />

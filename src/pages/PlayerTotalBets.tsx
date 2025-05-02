@@ -25,12 +25,12 @@ import {
 } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { getBetsEarnedTeamTable, getBetsTableByUser, getDownlinesTable, getTransactions } from '@/lib/apiCalls';
+import { getBetsEarnedTeamTable, getDownlinesTable, getTransactions } from '@/lib/apiCalls';
 import { useLocation } from 'react-router-dom';
 import { formatPeso } from '@/lib/utils';
 
 
-export function PlayerBets() {
+export function PlayerTotalBets() {
   const location = useLocation();
   const navigate = useNavigate();
   const userID = location.state?.userID;
@@ -44,7 +44,7 @@ export function PlayerBets() {
   useEffect(() => {
       if (userID) {
         const handleUpdate = async () => {
-          const data = await getBetsTableByUser(userID);
+          const data = await getBetsEarnedTeamTable(userID);
           setTransactionsHistory(data);
         };
         handleUpdate();
@@ -80,11 +80,9 @@ export function PlayerBets() {
     return bets.filter(
       (bet) =>
         bet?.status?.toString().toLowerCase().includes(query) ||
-        bet?.game_name?.toString().toLowerCase().includes(query) ||
-        bet?.game_type_name?.toString().toLowerCase().includes(query) ||
-        bet?.bets?.toString().toLowerCase().includes(query) ||
-        bet?.date?.toString().toLowerCase().includes(query) ||
-        bet?.time?.toString().toLowerCase().includes(query) 
+        bet?.mobile?.toString().toLowerCase().includes(query) ||
+        bet?.created?.toString().toLowerCase().includes(query) ||
+        bet?.modified?.toString().toLowerCase().includes(query)
     );
   };
   
@@ -111,7 +109,7 @@ export function PlayerBets() {
     }
     
     return bets.filter(bet => {
-      const betDate = new Date(bet.date);
+      const betDate = new Date(bet.created);
       return betDate >= startDate && betDate <= today;
     });
   };
@@ -127,7 +125,7 @@ export function PlayerBets() {
       <header className="bg-white shadow-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <button 
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/manageTeam', { state: { userID } })}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -170,9 +168,8 @@ export function PlayerBets() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All</SelectItem>
-                  <SelectItem value="win">Wins</SelectItem>
-                  <SelectItem value="loss">Lose</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="pending">Active</SelectItem>
+                  <SelectItem value="blocked">Blocked</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -252,48 +249,45 @@ export function PlayerBets() {
                 <TableCaption>A history of your Transactions</TableCaption>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="text-center">Date</TableHead>
-                    <TableHead className="text-center">Time</TableHead>
+                    <TableHead className="text-center">Date Joined</TableHead>
                     <TableHead className="text-center">Player</TableHead>
-                    <TableHead className="text-center">Game</TableHead>
-                    <TableHead className="text-center">Bet</TableHead>
-                    <TableHead className="text-center">Combination</TableHead>
-                    <TableHead className="text-center">Jackpot</TableHead>
+                    <TableHead className="text-center">Total Bets Wagered</TableHead>
+                    <TableHead className="text-center">Total Bets Ongoing</TableHead>
+                    <TableHead className="text-center">Total Bets Won</TableHead>
+                    <TableHead className="text-center">Total Bets Lost</TableHead>
+                    <TableHead className="text-center">Total Jackpot Earned</TableHead>
                     <TableHead className="text-center">Status</TableHead>
+                    <TableHead className="text-center">View Bets</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredBets.map((bet) => (
                     <TableRow key={bet.id}>
-                      <TableCell className="text-center">{bet.date}</TableCell>
-                      <TableCell className="text-center">{bet.time}</TableCell>
+                      <TableCell className="text-center">{bet.created}</TableCell>
                       <TableCell className="text-center">{bet.mobile}</TableCell>
-                      <TableCell className="text-center">{bet.game_name}<br/>{bet.game_type_name}</TableCell>
-                      <TableCell className="text-center">{formatPeso(bet.bet)}</TableCell>
-                      <TableCell className="text-center">{bet.bets}</TableCell>
-                      <TableCell className="text-center">{formatPeso(bet.jackpot)}</TableCell>
+                      <TableCell className="text-center">{formatPeso(bet.total_pending)}</TableCell>
+                      <TableCell className="text-center">{formatPeso(bet.total_bets)}</TableCell>
+                      <TableCell className="text-center">{formatPeso(bet.total_wins)}</TableCell>
+                      <TableCell className="text-center">{formatPeso(bet.total_loss)}</TableCell>
+                      <TableCell className="text-center">{formatPeso(bet.total_jackpot)}</TableCell>
                       <TableCell className="text-center">
                         <Badge 
                           className= {
-                            bet.status === 'win' 
+                            bet.status === 'pending' 
                               ? 'bg-green-100 text-green-800 hover:bg-green-200' 
-                              : bet.status === 'loss'
+                              : bet.status === 'blocked'
                               ? 'bg-red-100 text-red-800 hover:bg-red-200'
                               : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
                           }
                         >
-                          {bet.status === 'win' ? 'Win' : bet.status === 'loss' ? 'Loss' : 'Pending'}
+                          {bet.status === 'pending' ? 'Active' : bet.status === 'blocked' ? 'Blocked' : 'Pending'}
                         </Badge>
                       </TableCell>
-                      {/* <TableCell>
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={() => navigate(`/game-history/${bet.gameId}`)}
-                        >
-                          Details
-                        </Button>
-                      </TableCell> */}
+                      <TableCell>
+                      <Button
+                        onClick={() => navigate('/playerbets', { state: { userID: bet.id } })}
+                        className="bg-green-500 hover:bg-green-600"  >View Bets</Button>
+                      </TableCell> 
                     </TableRow>
                   ))}
                 </TableBody>
