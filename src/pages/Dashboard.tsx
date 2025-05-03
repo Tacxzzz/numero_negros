@@ -631,6 +631,7 @@ const handleSubmit = async (e) => {
           </>
         }
         imageUrl={AdvertisementImage}// Replace with your ad image URL
+        youtubeUrl="https://www.youtube.com/shorts/lTGTs5M4geE"
       />
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
