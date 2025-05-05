@@ -25,12 +25,12 @@ import {
 } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { getBetsEarnedTeamTable, getCashoutsTableByUser, getDownlinesTable, getTransactions, totalCashinTeamTable, totalCashOutTeam, totalCashoutTeamTable } from '@/lib/apiCalls';
+import { getBetsEarnedTeamTable, getDownlinesTable, getTransactions, totalCashinTeamTable } from '@/lib/apiCalls';
 import { useLocation } from 'react-router-dom';
-import { formatPeso, getTransCode } from '@/lib/utils';
+import { formatPeso } from '@/lib/utils';
 
 
-export function PlayerCashout() {
+export function PlayerCashinTotal() {
   const location = useLocation();
   const navigate = useNavigate();
   const userID = location.state?.userID;
@@ -44,7 +44,7 @@ export function PlayerCashout() {
   useEffect(() => {
       if (userID) {
         const handleUpdate = async () => {
-          const data = await getCashoutsTableByUser(userID);
+          const data = await totalCashinTeamTable(userID);
           setTransactionsHistory(data);
         };
         handleUpdate();
@@ -79,9 +79,10 @@ export function PlayerCashout() {
     // Filter based on id or trans_type
     return bets.filter(
       (bet) =>
-        bet?.id?.toString().toLowerCase().includes(query) ||
+        bet?.status?.toString().toLowerCase().includes(query) ||
         bet?.mobile?.toString().toLowerCase().includes(query) ||
-        bet?.date?.toString().toLowerCase().includes(query) 
+        bet?.created?.toString().toLowerCase().includes(query) ||
+        bet?.modified?.toString().toLowerCase().includes(query)
     );
   };
   
@@ -108,7 +109,7 @@ export function PlayerCashout() {
     }
     
     return bets.filter(bet => {
-      const betDate = new Date(bet.date);
+      const betDate = new Date(bet.created);
       return betDate >= startDate && betDate <= today;
     });
   };
@@ -124,7 +125,7 @@ export function PlayerCashout() {
       <header className="bg-white shadow-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <button 
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/manageTeam', { state: { userID } })}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -133,7 +134,7 @@ export function PlayerCashout() {
             Back to Dashboard
           </button>
           
-          <h1 className="text-xl font-bold text-center flex-1">Cashouts</h1>
+          <h1 className="text-xl font-bold text-center flex-1">Cashins</h1>
           
           <div className="w-[60px]"></div> {/* Spacer for balance */}
         </div>
@@ -167,9 +168,8 @@ export function PlayerCashout() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All</SelectItem>
-                  <SelectItem value="success">Success</SelectItem>
-                  <SelectItem value="failed">Failed</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="pending">Active</SelectItem>
+                  <SelectItem value="blocked">Blocked</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -249,49 +249,43 @@ export function PlayerCashout() {
                 <TableCaption>A history of your Transactions</TableCaption>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="text-center">Date</TableHead>
-                    <TableHead className="text-center">Transaction no</TableHead>
+                    <TableHead className="text-center">Date Joined</TableHead>
                     <TableHead className="text-center">Player</TableHead>
-                    <TableHead className="text-center">Full Name</TableHead>
-                    <TableHead className="text-center">Bank</TableHead>
-                    <TableHead className="text-center">Account No.</TableHead>
-                    <TableHead className="text-center">Amount</TableHead>
+                    <TableHead className="text-center">Total Cashin</TableHead>
+                    <TableHead className="text-center">Total Pending Cashin</TableHead>
+                    <TableHead className="text-center">Total Successful Cashin</TableHead>
+                    <TableHead className="text-center">Total Failed Cashin</TableHead>
                     <TableHead className="text-center">Status</TableHead>
+                    <TableHead className="text-center">View Cashins</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredBets.map((bet) => (
                     <TableRow key={bet.id}>
-                      <TableCell className="text-center">{bet.date}</TableCell>
-                      <TableCell className="text-center">{getTransCode(bet.date)}{bet.id}</TableCell>
+                      <TableCell className="text-center">{bet.created}</TableCell>
                       <TableCell className="text-center">{bet.mobile}</TableCell>
-                      <TableCell className="text-center">{bet.full_name}</TableCell>
-                      <TableCell className="text-center">{bet.bank}</TableCell>
-                      <TableCell className="text-center">{bet.account}</TableCell>
-
-                      <TableCell className="text-center">{formatPeso(bet.amount)}</TableCell>
+                      <TableCell className="text-center">{formatPeso(bet.total_cashin)}</TableCell>
+                      <TableCell className="text-center">{formatPeso(bet.total_pending)}</TableCell>
+                      <TableCell className="text-center">{formatPeso(bet.total_success)}</TableCell>
+                      <TableCell className="text-center">{formatPeso(bet.total_failed)}</TableCell>
                       <TableCell className="text-center">
                         <Badge 
                           className= {
-                            bet.status === 'success' 
+                            bet.status === 'pending' 
                               ? 'bg-green-100 text-green-800 hover:bg-green-200' 
-                              : bet.status === 'failed'
+                              : bet.status === 'blocked'
                               ? 'bg-red-100 text-red-800 hover:bg-red-200'
                               : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
                           }
                         >
-                          {bet.status === 'success' ? 'Succes' : bet.status === 'failed' ? 'Failed' : 'Pending'}
+                          {bet.status === 'pending' ? 'Active' : bet.status === 'blocked' ? 'Blocked' : 'Pending'}
                         </Badge>
                       </TableCell>
-                      {/* <TableCell>
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={() => navigate(`/game-history/${bet.gameId}`)}
-                        >
-                          Details
-                        </Button>
-                      </TableCell> */}
+                      <TableCell>
+                      <Button
+                        onClick={() => navigate('/playercashins', { state: { userID: bet.id } })}
+                        className="bg-green-500 hover:bg-green-600"  >View</Button>
+                      </TableCell> 
                     </TableRow>
                   ))}
                 </TableBody>

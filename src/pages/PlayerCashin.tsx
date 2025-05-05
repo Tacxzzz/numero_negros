@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { getBetsEarnedTeamTable, getDownlinesTable, getTransactions, totalCashinTeamTable } from '@/lib/apiCalls';
+import { getBetsEarnedTeamTable, getCashinsTableByUser, getDownlinesTable, getTransactions, totalCashinTeamTable } from '@/lib/apiCalls';
 import { useLocation } from 'react-router-dom';
 import { formatPeso, getTransCode } from '@/lib/utils';
 
@@ -44,7 +44,7 @@ export function PlayerCashin() {
   useEffect(() => {
       if (userID) {
         const handleUpdate = async () => {
-          const data = await totalCashinTeamTable(userID);
+          const data = await getCashinsTableByUser(userID);
           setTransactionsHistory(data);
         };
         handleUpdate();
@@ -124,7 +124,7 @@ export function PlayerCashin() {
       <header className="bg-white shadow-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <button 
-            onClick={() => navigate('/manageTeam', { state: { userID } })}
+            onClick={() => navigate(-1)}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -273,7 +273,7 @@ export function PlayerCashin() {
                               : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
                           }
                         >
-                          {bet.status === 'success' ? 'Succes' : bet.status === 'failed' ? 'Failed' : 'Pending'}
+                          {bet.status === 'success' ? 'Success' : bet.status === 'failed' ? 'Failed' : 'Pending'}
                         </Badge>
                       </TableCell>
                       {/* <TableCell>

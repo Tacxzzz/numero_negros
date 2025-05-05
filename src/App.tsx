@@ -3,6 +3,8 @@ import { lazy, Suspense } from "react";
 import { UserProvider } from "./pages/UserContext";
 import { ClientProvider } from "./pages/ClientContext";
 import AddToHomeScreen from "./components/AddToHomeScreen";
+import { PlayerCashinTotal } from "./pages/PlayerCashinTotal";
+import { PlayerCashoutTotal } from "./pages/PlayerCashoutTotal";
 
 
 // Correct lazy imports: 
@@ -79,8 +81,10 @@ function App() {
               <Route path="/teamwins" element={<PlayerWins />} />
               <Route path="/teambalances" element={<PlayerBalances />} />
               <Route path="/teamcommissions" element={<PlayerCommissions />} />
-              <Route path="/teamcashins" element={<PlayerCashin />} />
-              <Route path="/teamcashouts" element={<PlayerCashout />} />
+              <Route path="/teamcashins" element={<PlayerCashinTotal />} />
+              <Route path="/playercashins" element={<PlayerCashin />} />
+              <Route path="/teamcashouts" element={<PlayerCashoutTotal />} />
+              <Route path="/playercashouts" element={<PlayerCashout />} />
               <Route path="/test" element={<div>Test Page Works!</div>} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
