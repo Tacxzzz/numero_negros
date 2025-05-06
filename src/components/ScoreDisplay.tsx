@@ -8,9 +8,9 @@ export function ScoreDisplay({ scores }: { scores: string[] }) {
     <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 flex flex-nowrap justify-center gap-2 sm:gap-4 max-w-[90vw] overflow-hidden">
       {scores.map((score, index) => (
         <div key={index} className="relative flex items-center justify-center">
-          <div className={`rounded-full bg-gradient-to-r from-green-300 to-green-500 flex items-center justify-center shadow-lg border-4 border-white ${circleSize}`}>
-            <div className={`rounded-full bg-gradient-to-r from-green-400 to-green-600 flex items-center justify-center border-2 border-yellow-200 ${innerCircleSize}`}>
-              <span className={`text-white font-bold ${fontSize}`}>{score}</span>
+          <div className={`rounded-full bg-gray-100 flex items-center justify-center shadow-lg border-4 border-[#0a1765] ${circleSize}`}>
+            <div className={`rounded-full bg-gray-100 flex items-center justify-center border-2  ${innerCircleSize}`}>
+              <span className={`text-[#0a1765] font-bold ${fontSize}`}>{score}</span>
             </div>
           </div>
         </div>
