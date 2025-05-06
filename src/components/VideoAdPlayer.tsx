@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import VideoAd from '@/files/PisoPlay Ad 1.mp4'
 
 export function VideoAdPlayer() {
   const [overlayVisible, setOverlayVisible] = useState(true)
@@ -12,6 +11,10 @@ export function VideoAdPlayer() {
   // Toggle overlay on tap (mobile)
   const handleTouchStart = () => setOverlayVisible((prev) => !prev)
 
+  // Replace with your desired YouTube video ID
+  const YOUTUBE_VIDEO_ID = "dQw4w9WgXcQ"
+  const YOUTUBE_EMBED_URL = `https://www.youtube.com/watch?v=GYLa2dGGpTA`
+
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow">
       <div 
@@ -20,14 +23,16 @@ export function VideoAdPlayer() {
         onMouseLeave={handleMouseLeave}
         onTouchStart={handleTouchStart}
       >
-        <video
-          src={VideoAd}
-          controls
-          className="w-full h-48 object-cover"
-          poster="/placeholder-video-thumbnail.jpg"
-        >
-          Your browser does not support the video tag.
-        </video>
+        <div className="w-full h-48 bg-black">
+          <iframe
+            src={YOUTUBE_EMBED_URL}
+            title="YouTube video ad"
+            className="w-full h-full object-cover"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            frameBorder={0}
+          />
+        </div>
 
         <div className="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded-md text-xs font-medium flex items-center">
           <span className="w-2 h-2 bg-white rounded-full mr-1 animate-pulse"></span>
