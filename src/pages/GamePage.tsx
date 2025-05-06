@@ -325,7 +325,7 @@ const hasAllDistinctScores = (scores: string[]) => {
       }
   
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sky-400 to-sky-300 flex flex-col items-center justify-center p-4 overflow-hidden relative">
+    <div className="min-h-screen bg-gradient-to-b from-[#348df3cf] to-[#002a6e] flex flex-col items-center justify-center p-4 overflow-hidden relative">
       {/* Back button */}
       <button 
         onClick={() => navigate(`/game-history/${gameId}`)}
@@ -335,45 +335,86 @@ const hasAllDistinctScores = (scores: string[]) => {
           <path d="M19 12H5M12 19l-7-7 7-7"/>
         </svg>
       </button>
-      
-      {/* Background decorations */}
-      <div className="absolute left-0 bottom-0 w-24 h-32">
-        <div className="absolute bottom-4 left-4 w-8 h-12 bg-pink-400 rounded-t-full"></div>
-        <div className="absolute bottom-8 left-12 w-6 h-16 bg-green-400 rounded-t-full"></div>
-      </div>
-      <div className="absolute right-0 bottom-0 w-24 h-32">
-        <div className="absolute bottom-4 right-4 w-8 h-12 bg-yellow-400 rounded-t-full"></div>
-        <div className="absolute bottom-8 right-12 w-6 h-16 bg-purple-400 rounded-t-full"></div>
-      </div>
 
+      <div className="relative top-0 left-0 w-full h-full flex flex-col items-center gap-4">
+          <h4 className="text-lg sm:text-xl font-bold text-gray-800">
+            {gameData[0]?.name} 
+          </h4>
+          <br/>
+      </div>
       {/* Game container */}
-      <div className="w-full h-full max-w-md bg-white rounded-3xl shadow-xl overflow-hidden relative">
-        {/* Rainbow background */}
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-yellow-200 to-pink-200 opacity-50"></div>
-        
-        {/* Rainbow arc */}
-        <div className="absolute top-0 left-0 right-0 h-32 overflow-hidden">
-          <div className="w-[150%] h-[300px] mx-auto bg-gradient-to-r from-purple-500 via-pink-500 via-red-500 via-yellow-500 via-green-500 to-blue-500 rounded-[100%] relative -top-[200px]"></div>
-        </div>
-        
-        {/* Clouds */}
-        <div className="absolute top-4 left-6">
-          <div className="bg-white w-10 h-5 rounded-full opacity-80"></div>
-          <div className="bg-white w-6 h-4 rounded-full opacity-80 absolute -top-2 -left-2"></div>
-          <div className="bg-white w-6 h-4 rounded-full opacity-80 absolute -top-1 left-6"></div>
-        </div>
-        <div className="absolute top-8 right-8">
-          <div className="bg-white w-12 h-6 rounded-full opacity-80"></div>
-          <div className="bg-white w-8 h-5 rounded-full opacity-80 absolute -top-2 -left-2"></div>
-          <div className="bg-white w-8 h-5 rounded-full opacity-80 absolute -top-1 left-8"></div>
+      <div className="w-full h-full max-w-md overflow-hidden relative">
+        {/* Score display */}
+        <div className='flex flex-col items-center '>
+        <ScoreDisplay scores={scores} />
+        <br/><br/>
         </div>
 
-        {/* Score display */}
-        <ScoreDisplay scores={scores} />
-        <br/><br/><br/>
+        {/* Stylish Game Type Dropdown */}
+          <div className="relative z-10 p-4 pt-14">
+            <label
+              htmlFor="gameTypeDropdown"
+              className="block text-sm font-medium text-gray-100 mb-2"
+            >
+              Select Draw:
+            </label>
+            <select
+              id="gameTypeDropdowns"
+              value={selectedDraw || gameDrawData[0]?.id || ""}
+              onChange={(e) => {
+              const selectedValue = e.target.value;
+              setSelectedDraw(selectedValue);
+              setLoading(true);
+              }}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+            >
+              {gameDrawOptions.map((draw) => (
+              <option 
+                key={draw.id} 
+                value={draw.id}
+                selected={draw.id === (gameDrawData[0]?.id)}
+              >
+                {draw.date} {draw.time}
+              </option>
+              ))}
+            </select>
+
+              {gameTypeData[0].game_type!=="" &&(
+                <>
+                <label
+                  htmlFor="gameTypeDropdown"
+                  className="block text-sm font-medium text-gray-100 mb-2"
+                >
+                  Select Type:
+                </label>
+                <select
+                  id="gameTypeDropdown"
+                  value={selectedGameType || gameTypeData[0].id || ""}
+                  onChange={(e) => {
+                  const selectedValue = e.target.value;
+                  setSelectedGameType(selectedValue);
+                  setLoading(true);
+                  }}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                >
+                  {gameTypeOptions.map((type) => (
+                  <option 
+                    key={type.id} 
+                    value={type.id}
+                    selected={type.id === gameTypeData[0].id}
+                  >
+                    {type.name}
+                  </option>
+                    ))}
+                  </select>
+                    <br/><br/>
+                </>
+                    )}
+          </div>
+        
         {/* Game board */}
         <div className="relative z-10 p-4 pt-16">
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-4 shadow-inner">
+          <div className="bg-gradient-to-br from-gray-50 to-[#002a6e] backdrop-blur-sm rounded-3xl p-4 shadow-inner">
             {gameData &&
             (
               <GameBoard onTileClick={handleTileClick} lengthChoice={lengthChoice} lengthStart={lengthStart} scores={scores} gameId={gameId} gameType={gameType} />
@@ -383,192 +424,133 @@ const hasAllDistinctScores = (scores: string[]) => {
         
             {/* Action buttons */}
             <div className="relative z-10 p-4 flex flex-col items-center gap-4">
-            <div className="relative z-10 p-4 flex flex-col items-center gap-4">
-  {/* Game Title and Info */}
-  <h4 className="text-lg sm:text-xl font-bold text-gray-800">
-    {gameData[0]?.name} 
-  </h4>
+              <div className="relative z-10 p-4 flex flex-col items-center gap-4">
+                    <div className="flex justify-center space-x-4">
+                          <button 
+                            onClick={handleLuckyPick} 
+                            disabled={!gameId || !gameType} 
+                            //disabled
+                            className={`px-4 py-2 rounded-lg shadow-md text-white 
+                              ${!gameId || !gameType ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-600"}`}>
+                            🎲
+                          </button>
+                          {favorites?.length > 0 && (
+                            <button 
+                              onClick={handleSaveCombination}
+                              disabled={
+                                !(
+                                  favorites.every((favorites) => favorites.trim() !== "") &&
+                                  userID.trim() !== "" &&
+                                  (
+                                    (gameId === "2" || gameId === "3") &&
+                                    (gameType === "4" || gameType === "7")
+                                      ? hasTwoMatchingScores(favorites)
+                                      : true
+                                  )
+                                  &&
+                                  (
+                                    (gameId === "2" || gameId === "3") &&
+                                    (gameType === "5" || gameType === "8")
+                                      ? hasAllDistinctScores(favorites)
+                                      : true
+                                  )
+                                )
+                              } 
+                              className={`${
+                                favorites.every((favorites) => favorites.trim() !== "") &&
+                                userID.trim() !== "" &&
+                                (
+                                  (gameId === "2" || gameId === "3") &&
+                                  (gameType === "4" || gameType === "7")
+                                    ? hasTwoMatchingScores(favorites)
+                                    : true
+                                )
+                                &&
+                                  (
+                                    (gameId === "2" || gameId === "3") &&
+                                    (gameType === "5" || gameType === "8")
+                                      ? hasAllDistinctScores(favorites)
+                                      : true
+                                  )
+                                  ? "px-4 py-2 bg-blue-500 hover:bg-blue-600"
+                                  : "px-4 py-2 bg-gray-300 cursor-not-allowed"
+                              }
+                              text-white rounded-lg shadow-md `}>
+                              ⭐ {favorites.filter(fav => fav !== "").join("-")}
+                            </button>
+                          )}
 
-  <div className="flex justify-center space-x-4">
-        <button 
-          onClick={handleLuckyPick} 
-          disabled={!gameId || !gameType} 
-          //disabled
-          className={`px-4 py-2 rounded-lg shadow-md text-white 
-            ${!gameId || !gameType ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-600"}`}>
-          🎲
-        </button>
-        {favorites?.length > 0 && (
-          <button 
-            onClick={handleSaveCombination}
-            disabled={
-              !(
-                favorites.every((favorites) => favorites.trim() !== "") &&
-                userID.trim() !== "" &&
-                (
-                  (gameId === "2" || gameId === "3") &&
-                  (gameType === "4" || gameType === "7")
-                    ? hasTwoMatchingScores(favorites)
-                    : true
-                )
-                &&
-                (
-                  (gameId === "2" || gameId === "3") &&
-                  (gameType === "5" || gameType === "8")
-                    ? hasAllDistinctScores(favorites)
-                    : true
-                )
-              )
-            } 
-            className={`${
-              favorites.every((favorites) => favorites.trim() !== "") &&
-              userID.trim() !== "" &&
-              (
-                (gameId === "2" || gameId === "3") &&
-                (gameType === "4" || gameType === "7")
-                  ? hasTwoMatchingScores(favorites)
-                  : true
-              )
-              &&
-                (
-                  (gameId === "2" || gameId === "3") &&
-                  (gameType === "5" || gameType === "8")
-                    ? hasAllDistinctScores(favorites)
-                    : true
-                )
-                ? "px-4 py-2 bg-blue-500 hover:bg-blue-600"
-                : "px-4 py-2 bg-gray-300 cursor-not-allowed"
-            }
-            text-white rounded-lg shadow-md `}>
-            ⭐ {favorites.filter(fav => fav !== "").join("-")}
-          </button>
-        )}
+                          <button 
+                            onClick={saveFavoriteClicked} 
+                            disabled={
+                              !(
+                                scores.every((score) => score.trim() !== "") &&
+                                userID.trim() !== "" &&
+                                (
+                                  (gameId === "2" || gameId === "3") &&
+                                  (gameType === "4" || gameType === "7")
+                                    ? hasTwoMatchingScores(scores)
+                                    : true
+                                )
+                              )
+                            }
+                            className={`${
+                              scores.every((score) => score.trim() !== "") &&
+                              userID.trim() !== "" &&
+                              (
+                                (gameId === "2" || gameId === "3") &&
+                                (gameType === "4" || gameType === "7")
+                                  ? hasTwoMatchingScores(scores)
+                                  : true
+                              )
+                                ? "px-4 py-2 bg-blue-500 hover:bg-blue-600"
+                                : "px-4 py-2 bg-gray-300 cursor-not-allowed"
+                            }
+                            text-white rounded-lg shadow-md `}>
+                            💾
+                          </button>
+                        </div>
 
-        <button 
-          onClick={saveFavoriteClicked} 
-          disabled={
-            !(
-              scores.every((score) => score.trim() !== "") &&
-              userID.trim() !== "" &&
-              (
-                (gameId === "2" || gameId === "3") &&
-                (gameType === "4" || gameType === "7")
-                  ? hasTwoMatchingScores(scores)
-                  : true
-              )
-            )
-          }
-          className={`${
-            scores.every((score) => score.trim() !== "") &&
-            userID.trim() !== "" &&
-            (
-              (gameId === "2" || gameId === "3") &&
-              (gameType === "4" || gameType === "7")
-                ? hasTwoMatchingScores(scores)
-                : true
-            )
-              ? "px-4 py-2 bg-blue-500 hover:bg-blue-600"
-              : "px-4 py-2 bg-gray-300 cursor-not-allowed"
-          }
-          text-white rounded-lg shadow-md `}>
-          💾
-        </button>
-      </div>
-            {/* Stylish Game Type Dropdown */}
-  <div className="w-full max-w-xs">
-    {gameTypeData[0].game_type!=="" &&(
-      <>
-      <label
-      htmlFor="gameTypeDropdown"
-      className="block text-sm font-medium text-gray-700 mb-2"
-    >
-      Select Type:
-    </label>
-    <select
-      id="gameTypeDropdown"
-      value={selectedGameType || gameTypeData[0].id || ""}
-      onChange={(e) => {
-        const selectedValue = e.target.value;
-        setSelectedGameType(selectedValue);
-        setLoading(true);
-      }}
-      className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-pink-500"
-    >
-      {gameTypeOptions.map((type) => (
-        <option 
-        key={type.id} 
-        value={type.id}
-        selected={type.id === gameTypeData[0].id}
-        >
-          {type.name}
-        </option>
-      ))}
-    </select>
-    <br/><br/>
-      </>
-    )}
-    
-     <label
-      htmlFor="gameTypeDropdown"
-      className="block text-sm font-medium text-gray-700 mb-2"
-    >
-      Select Draw:
-    </label>
-    <select
-      id="gameTypeDropdowns"
-      value={selectedDraw || gameDrawData[0]?.id || ""}
-      onChange={(e) => {
-        const selectedValue = e.target.value;
-        setSelectedDraw(selectedValue);
-        setLoading(true);
-      }}
-      className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-pink-500"
-    >
-      {gameDrawOptions.map((draw) => (
-        <option 
-        key={draw.id} 
-        value={draw.id}
-        selected={draw.id === (gameDrawData[0]?.id)}
-        >
-           {draw.date} {draw.time}
-        </option>
-      ))}
-    </select> 
-  </div>
-  <h4 className="text-sm sm:text-base text-gray-600">
-    
-  </h4>
+                        <h4 className="text-sm sm:text-base text-gray-600"></h4>
 
-  {/* Countdown Timer */}
-  <p className="text-green-500 text-sm sm:text-base">
-    Time left:{" "}
-    <CountdownTimer
-      date={gameDrawData[0]?.date}
-      time={gameDrawData[0]?.time}
-      cutoffMinutes={gameDrawData[0]?.deadline}
-    />
-  </p>
+                        {/* Countdown Timer */}
+                        <p className="text-gray-100 text-sm  sm:text-base">
+                          Time left:{" "}
+                          <CountdownTimer
+                            date={gameDrawData[0]?.date}
+                            time={gameDrawData[0]?.time}
+                            cutoffMinutes={gameDrawData[0]?.deadline}
+                          />
+                        </p>
 
-   {clientId && (
-    <>
-  <p className="text-red-500 text-sm sm:text-base">
-    Playing as : {clientFullName}
-  </p>
-  </>
-  )} 
-</div>
+                        {clientId && (
+                          <>
+                        <p className="text-red-500 text-sm sm:text-base">
+                          Playing as : {clientFullName}
+                        </p>
+                        </>
+                        )} 
+                    </div>
 
 
 
            
-              <div className="flex items-center gap-4">
-                
-               
-              
-              <button
-                  onClick={() => setPlayModalOpen(true)}
-                  disabled={
-                    !(
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={() => setPlayModalOpen(true)}
+                    disabled={
+                      !(
+                        scores.every((score) => score.trim() !== "") &&
+                        userID.trim() !== "" &&
+                        (
+                          (gameId === "2" || gameId === "3") &&
+                          (gameType === "4" || gameType === "7")
+                            ? hasTwoMatchingScores(scores)
+                            : true
+                        )
+                      )
+                    }
+                    className={`w-full ${
                       scores.every((score) => score.trim() !== "") &&
                       userID.trim() !== "" &&
                       (
@@ -577,102 +559,82 @@ const hasAllDistinctScores = (scores: string[]) => {
                           ? hasTwoMatchingScores(scores)
                           : true
                       )
-                    )
-                  }
-                  className={`${
-                    scores.every((score) => score.trim() !== "") &&
-                    userID.trim() !== "" &&
-                    (
-                      (gameId === "2" || gameId === "3") &&
-                      (gameType === "4" || gameType === "7")
-                        ? hasTwoMatchingScores(scores)
-                        : true
-                    )
-                      ? "bg-yellow-400 hover:bg-yellow-500"
-                      : "bg-gray-300 cursor-not-allowed"
-                  } text-white font-bold py-2 px-8 rounded-full shadow-md transition-transform hover:scale-105 active:scale-95 uppercase text-sm tracking-wider`}
-                >
-                  Bet
-                </button>
+                        ? "bg-blue-700 hover:bg-yellow-500"
+                        : "bg-gray-300 cursor-not-allowed"
+                    } text-white font-bold w-full py-2 px-28 rounded-full shadow-md transition-transform hover:scale-105 active:scale-95 uppercase text-sm tracking-wider `}
+                  >
+                    Bet
+                  </button>
                 
-                <Dialog open={playModalOpen} onOpenChange={setPlayModalOpen}>
-                  <DialogContent className="bg-gradient-to-b from-pink-100 to-orange-100 border-2 border-pink-300 rounded-xl max-w-xs sm:max-w-sm">
-                    <DialogHeader>
-                      <DialogTitle className="text-center text-xl font-bold text-pink-700">
-                      <h5>Selected Numbers: </h5><h4>{scores.filter((score) => score !== "").join("-") || ""}
-                      </h4>
-                      <br/>
-                      <h4>{gameData[0]?.name} {gameTypeData[0]?.game_type}</h4>
-                      <h4>{gameDrawData[0]?.date} {gameDrawData[0]?.time}</h4>
-                      <br/>
-                      <h4>
-                        Bet : {formatPeso(adjustedBet)}<br />
-                        Winnings : {formatPeso(adjustedWinnings)}
-                      </h4> 
-                      <p className="text-green-500 text-sm sm:text-base">
-                        Time left: <CountdownTimer date={gameDrawData[0]?.date} time={gameDrawData[0]?.time} cutoffMinutes={gameDrawData[0]?.deadline} />
-                      </p>
-                      </DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4 my-2">
-                      <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg">
-                        <Label htmlFor="bet" className="text-pink-800 font-medium block mb-2">
-                          Your Current Balance : {formatPeso(balance)}
-                        </Label>
-                      </div>
-
-                      {clientId && (
-                        <>
+                  <Dialog open={playModalOpen} onOpenChange={setPlayModalOpen}>
+                    <DialogContent className="bg-gradient-to-b from-[#348df3cf] to-[#002a6e] border-2 border-[#348df3cf] rounded-xl max-w-xs sm:max-w-sm">
+                      <DialogHeader>
+                        <DialogTitle className="text-center text-xl font-bold text-gray-100">
+                        <h5>Selected Numbers: </h5><h4>{scores.filter((score) => score !== "").join("-") || ""}
+                        </h4>
+                        <br/>
+                        <h4>{gameData[0]?.name} {gameTypeData[0]?.game_type}</h4>
+                        <h4>{gameDrawData[0]?.date} {gameDrawData[0]?.time}</h4>
+                        <br/>
+                        <h4>
+                          Bet : {formatPeso(adjustedBet)}<br />
+                          Winnings : {formatPeso(adjustedWinnings)}
+                        </h4> 
+                        <p className="text-gray-200 font-bold text-sm sm:text-base">
+                          Time left: <CountdownTimer date={gameDrawData[0]?.date} time={gameDrawData[0]?.time} cutoffMinutes={gameDrawData[0]?.deadline} />
+                        </p>
+                        </DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4 my-2">
                         <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg">
-                        <Label htmlFor="bet" className="text-pink-800 font-medium block mb-2">
-                        Playing as : {clientFullName}
-                        </Label>
-                      </div>
-                      </>
-                      )} 
-                      <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg">
-                            <Label htmlFor="multiplier" className="text-pink-800 font-medium block mb-2">
-                              Bet Multiplier
-                            </Label>
-                            <input
-                              type="number"
-                              id="multiplier"
-                              value={multiplier}
-                              onChange={handleMultiplierChange}
-                              min={1}
-                              className="w-full p-2 rounded border border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-400 text-center font-bold text-pink-700"
-                            />
-                          </div>
+                          <Label htmlFor="bet" className="text-[#002a6e] font-medium block mb-2">
+                            Your Current Balance : {formatPeso(balance)}
+                          </Label>
+                        </div>
 
-
-
-                      <Button 
-                        className="w-full bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-600 hover:to-orange-600 text-white rounded-full py-6 text-lg font-bold"
-                        disabled={balance < gameTypeData[0]?.bet || betAllow===false}
-                        onClick={handleBetConfirm}
+                        {clientId && (
+                          <>
+                          <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg">
+                          <Label htmlFor="bet" className="text-[#002a6e] font-medium block mb-2">
+                          Playing as : {clientFullName}
+                          </Label>
+                        </div>
+                        </>
+                        )} 
+                        <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg">
+                              <Label htmlFor="multiplier" className="text-[#002a6e] font-medium block mb-2">
+                                Bet Multiplier
+                              </Label>
+                              <input
+                                type="number"
+                                id="multiplier"
+                                value={multiplier}
+                                onChange={handleMultiplierChange}
+                                min={1}
+                                className="w-full p-2 rounded border border-[#002a6e] focus:outline-none focus:ring-2 focus:ring-[#348df3cf] text-center font-bold text-[#002a6e]"
+                              />
+                </div>
+                  <Button 
+                    className="w-full bg-gradient-to-r from-[#348df3cf] to-[#002a6e] hover:from-pink-600 hover:to-orange-600 text-white rounded-full py-6 text-lg font-bold"
+                    disabled={balance < gameTypeData[0]?.bet || betAllow===false}
+                    onClick={handleBetConfirm}
+                    >
+                    CONFIRM BET
+                  </Button>
+                </div>
+                <DialogFooter>
+                  <Button 
+                      onClick={() => setPlayModalOpen(false)}
+                      variant="outline"
+                      className="w-full border-[#348df3cf] text-[#002a6e] rounded-full"
                       >
-                        CONFIRM BET
-                      </Button>
-                    </div>
-                    <DialogFooter>
-                      <Button 
-                        onClick={() => setPlayModalOpen(false)}
-                        variant="outline"
-                        className="w-full border-pink-300 text-pink-700 rounded-full"
-                      >
-                        Back
-                      </Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
-                
-                
-              </div>
-            </div>
-
-
-
-
+                      Back
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </div>
       </div>
     </div>
   );

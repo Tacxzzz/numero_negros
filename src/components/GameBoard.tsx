@@ -26,7 +26,7 @@ export function GameBoard({ onTileClick, lengthChoice = 25,lengthStart = 0, scor
         id: i,
         value: i.toString(),
         type: "normal",
-        color: "bg-gray-400 hover:bg-blue-500",
+        color: "bg-[#0a1765] hover:bg-blue-500",
       });
     }
     return tiles;
