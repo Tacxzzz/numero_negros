@@ -1449,3 +1449,44 @@ export const convertCommissionsToBalance = async (
     return { error: true , message:"conversion failed." };
   }
 };
+
+
+
+export const setDailyRewards = async (userID: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/setDailyRewards`, { userID });
+
+    if (Array.isArray(response.data)) {
+      console.log(response.data);
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch recipients:", error);
+    return [];
+  }
+};
+
+
+export const claimDailyReward = async (
+  userID: string, reward: string 
+) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/claimDailyReward`, { userID, reward});
+
+    if (response.data && response.data.authenticated) {
+      const userData = response.data;
+      return {
+        authenticated: userData.authenticated
+      };
+    } else {
+      console.warn("User data is empty or invalid.");
+      return { authenticated: false };
+    }
+    
+  } catch (error) {
+    console.error("Failed to send remittance:", error);
+    return {  authenticated: false };
+  }
+};

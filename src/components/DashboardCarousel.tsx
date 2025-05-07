@@ -35,7 +35,7 @@ export function DashboardCarousel({ slides }: DashboardCarouselProps) {
         ))}
       </div>
       {/* Dot indicators based on actual slide count */}
-      <div className="flex justify-center mt-2 space-x-2">
+      <div className="flex justify-center mt-2 space-x-2 ">
         {slides.map((_, idx) => (
           <button
             key={idx}

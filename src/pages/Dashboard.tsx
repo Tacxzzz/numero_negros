@@ -37,6 +37,7 @@ import AdvertisementImage from "@/files/advertisement.svg";
 const AnnouncementsMarquee = lazy(() => import("@/components/AnnouncementsMarque"));
 const AutoScrollWinnersCarousel = lazy(() => import("@/components/AutoScrollWinnersCarousel"));
 import { setTawkWidgetVisible } from '@/lib/tawkWidgetUtils';
+import DailyCheckInCard from '@/components/DailyCheckInCard';
 
 // Tawk.to configuration
 const TAWK_SRC = "https://embed.tawk.to/67f4c61c846b7b190fd1ea14/1ioa2bnq9";
@@ -145,6 +146,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
       
       // Store cleanup function reference
       let observerCleanup: (() => void) | null = null;
+
 
       script.onload = () => {
         // Apply styles and keep them enforced with MutationObserver
@@ -1037,28 +1039,7 @@ const handleSubmit = async (e) => {
             <div>
               <DashboardCarousel slides={carouselSlides} />
             </div>
-            
-            {/* Right column: Preserved Play button block */}
-            <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow">
-              <div className="relative">
-                <iframe
-                  src="https://pisogame.com/pages/home/download/android/index?code=VI6KxuLZb"
-                  className="w-full h-48 object-cover"
-                  allowFullScreen
-                ></iframe>
-              </div>
-              <div className="p-3 flex justify-between items-center">
-                <div className="flex items-center">
-                </div>
-                <Button 
-                  size="sm" 
-                  className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
-                  onClick={() => window.open('https://pisogame.com/pages/home/download/android/index?code=VI6KxuLZb', '_blank')}
-                >
-                  Play
-                </Button>
-              </div>
-            </div>
+              <DailyCheckInCard />
           </div>
         </section>
         
