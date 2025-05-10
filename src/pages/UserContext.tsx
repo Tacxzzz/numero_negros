@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
 
 interface UserContextType {
   userID: string | null;
@@ -14,14 +14,23 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return localStorage.getItem("identifier");
   });
 
-  const [deviceID, setDeviceID] = useState<string | null>(() => {
-    let storedID = localStorage.getItem("deviceID");
-    if (!storedID) {
-      storedID = uuidv4();
-      localStorage.setItem("deviceID", storedID);
+  const [deviceID, setDeviceID] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Get device ID either from localStorage or FingerprintJS
+    const storedDeviceID = localStorage.getItem("deviceIDFingerPrint");
+    if (storedDeviceID) {
+      setDeviceID(storedDeviceID);
+    } else {
+      (async () => {
+        const fp = await FingerprintJS.load();
+        const result = await fp.get();
+        const deviceID = result.visitorId;
+        setDeviceID(deviceID);
+        localStorage.setItem("deviceIDFingerPrint", deviceID); // Store the deviceID in localStorage
+      })();
     }
-    return storedID;
-  });
+  }, []);
 
   useEffect(() => {
     if (userID) {
@@ -30,6 +39,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.removeItem("identifier");
     }
   }, [userID]);
+
+  if (!deviceID) return null; // Optional: Display loading or fallback content until deviceID is ready
 
   return (
     <UserContext.Provider value={{ userID, setUserID, deviceID }}>

@@ -308,6 +308,7 @@ export const fetchUserData = async (userID: string, deviceID: string) => {
       alert("DEVICE ID ALREADY EXISTS!");
       localStorage.removeItem("authToken");
       localStorage.removeItem("identifier");
+      localStorage.removeItem("deviceIDFingerPrint");
       window.location.reload();
       return null;
     }
