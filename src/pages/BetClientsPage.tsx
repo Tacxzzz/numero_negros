@@ -34,7 +34,7 @@ import { useClient } from "./ClientContext";
 
 export function BetClientsPage() {
   const navigate = useNavigate();
-  const { setUserID,userID } = useUser();
+  const { setUserID,userID,deviceID } = useUser();
   
   const [filter, setFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');

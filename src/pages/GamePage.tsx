@@ -16,7 +16,7 @@ import { useClient } from "./ClientContext";
 
 export function GamePage() {
   const navigate = useNavigate();
-  const { setUserID,userID } = useUser();
+  const { setUserID,userID,deviceID } = useUser();
   const { clientId, setClientId } = useClient();
   const [clientFullName, setClientFullName] = useState("");
   console.log(userID);
@@ -112,7 +112,7 @@ export function GamePage() {
   useEffect(() => {
       if (userID) {
         const handleUpdate = async () => {
-          const userData = await fetchUserData(userID);
+          const userData = await fetchUserData(userID,deviceID);
           setBalance(userData[0].balance);
           const dataFave = await readMyFavorite(userID,gameId);
           if(dataFave.authenticated)

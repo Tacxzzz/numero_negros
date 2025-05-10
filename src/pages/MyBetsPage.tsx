@@ -33,7 +33,7 @@ import { formatPeso, getTransCode } from '@/lib/utils';
 
 export function MyBetsPage() {
   const navigate = useNavigate();
-  const { setUserID,userID } = useUser();
+  const { setUserID,userID,deviceID } = useUser();
   console.log(userID);
   const [filter, setFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');

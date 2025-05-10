@@ -294,9 +294,36 @@ export const cashIn = async (
 
 
 
-export const fetchUserData = async (id: string) => {
+export const fetchUserData = async (userID: string, deviceID: string) => { 
   try {
-    const response = await axios.post(`${API_URL}/main/getUserData`, { userID: id });
+    const response = await axios.post(`${API_URL}/main/getUserData`, { userID, deviceID });
+
+    const data = response.data;
+
+    if (data?.error === "ERROR") {
+      return null;
+    }
+
+    if (data?.error === "invalid") {
+      alert("DEVICE ID ALREADY EXISTS!");
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("identifier");
+      window.location.reload();
+      return null;
+    }
+
+    return data; // now always returning an object or null
+  } catch (error) {
+    console.error("Failed to fetch user data:", error);
+    return null;
+  }
+};
+
+
+
+export const fetchUserDataDyna = async (userID: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getUserDataDyna`, { userID });
 
     if (Array.isArray(response.data)) {
       return response.data;

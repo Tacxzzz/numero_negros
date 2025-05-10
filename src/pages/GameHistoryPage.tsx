@@ -36,7 +36,7 @@ type GameDraw = {
 
 export function GameHistoryPage() {
   const { gameId } = useParams();
-  const { setUserID,userID } = useUser();
+  const { setUserID,userID,deviceID } = useUser();
   console.log(userID);
   const navigate = useNavigate();
   const [gameData, setGameData] = useState<any>(null);

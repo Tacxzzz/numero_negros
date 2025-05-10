@@ -33,7 +33,7 @@ import { formatPeso, getTransCode } from '@/lib/utils';
 
 export function AllowReferrer() {
   const navigate = useNavigate();
-  const { setUserID,userID } = useUser();
+  const { setUserID,userID,deviceID } = useUser();
   console.log(userID);
   
   const [allowCashin, setAllowCashin] = useState('');
@@ -47,7 +47,7 @@ export function AllowReferrer() {
   useEffect(() => {
       const handleUpdate = async () => {
   
-              const data = await fetchUserData(userID);
+              const data = await fetchUserData(userID,deviceID);
               setAllowCashin(data[0].allow_cashin);
               setAllowCashout(data[0].allow_cashout);
               setAllowWins(data[0].allow_wins);
@@ -64,7 +64,7 @@ export function AllowReferrer() {
     const allowAccessClicked = async (allow: string) => {
         await allowAccessReferrer(userID,allow);
 
-        const data = await fetchUserData(userID);
+        const data = await fetchUserData(userID,deviceID);
         setAllowCashin(data[0].allow_cashin);
         setAllowCashout(data[0].allow_cashout);
         setAllowWins(data[0].allow_wins);
@@ -77,7 +77,7 @@ export function AllowReferrer() {
     const removeAccessClicked = async (allow: string) => {
       await removeAccessReferrer(userID,allow);
 
-      const data = await fetchUserData(userID);
+      const data = await fetchUserData(userID,deviceID);
       setAllowCashin(data[0].allow_cashin);
       setAllowCashout(data[0].allow_cashout);
       setAllowWins(data[0].allow_wins);

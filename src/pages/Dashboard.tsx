@@ -83,7 +83,7 @@ interface SidebarProps {
 export function Dashboard({ onLogout }: SidebarProps) {
 
   const navigate = useNavigate();
-  const { setUserID,userID } = useUser();
+  const { setUserID,userID,deviceID  } = useUser();
   const { clientId, setClientId } = useClient();
   const [clientFullName, setClientFullName] = useState("");
   //console.log(userID);
@@ -173,7 +173,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
 
   useEffect(() => {
     setShowAdModal(true);
-    if (userID) {
+    if (userID && deviceID) {
       const handleUpdate = async () => {
 
         const commData = await getCommissions(userID);
@@ -186,17 +186,18 @@ export function Dashboard({ onLogout }: SidebarProps) {
         setLevel1(dataRef.level1);
         setLevel2(dataRef.level2);
 
-        const data = await fetchUserData(userID);
-        setBalance(data[0].balance);
-        setWinnings(data[0].wins);
-        setCommissions(data[0].commissions);
-        setQuota(data[0].quota);
-        setQuotaTime(data[0].quota_time);
-        setQuotaAllow(data[0].quota_allow);
-        setMobile(data[0].mobile);
-        setReferral(data[0].referral);
-        setStatus(data[0].status);
-        setAgent(data[0].agent);
+        const data = await fetchUserData(userID,deviceID);
+        console.log(data);
+        setBalance(data.balance);
+        setWinnings(data.wins);
+        setCommissions(data.commissions);
+        setQuota(data.quota);
+        setQuotaTime(data.quota_time);
+        setQuotaAllow(data.quota_allow);
+        setMobile(data.mobile);
+        setReferral(data.referral);
+        setStatus(data.status);
+        setAgent(data.agent);
         setLoading(false);
 
 
@@ -229,7 +230,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
       handleUpdate();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userID]);
+  }, [userID,deviceID ]);
 
   // const handleCashInClick = () => {
   //   setShowSuccessModal(true);
@@ -268,17 +269,17 @@ export function Dashboard({ onLogout }: SidebarProps) {
     setLevel1(dataRef.level1);
     setLevel2(dataRef.level2);
 
-    const data = await fetchUserData(userID);
-    setBalance(data[0].balance);
-    setWinnings(data[0].wins);
-    setCommissions(data[0].commissions);
-    setQuota(data[0].quota);
-    setQuotaTime(data[0].quota_time);
-    setQuotaAllow(data[0].quota_allow);
-    setMobile(data[0].mobile);
-    setReferral(data[0].referral);
-    setStatus(data[0].status);
-    setAgent(data[0].agent);
+    const data = await fetchUserData(userID,deviceID);
+    setBalance(data.balance);
+    setWinnings(data.wins);
+    setCommissions(data.commissions);
+    setQuota(data.quota);
+    setQuotaTime(data.quota_time);
+    setQuotaAllow(data.quota_allow);
+    setMobile(data.mobile);
+    setReferral(data.referral);
+    setStatus(data.status);
+    setAgent(data.agent);
     setShowAccountModal(false);
   };
 
@@ -303,17 +304,17 @@ export function Dashboard({ onLogout }: SidebarProps) {
     setLevel1(dataRef.level1);
     setLevel2(dataRef.level2);
 
-    const data = await fetchUserData(userID);
-    setBalance(data[0].balance);
-    setWinnings(data[0].wins);
-    setCommissions(data[0].commissions);
-    setQuota(data[0].quota);
-    setQuotaTime(data[0].quota_time);
-    setQuotaAllow(data[0].quota_allow);
-    setMobile(data[0].mobile);
-    setReferral(data[0].referral);
-    setStatus(data[0].status);
-    setAgent(data[0].agent);
+    const data = await fetchUserData(userID,deviceID);
+    setBalance(data.balance);
+    setWinnings(data.wins);
+    setCommissions(data.commissions);
+    setQuota(data.quota);
+    setQuotaTime(data.quota_time);
+    setQuotaAllow(data.quota_allow);
+    setMobile(data.mobile);
+    setReferral(data.referral);
+    setStatus(data.status);
+    setAgent(data.agent);
     setLoading(false);
 
     
@@ -399,17 +400,17 @@ const handleSubmit = async (e) => {
       setLevel1(dataRef.level1);
       setLevel2(dataRef.level2);
 
-      const data = await fetchUserData(userID);
-      setBalance(data[0].balance);
-      setWinnings(data[0].wins);
-      setCommissions(data[0].commissions);
-      setQuota(data[0].quota);
-      setQuotaTime(data[0].quota_time);
-      setQuotaAllow(data[0].quota_allow);
-      setMobile(data[0].mobile);
-      setReferral(data[0].referral);
-      setStatus(data[0].status);
-      setAgent(data[0].agent);
+      const data = await fetchUserData(userID,deviceID);
+      setBalance(data.balance);
+      setWinnings(data.wins);
+      setCommissions(data.commissions);
+      setQuota(data.quota);
+      setQuotaTime(data.quota_time);
+      setQuotaAllow(data.quota_allow);
+      setMobile(data.mobile);
+      setReferral(data.referral);
+      setStatus(data.status);
+      setAgent(data.agent);
 
       if(clientId)
       {
@@ -453,17 +454,17 @@ const handleSubmit = async (e) => {
       setLevel1(dataRef.level1);
       setLevel2(dataRef.level2);
 
-      const data = await fetchUserData(userID);
-      setBalance(data[0].balance);
-      setWinnings(data[0].wins);
-      setCommissions(data[0].commissions);
-      setQuota(data[0].quota);
-      setQuotaTime(data[0].quota_time);
-      setQuotaAllow(data[0].quota_allow);
-      setMobile(data[0].mobile);
-      setReferral(data[0].referral);
-      setStatus(data[0].status);
-      setAgent(data[0].agent);
+      const data = await fetchUserData(userID,deviceID);
+      setBalance(data.balance);
+      setWinnings(data.wins);
+      setCommissions(data.commissions);
+      setQuota(data.quota);
+      setQuotaTime(data.quota_time);
+      setQuotaAllow(data.quota_allow);
+      setMobile(data.mobile);
+      setReferral(data.referral);
+      setStatus(data.status);
+      setAgent(data.agent);
 
       if(clientId)
       {
@@ -505,17 +506,17 @@ const handleSubmit = async (e) => {
       setLevel1(dataRef.level1);
       setLevel2(dataRef.level2);
 
-      const data = await fetchUserData(userID);
-      setBalance(data[0].balance);
-      setWinnings(data[0].wins);
-      setCommissions(data[0].commissions);
-      setQuota(data[0].quota);
-      setQuotaTime(data[0].quota_time);
-      setQuotaAllow(data[0].quota_allow);
-      setMobile(data[0].mobile);
-      setReferral(data[0].referral);
-      setStatus(data[0].status);
-      setAgent(data[0].agent);
+      const data = await fetchUserData(userID,deviceID);
+      setBalance(data.balance);
+      setWinnings(data.wins);
+      setCommissions(data.commissions);
+      setQuota(data.quota);
+      setQuotaTime(data.quota_time);
+      setQuotaAllow(data.quota_allow);
+      setMobile(data.mobile);
+      setReferral(data.referral);
+      setStatus(data.status);
+      setAgent(data.agent);
 
       if(clientId)
       {
@@ -557,17 +558,17 @@ const handleSubmit = async (e) => {
       setLevel1(dataRef.level1);
       setLevel2(dataRef.level2);
 
-      const data = await fetchUserData(userID);
-      setBalance(data[0].balance);
-      setWinnings(data[0].wins);
-      setCommissions(data[0].commissions);
-      setQuota(data[0].quota);
-      setQuotaTime(data[0].quota_time);
-      setQuotaAllow(data[0].quota_allow);
-      setMobile(data[0].mobile);
-      setReferral(data[0].referral);
-      setStatus(data[0].status);
-      setAgent(data[0].agent);
+      const data = await fetchUserData(userID,deviceID);
+      setBalance(data.balance);
+      setWinnings(data.wins);
+      setCommissions(data.commissions);
+      setQuota(data.quota);
+      setQuotaTime(data.quota_time);
+      setQuotaAllow(data.quota_allow);
+      setMobile(data.mobile);
+      setReferral(data.referral);
+      setStatus(data.status);
+      setAgent(data.agent);
 
       if(clientId)
       {
@@ -1790,7 +1791,7 @@ const handleSubmit = async (e) => {
 // Account Management Modal Component
 function AccountManagementModal({ onClose }: { onClose: () => void }) {
   const [activeTab, setActiveTab] = useState('profile');
-  const { setUserID,userID } = useUser();
+  const { setUserID,userID,deviceID } = useUser();
   const [mobile, setMobile] = useState("");
   const [referral, setReferral] = useState("");
   const [status,setStatus] = useState("");
@@ -1864,10 +1865,10 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
   useEffect(() => {
     if (userID) {
       const handleUpdate = async () => {
-        const data = await fetchUserData(userID);
-        setMobile(data[0].mobile);
-        setReferral(data[0].referral);
-        setStatus(data[0].status);
+        const data = await fetchUserData(userID,deviceID);
+        setMobile(data.mobile);
+        setReferral(data.referral);
+        setStatus(data.status);
 
         const dataRef = await getReferrals(userID);
         setLevel1(dataRef.level1);

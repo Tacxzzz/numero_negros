@@ -26,7 +26,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { useUser } from "./UserContext";
-import { getGameByID, getMyBets, countBetsEarnedTeam, getRateChartDataTeam, totalBalancePlayersTeam, totalCashinTeam, totalCashOutTeam, totalClientsTeam, totalCommissionsTeam, totalPlayersTeam, totalWinsTeam, fetchUserData} from '@/lib/apiCalls';
+import { getGameByID, getMyBets, countBetsEarnedTeam, getRateChartDataTeam, totalBalancePlayersTeam, totalCashinTeam, totalCashOutTeam, totalClientsTeam, totalCommissionsTeam, totalPlayersTeam, totalWinsTeam, fetchUserData, fetchUserDataDyna} from '@/lib/apiCalls';
 import { formatPeso, getTransCode } from '@/lib/utils';
 
 
@@ -101,7 +101,7 @@ export function ManageReferrals() {
       if (userID) {
         const handleUpdate = async () => {
           
-            const dataUSer = await fetchUserData(userID);
+            const dataUSer = await fetchUserDataDyna(userID);
             setMobile(dataUSer[0].mobile);
 
             const initialStartDate = new Date();
