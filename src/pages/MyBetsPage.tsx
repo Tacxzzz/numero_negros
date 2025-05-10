@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { 
   Table,
@@ -34,7 +35,6 @@ import { formatPeso, getTransCode } from '@/lib/utils';
 export function MyBetsPage() {
   const navigate = useNavigate();
   const { setUserID,userID,deviceID } = useUser();
-  console.log(userID);
   const [filter, setFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [dateRange, setDateRange] = useState('all');
@@ -297,7 +297,6 @@ const winRate = Array.isArray(betsHistory) && betsHistory.length > 0
                   <TabsContent value="all" className="p-0">
   <BetsTable 
     bets={Array.isArray(filteredBets) ? filteredBets : []} 
-    navigate={navigate} 
   />
 </TabsContent>
 
@@ -308,7 +307,6 @@ const winRate = Array.isArray(betsHistory) && betsHistory.length > 0
         ? filteredBets.filter(bet => bet.status === 'pending')
         : []
     }
-    navigate={navigate} 
   />
 </TabsContent>
 
@@ -319,7 +317,6 @@ const winRate = Array.isArray(betsHistory) && betsHistory.length > 0
         ? filteredBets.filter(bet => bet.status !== 'pending')
         : []
     }
-    navigate={navigate} 
   />
 </TabsContent>
 
@@ -330,7 +327,8 @@ const winRate = Array.isArray(betsHistory) && betsHistory.length > 0
 }
 
 // Separate component for the bets table
-function BetsTable({ bets, navigate }: { bets: any[], navigate: (path: string) => void }) {
+function BetsTable({ bets}: { bets: any[]}) {
+  const navigate = useNavigate();
   if (!bets || bets.length === 0) {
     return (
       <div className="text-center py-12">
@@ -365,6 +363,7 @@ function BetsTable({ bets, navigate }: { bets: any[], navigate: (path: string) =
             <TableHead className="text-right">Prize</TableHead>
             <TableHead>From Bet Client</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead className='text-center'>Receipt</TableHead>
             
           </TableRow>
         </TableHeader>
@@ -405,7 +404,17 @@ function BetsTable({ bets, navigate }: { bets: any[], navigate: (path: string) =
                   {bet.status === 'win' ? 'Win' : bet.status === 'loss' ? 'Loss' : 'Pending'}
                 </Badge>
               </TableCell>
-              
+
+
+                <TableCell className="text-center">
+                 <Button
+                    className="w-full sm:w-auto bg-blue-500 border-blue-500 text-black-600 hover:bg-blue-500/20 hover:text-blue-700"
+                    onClick={() => navigate('/ticketreceipt', { state: { betID: bet.id } })}
+                  >
+                    Receipt
+                  </Button>
+                </TableCell>
+
               {/* <TableCell>
                 <Button 
                   variant="ghost" 
@@ -419,6 +428,7 @@ function BetsTable({ bets, navigate }: { bets: any[], navigate: (path: string) =
           ))}
         </TableBody>
       </Table>
+      <br/>
     </div>
   );
 }

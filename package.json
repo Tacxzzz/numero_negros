@@ -27,10 +27,12 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "crypto-js": "^4.2.0",
+    "jspdf": "^3.0.1",
     "keen-slider": "^6.8.6",
     "lucide-react": "^0.294.0",
     "moment": "^2.30.1",
     "react": "^18.2.0",
+    "react-barcode": "^1.6.1",
     "react-dom": "^18.2.0",
     "react-icons": "^5.5.0",
     "react-native-device-info": "^14.0.4",
@@ -40,6 +42,7 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
+    "@types/html2canvas": "^1.0.0",
     "@types/node": "^20.3.1",
     "@types/react": "^18.0.37",
     "@types/react-dom": "^18.0.11",

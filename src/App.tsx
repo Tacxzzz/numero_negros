@@ -6,7 +6,6 @@ import AddToHomeScreen from "./components/AddToHomeScreen";
 import { PlayerCashinTotal } from "./pages/PlayerCashinTotal";
 import { PlayerCashoutTotal } from "./pages/PlayerCashoutTotal";
 
-
 // Correct lazy imports: 
 const LoginPage = lazy(() => import("./pages/LoginPage").then(module => ({ default: module.LoginPage })));
 const Dashboard = lazy(() => import("./pages/Dashboard").then(module => ({ default: module.Dashboard })));
@@ -32,6 +31,7 @@ const PlayerBalances = lazy(() => import("./pages/PlayerBalances").then(module =
 const PlayerCommissions = lazy(() => import("./pages/PlayerCommissions").then(module => ({ default: module.PlayerCommissions })));
 const PlayerCashin = lazy(() => import("./pages/PlayerCashin").then(module => ({ default: module.PlayerCashin })));
 const PlayerCashout = lazy(() => import("./pages/PlayerCashout").then(module => ({ default: module.PlayerCashout })));
+const TicketReceipt = lazy(() => import("./pages/TicketReceipt"));
 
 
 
@@ -78,6 +78,7 @@ function App() {
               <Route path="/team" element={<Players />} />
               <Route path="/teambets" element={<PlayerTotalBets />} />
               <Route path="/playerbets" element={<PlayerBets />} />
+              <Route path="/ticketreceipt" element={<TicketReceipt />} />
               <Route path="/teamwins" element={<PlayerWins />} />
               <Route path="/teambalances" element={<PlayerBalances />} />
               <Route path="/teamcommissions" element={<PlayerCommissions />} />
@@ -87,6 +88,7 @@ function App() {
               <Route path="/playercashouts" element={<PlayerCashout />} />
               <Route path="/test" element={<div>Test Page Works!</div>} />
               <Route path="*" element={<Navigate to="/" replace />} />
+              
             </Routes>
           </Suspense>
         </Router>

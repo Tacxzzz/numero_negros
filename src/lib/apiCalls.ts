@@ -1518,3 +1518,23 @@ export const claimDailyReward = async (
     return {  authenticated: false };
   }
 };
+
+
+export const getBetByID = async (
+  betID: string
+) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getBetByID`, { betID});
+
+    if (Array.isArray(response.data)) {
+      console.log(response.data);
+      
+    } else if (response.data.error) {
+      return [];
+    }
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch recipients:", error);
+    return [];
+  }
+};
