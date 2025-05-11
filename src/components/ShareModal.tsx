@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useRef } from "react";
+import html2canvas from "html2canvas";
 import {
   Dialog,
   DialogContent,
@@ -21,6 +22,10 @@ export const ShareModal: React.FC<ShareModalProps> = ({
   onOpenChange,
   imageData,
 }) => {
+  // Ref for the content to be captured (excluding header)
+  const captureContentRef = useRef<HTMLDivElement>(null);
+  // Ref for the Share Screenshot button
+  const shareButtonRef = useRef<HTMLButtonElement>(null);
   const handleShare = (platform: string) => {
     // In a real app, you would implement actual sharing functionality
     // This is a simplified example
@@ -68,27 +73,75 @@ export const ShareModal: React.FC<ShareModalProps> = ({
     onOpenChange(false);
   };
 
+  // Capture and share only the ticket content, excluding the header
+  const shareScreenshot = async () => {
+    try {
+      if (!captureContentRef.current) return;
+
+      // Hide the share button before screenshot
+      if (shareButtonRef.current) {
+        shareButtonRef.current.style.display = "none";
+      }
+
+      // Wait a tick to ensure the button is hidden
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      const canvas = await html2canvas(captureContentRef.current);
+
+      // Restore the button after screenshot
+      if (shareButtonRef.current) {
+        shareButtonRef.current.style.display = "";
+      }
+      const blob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob((blob) => resolve(blob))
+      );
+      if (!blob) {
+        alert("Failed to capture the modal as an image.");
+        return;
+      }
+      const file = new File([blob], "ShareModal.png", { type: "image/png" });
+      if (
+        navigator.canShare &&
+        navigator.canShare({ files: [file] })
+      ) {
+        await navigator.share({
+          title: "Lottery Ticket Modal",
+          text: "Here is my lottery ticket modal!",
+          files: [file],
+        });
+        onOpenChange(false);
+      } else {
+        alert("File sharing is not supported on this device or browser.");
+      }
+    } catch (error) {
+      console.error("Error sharing screenshot:", error);
+      alert("An error occurred while trying to share the screenshot.");
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Share Lottery Ticket</DialogTitle>
+          <DialogTitle>Preview Bet Receipt</DialogTitle>
           <DialogDescription>
-            Share your lottery ticket to social media
+            Share your Bet Receipt
           </DialogDescription>
         </DialogHeader>
         
-        {imageData && (
-          <div className="flex justify-center my-4">
-            <img 
-              src={imageData} 
-              alt="Lottery Ticket" 
-              className="max-w-full max-h-60 object-contain border rounded-md"
-            />
-          </div>
-        )}
+        <div ref={captureContentRef}>
+          {imageData && (
+            <div className="flex justify-center my-4">
+              <img 
+                src={imageData} 
+                alt="Lottery Ticket" 
+                className="max-w-full max-h-60 object-contain border rounded-md"
+              />
+            </div>
+          )}
+        </div>
         
-        <div className="grid grid-cols-4 gap-4 py-4">
+        {/* <div className="grid grid-cols-4 gap-4 py-4">
           <Button
             variant="outline"
             className="flex flex-col items-center"
@@ -124,10 +177,10 @@ export const ShareModal: React.FC<ShareModalProps> = ({
             <Linkedin className="h-6 w-6 text-blue-800" />
             <span className="mt-1 text-xs">LinkedIn</span>
           </Button>
-        </div>
+        </div> */}
         
-        <DialogFooter className="sm:justify-start">
-          <Button
+        <DialogFooter className="sm:justify-start flex flex-col gap-2">
+          {/* <Button
             type="button"
             variant="secondary"
             onClick={copyToClipboard}
@@ -135,9 +188,19 @@ export const ShareModal: React.FC<ShareModalProps> = ({
           >
             <Copy className="h-4 w-4" />
             Copy Image
+          </Button> */}
+          <Button
+            type="button"
+            variant="default"
+            onClick={shareScreenshot}
+            className="gap-2"
+            ref={shareButtonRef}
+          >
+            <Copy className="h-4 w-4" />
+            Share Screenshot
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
-};
+}; 

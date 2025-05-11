@@ -149,10 +149,19 @@ const TicketReceipt: React.FC = () => {
           <CardContent className="p-6 flex flex-col items-center">
             {/* Logo */}
             <div className="mb-6 mt-4">
-              <div className="font-bold text-3xl text-center">
+              {/* <div className="font-bold text-4xl text-center">
                 {bet.game_name}
                 <div className="text-xs font-bold bg-black text-white px-2 text-center">LOTTO</div>
+              </div> */}
+              
+              <div className="font-bold text-3xl text-center items-center justify-center ">
+                <div className="mb-3">{bet.game_name}</div>
+                
+                <div className="flex items-center justify-center text-xs font-bold bg-black text-white text-align-center px-2 py-2 font-bold mt-2">LOTTO</div>
+                
               </div>
+
+              
             </div>
 
             {/* Ticket Details */}
@@ -168,7 +177,7 @@ const TicketReceipt: React.FC = () => {
                   <span className="mr-2">Ticket Price:</span>
                   <span>{formatPeso(bet.bet)}</span>
                 </div>
-                <div className="text-sm">{getTransCode(bet.created_date + " " + bet.created_time) + bet.id}</div>
+                {/* <div className="text-sm">{getTransCode(bet.created_date + " " + bet.created_time) + bet.id}</div> */}
               </div>
               <div className="space-y-1 text-right">
                 <div>{bet.game_type_name} {formatPeso(bet.bet)}</div>
@@ -178,9 +187,9 @@ const TicketReceipt: React.FC = () => {
            {/* Barcode */}
             <div className="w-full my-4 flex flex-col items-center">
                  <Barcode value={getTransCode(bet.created_date + " " + bet.created_time) + bet.id} />
-                <div className="text-sm mt-2">
+                {/* <div className="text-sm mt-2">
                   {getTransCode(bet.created_date + " " + bet.created_time) + bet.id}
-                </div>
+                </div> */}
               </div>
 
 
@@ -188,8 +197,12 @@ const TicketReceipt: React.FC = () => {
         </Card>
         ))}
 
-      {/* Action Buttons */}
-      <div className="w-full grid grid-cols-3 gap-2 mt-4 max-w-sm">
+
+
+      </div>
+
+            {/* Action Buttons */}
+            <div className="w-full grid grid-cols-3 gap-2 mt-4 max-w-sm">
         <Button
           variant="default"
           className="bg-blue-900 hover:bg-blue-800 text-white"
@@ -214,8 +227,6 @@ const TicketReceipt: React.FC = () => {
           <FileDown className="mr-2 h-4 w-4" />
           PDF
         </Button>
-      </div>
-
       </div>
 
       {/* Action Buttons */}
