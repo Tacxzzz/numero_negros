@@ -59,9 +59,9 @@ export const SendModal: React.FC<SendModalProps> = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-[95vw] max-w-full sm:max-w-md p-2 sm:p-2">
         <DialogHeader>
-          <DialogTitle className="text-base sm:text-lg">Send Lottery Ticket</DialogTitle>
+          <DialogTitle className="text-base sm:text-lg">Preview Bet Receipt</DialogTitle>
           <DialogDescription className="text-xs sm:text-sm">
-            Send your lottery ticket as a message
+            Send your Bet Receipt
           </DialogDescription>
         </DialogHeader>
         
