@@ -908,15 +908,18 @@ const handleSubmit = async (e) => {
               <p className="text-2xl font-bold text-gray-800">{formatPeso(winnings)}</p>
             </div>
             <div className="flex flex-col gap-2">
-                    <Button className="bg-green-500 hover:bg-green-600" 
-                    disabled={!winnings || winnings < 50} 
-                    onClick={() => {
-                      setShowWinConvertDialog(true);
-                      setWinningsConvert(winnings); // Add your second function here
-                    }}
-                    >Convert</Button>
-                    <Button className="bg-green-500 hover:bg-green-600" disabled={!winnings || winnings < 106} onClick={() => setShowCashOutDialog(true)}>Cash Out</Button>
-                  </div>
+              <Button className="bg-green-500 hover:bg-green-600" 
+              disabled={!winnings || winnings < 50} 
+              onClick={() => {
+                setShowWinConvertDialog(true);
+                setWinningsConvert(winnings); // Add your second function here
+              }}
+              >Convert</Button>
+              <Button className="bg-green-500 hover:bg-green-600" 
+              //disabled={!winnings || winnings < 106} 
+              disabled
+              onClick={() => setShowCashOutDialog(true)}>Cash Out</Button>
+            </div>
             
           </div>
         </div>
@@ -962,7 +965,8 @@ const handleSubmit = async (e) => {
     }}
     >Convert</Button>
      <Button className="bg-green-500 hover:bg-green-600" 
-     disabled={!commissions || commissions < 106} 
+     //disabled={!commissions || commissions < 106} 
+     disabled
       onClick={() => {
         setShowCashOutComDialog(true);
         setCommissionsCashout(commissions); // Add your second function here
