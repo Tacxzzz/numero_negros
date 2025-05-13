@@ -12,6 +12,9 @@ import { VideoAdPlayer } from '@/components/VideoAdPlayer';
 import { DashboardCarousel } from '@/components/DashboardCarousel';
 import { YouTubeEmbed } from '@/components/YouTubeEmbed';
 import { YouTubeEmbedCard } from '@/components/YouTubeEmbedCard';
+import ImageAdCard from "../components/ImageAdCard";
+import Prizes1 from '../files/Prizes-1.png';
+import Prizes2 from '../files/Prizes-2.png';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -618,7 +621,15 @@ const handleSubmit = async (e) => {
           title="Piso Play Game Play"
         />
       )
-    }
+    },
+    {
+      type: "ad" as const,
+      adContent: <ImageAdCard image={Prizes1} alt="Prizes 1" />,
+    },
+    {
+      type: "ad" as const,
+      adContent: <ImageAdCard image={Prizes2} alt="Prizes 2" />,
+    },
   ];
   
   return (
