@@ -916,8 +916,7 @@ const handleSubmit = async (e) => {
               }}
               >Convert</Button>
               <Button className="bg-green-500 hover:bg-green-600" 
-              //disabled={!winnings || winnings < 106} 
-              disabled
+              disabled={!winnings || winnings < 106} 
               onClick={() => setShowCashOutDialog(true)}>Cash Out</Button>
             </div>
             
@@ -965,8 +964,7 @@ const handleSubmit = async (e) => {
     }}
     >Convert</Button>
      <Button className="bg-green-500 hover:bg-green-600" 
-     //disabled={!commissions || commissions < 106} 
-     disabled
+     disabled={!commissions || commissions < 106} 
       onClick={() => {
         setShowCashOutComDialog(true);
         setCommissionsCashout(commissions); // Add your second function here
