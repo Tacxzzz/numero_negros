@@ -150,7 +150,7 @@ export function LoginPage() {
         {/* Top promotional banner - only shown when not in OTP input mode */}
         {!showOtpInput && !forgotPass && !openOTPforgot && (
           <div className="w-full bg-blue-500 text-white text-center py-4 px-6 rounded-xl mb-5">
-            <h2 className="text-xl font-bold">Sign Up and Get your free ₱15 credits</h2>
+            <h2 className="text-xl font-bold">Sign Up and Get your Free ₱15 credits</h2>
           </div>
         )}
 
