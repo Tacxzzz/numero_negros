@@ -916,7 +916,7 @@ const handleSubmit = async (e) => {
               }}
               >Convert</Button>
               <Button className="bg-green-500 hover:bg-green-600" 
-              disabled={!winnings || winnings < 106} 
+              disabled={!winnings || winnings < 108} 
               onClick={() => setShowCashOutDialog(true)}>Cash Out</Button>
             </div>
             
@@ -964,7 +964,7 @@ const handleSubmit = async (e) => {
     }}
     >Convert</Button>
      <Button className="bg-green-500 hover:bg-green-600" 
-     disabled={!commissions || commissions < 106} 
+     disabled={!commissions || commissions < 108} 
       onClick={() => {
         setShowCashOutComDialog(true);
         setCommissionsCashout(commissions); // Add your second function here
@@ -1269,7 +1269,7 @@ const handleSubmit = async (e) => {
                                   -moz-appearance: textfield;
                                 }
                               `}</style>
-                                <small className="text-xs text-gray-500">Min: 106 | Max: ₱5000</small>
+                                <small className="text-xs text-gray-500">Min: 108 | Max: ₱5000</small>
                             <br/><br/>
                             <input
                                 type="text"
@@ -1323,7 +1323,7 @@ const handleSubmit = async (e) => {
 
                           </div>
                           <Button 
-                            disabled={!winnings || winnings < 106 || !termsAccepted} 
+                            disabled={!winnings || winnings < 108 || !termsAccepted} 
                             type="submit"
                             variant="outline" 
                             size="sm" 
@@ -1484,7 +1484,7 @@ const handleSubmit = async (e) => {
                                   -moz-appearance: textfield;
                                 }
                               `}</style>
-                                <small className="text-xs text-gray-500">Min: 106 | Max: ₱5000</small>
+                                <small className="text-xs text-gray-500">Min: 108 | Max: ₱5000</small>
                             <br/><br/>
                             <input
                                 type="text"
@@ -1538,7 +1538,7 @@ const handleSubmit = async (e) => {
 
                           </div>
                           <Button 
-                            disabled={!commissionsCashout || commissionsCashout < 106 || !termsAccepted} 
+                            disabled={!commissionsCashout || commissionsCashout < 108 || !termsAccepted} 
                             type="submit"
                             variant="outline" 
                             size="sm" 
