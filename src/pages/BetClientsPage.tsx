@@ -29,7 +29,8 @@ import { addBetClients, getDrawsResults, getMyBetClients, updateBetClient } from
 import { getTransCode } from '@/lib/utils';
 import { useUser } from "./UserContext";
 import { useClient } from "./ClientContext";
-
+import useBrowserCheck from '@/components/WebBrowserChecker';
+import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 
 
 export function BetClientsPage() {
@@ -154,7 +155,11 @@ export function BetClientsPage() {
     
   };
 
-  
+  const isMessengerWebview = useBrowserCheck();
+    
+  if (isMessengerWebview) {
+      return <div> <OpenInExternalBrowser/> </div>;
+  }
   
   return (
     <div className="min-h-screen bg-gray-100">

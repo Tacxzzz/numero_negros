@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import useBrowserCheck from '@/components/WebBrowserChecker';
+import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 import { useUser } from "./UserContext";
 import { loginAccount, sendOTPForReset, verifyOTPForgot, verifyOTPLogin } from '@/lib/apiCalls';
 import { useClient } from "./ClientContext";
@@ -143,6 +145,11 @@ export function LoginPage() {
     navigate('/dashboard');
   };
   
+  const isMessengerWebview = useBrowserCheck();
+    
+  if (isMessengerWebview) {
+      return <div> <OpenInExternalBrowser/> </div>;
+  }
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">

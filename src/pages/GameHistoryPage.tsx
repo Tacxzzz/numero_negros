@@ -23,6 +23,8 @@ import { checkCurrentBetsTotal, getBetsByUserAndDraw, getDrawsByID, getGameByID,
 import { formatPeso, getPhilippineDate, getTransCode } from '@/lib/utils';
 import { useUser } from "./UserContext";
 // import { popularGames } from './Dashboard';
+import useBrowserCheck from '@/components/WebBrowserChecker';
+import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 
 type GameDraw = {
   id: string;
@@ -149,6 +151,12 @@ useEffect(() => {
     );
   }
   
+  const isMessengerWebview = useBrowserCheck();
+    
+  if (isMessengerWebview) {
+      return <div> <OpenInExternalBrowser/> </div>;
+  }
+
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}

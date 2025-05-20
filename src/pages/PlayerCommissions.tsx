@@ -28,7 +28,8 @@ import { Input } from '@/components/ui/input';
 import { getCommissionsTeamTable, getDownlinesTable, getTransactions } from '@/lib/apiCalls';
 import { useLocation } from 'react-router-dom';
 import { formatPeso } from '@/lib/utils';
-
+import useBrowserCheck from '@/components/WebBrowserChecker';
+import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 
 export function PlayerCommissions() {
   const location = useLocation();
@@ -116,7 +117,11 @@ export function PlayerCommissions() {
   // Apply all filters
   const filteredBets = filterBetsByDate(filterBetsBySearch(filterBetsByStatus(transactionsHistory)));
   
-  
+  const isMessengerWebview = useBrowserCheck();
+    
+  if (isMessengerWebview) {
+      return <div> <OpenInExternalBrowser/> </div>;
+  }
   
   return (
     <div className="min-h-screen bg-gray-100">

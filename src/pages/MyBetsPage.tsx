@@ -29,7 +29,8 @@ import { Input } from '@/components/ui/input';
 import { useUser } from "./UserContext";
 import { getGameByID, getMyBets } from '@/lib/apiCalls';
 import { formatPeso, getTransCode } from '@/lib/utils';
-
+import useBrowserCheck from '@/components/WebBrowserChecker';
+import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 
 
 export function MyBetsPage() {
@@ -131,7 +132,12 @@ const winRate = Array.isArray(betsHistory) && betsHistory.length > 0
     )
   : 0;
 
-  
+  const isMessengerWebview = useBrowserCheck();
+    
+  if (isMessengerWebview) {
+      return <div> <OpenInExternalBrowser/> </div>;
+  }
+
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}

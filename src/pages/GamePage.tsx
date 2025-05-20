@@ -13,6 +13,8 @@ import { confirmBet, fetchUserData, getBetClientData, getDrawByID, getDrawsByID,
 import CountdownTimer from './CountdownTimer';
 import { checkBettingTime, formatPeso } from '@/lib/utils';
 import { useClient } from "./ClientContext";
+import useBrowserCheck from '@/components/WebBrowserChecker';
+import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 
 export function GamePage() {
   const navigate = useNavigate();
@@ -323,6 +325,12 @@ const hasAllDistinctScores = (scores: string[]) => {
           </div>
         );
       }
+
+  const isMessengerWebview = useBrowserCheck();
+    
+  if (isMessengerWebview) {
+      return <div> <OpenInExternalBrowser/> </div>;
+  }
   
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#348df3cf] to-[#002a6e] flex flex-col items-center justify-center p-4 overflow-hidden relative">

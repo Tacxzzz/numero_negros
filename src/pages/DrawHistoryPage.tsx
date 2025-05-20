@@ -27,7 +27,8 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { getDrawsResults } from '@/lib/apiCalls';
 import { getTransCode } from '@/lib/utils';
-
+import useBrowserCheck from '@/components/WebBrowserChecker';
+import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 
 
 export function DrawHistoryPage() {
@@ -108,6 +109,11 @@ export function DrawHistoryPage() {
   
   // Calculate statistics
 
+  const isMessengerWebview = useBrowserCheck();
+    
+  if (isMessengerWebview) {
+      return <div> <OpenInExternalBrowser/> </div>;
+  }
   
   return (
     <div className="min-h-screen bg-gray-100">
