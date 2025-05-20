@@ -36,6 +36,8 @@ import {
 } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import pdfFile from '../files/PisoPlay Manual - Tagalog.pdf';
+import useBrowserCheck from '@/components/WebBrowserChecker';
+import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 
 export function SupportPage() {
   const navigate = useNavigate();
@@ -244,6 +246,12 @@ export function SupportPage() {
     setSubject('');
     setMessage('');
   };
+
+  const isMessengerWebview = useBrowserCheck();
+    
+  if (isMessengerWebview) {
+      return <div> <OpenInExternalBrowser/> </div>;
+  }
   
   return (
     <div className="min-h-screen bg-gray-100">

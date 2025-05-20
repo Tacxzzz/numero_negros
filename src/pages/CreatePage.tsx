@@ -7,6 +7,8 @@ import { createAccount, verifyOTP } from '@/lib/apiCalls';
 import { useUser } from "./UserContext";
 import PisoPlayLogo from "@/files/LogoWithName.svg"; 
 import { PhoneIcon, LockIcon } from "lucide-react";
+import useBrowserCheck from '@/components/WebBrowserChecker';
+import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 
 export function CreatePage() {
   const navigate = useNavigate();
@@ -91,6 +93,12 @@ export function CreatePage() {
       setError("OTP verification failed.");
     }
   };
+
+  const isMessengerWebview = useBrowserCheck();
+    
+  if (isMessengerWebview) {
+      return <div> <OpenInExternalBrowser/> </div>;
+  }
   
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">

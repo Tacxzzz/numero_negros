@@ -28,7 +28,8 @@ import { Input } from '@/components/ui/input';
 import { useUser } from "./UserContext";
 import { getTransactions } from '@/lib/apiCalls';
 import { formatPeso, getTransCode } from '@/lib/utils';
-
+import useBrowserCheck from '@/components/WebBrowserChecker';
+import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 
 export function MyTransactionsPage() {
   const navigate = useNavigate();
@@ -114,7 +115,11 @@ export function MyTransactionsPage() {
   // Apply all filters
   const filteredBets = filterBetsByDate(filterBetsBySearch(filterBetsByStatus(transactionsHistory)));
   
-  
+  const isMessengerWebview = useBrowserCheck();
+    
+  if (isMessengerWebview) {
+      return <div> <OpenInExternalBrowser/> </div>;
+  }
   
   return (
     <div className="min-h-screen bg-gray-100">

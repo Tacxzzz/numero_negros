@@ -29,7 +29,8 @@ import { useUser } from "./UserContext";
 import { getGameByID, getMyBets, countBetsEarnedTeam, getRateChartDataTeam, totalBalancePlayersTeam, totalCashinTeam, totalCashOutTeam, totalClientsTeam, totalCommissionsTeam, totalPlayersTeam, totalWinsTeam, fetchUserData, fetchUserDataDyna} from '@/lib/apiCalls';
 import { formatPeso, getTransCode } from '@/lib/utils';
 
-
+import useBrowserCheck from '@/components/WebBrowserChecker';
+import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { HandIcon , HandMetalIcon, ShoppingCart, Users, Boxes, Wallet, CoinsIcon, Wallet2, BookAIcon, BookCheck, BookHeart, Banknote } from "lucide-react";
@@ -226,6 +227,12 @@ export function ManageReferrals() {
     setEndDate("");
   };
   
+  const isMessengerWebview = useBrowserCheck();
+    
+  if (isMessengerWebview) {
+      return <div> <OpenInExternalBrowser/> </div>;
+  }
+
   return (
    <>
 

@@ -28,7 +28,8 @@ import { Input } from '@/components/ui/input';
 import { useUser } from "./UserContext";
 import { allowAccessReferrer, fetchUserData, getGameByID, getMyBets, removeAccessReferrer } from '@/lib/apiCalls';
 import { formatPeso, getTransCode } from '@/lib/utils';
-
+import useBrowserCheck from '@/components/WebBrowserChecker';
+import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 
 
 export function AllowReferrer() {
@@ -87,6 +88,11 @@ export function AllowReferrer() {
       setAllowBets(data[0].allow_bets);
   };
 
+  const isMessengerWebview = useBrowserCheck();
+    
+  if (isMessengerWebview) {
+      return <div> <OpenInExternalBrowser/> </div>;
+  }
   
   return (
     <div className="min-h-screen bg-gray-100">

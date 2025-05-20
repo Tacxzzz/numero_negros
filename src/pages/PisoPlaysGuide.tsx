@@ -32,8 +32,17 @@ import manual_23 from "../files/manual-svg/23.svg";
 import manual_24 from "../files/manual-svg/24.svg";
 import manual_25 from "../files/manual-svg/25.svg";
 import controller_icon from "../files/manual-svg/icon.svg";
+import useBrowserCheck from '@/components/WebBrowserChecker';
+import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 const PisoPlayGuide = () => {
   const navigate = useNavigate();
+
+  const isMessengerWebview = useBrowserCheck();
+    
+  if (isMessengerWebview) {
+      return <div> <OpenInExternalBrowser/> </div>;
+  }
+
   return (
     <div className="container mx-auto px-4 ">
       {/* Header */}

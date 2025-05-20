@@ -42,6 +42,9 @@ const AutoScrollWinnersCarousel = lazy(() => import("@/components/AutoScrollWinn
 import { setTawkWidgetVisible } from '@/lib/tawkWidgetUtils';
 import DailyCheckInCard from '@/components/DailyCheckInCard';
 
+import useBrowserCheck from '@/components/WebBrowserChecker';
+import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
+
 // Tawk.to configuration
 const TAWK_SRC = "https://embed.tawk.to/67f4c61c846b7b190fd1ea14/1ioa2bnq9";
 
@@ -631,6 +634,12 @@ const handleSubmit = async (e) => {
       adContent: <ImageAdCard image={Prizes2} alt="Prizes 2" />,
     },
   ];
+
+  const isMessengerWebview = useBrowserCheck();
+    
+  if (isMessengerWebview) {
+      return <div> <OpenInExternalBrowser/> </div>;
+  }
   
   return (
   <>
