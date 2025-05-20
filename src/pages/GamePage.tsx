@@ -326,11 +326,11 @@ const hasAllDistinctScores = (scores: string[]) => {
         );
       }
 
-  const isMessengerWebview = useBrowserCheck();
+  // const isMessengerWebview = useBrowserCheck();
     
-  if (isMessengerWebview) {
-      return <div> <OpenInExternalBrowser/> </div>;
-  }
+  // if (isMessengerWebview) {
+  //     return <div> <OpenInExternalBrowser/> </div>;
+  // }
   
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#348df3cf] to-[#002a6e] flex flex-col items-center justify-center p-4 overflow-hidden relative">

@@ -37,11 +37,11 @@ import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 const PisoPlayGuide = () => {
   const navigate = useNavigate();
 
-  const isMessengerWebview = useBrowserCheck();
+  // const isMessengerWebview = useBrowserCheck();
     
-  if (isMessengerWebview) {
-      return <div> <OpenInExternalBrowser/> </div>;
-  }
+  // if (isMessengerWebview) {
+  //     return <div> <OpenInExternalBrowser/> </div>;
+  // }
 
   return (
     <div className="container mx-auto px-4 ">

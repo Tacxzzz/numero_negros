@@ -115,11 +115,11 @@ export function MyTransactionsPage() {
   // Apply all filters
   const filteredBets = filterBetsByDate(filterBetsBySearch(filterBetsByStatus(transactionsHistory)));
   
-  const isMessengerWebview = useBrowserCheck();
+  // const isMessengerWebview = useBrowserCheck();
     
-  if (isMessengerWebview) {
-      return <div> <OpenInExternalBrowser/> </div>;
-  }
+  // if (isMessengerWebview) {
+  //     return <div> <OpenInExternalBrowser/> </div>;
+  // }
   
   return (
     <div className="min-h-screen bg-gray-100">

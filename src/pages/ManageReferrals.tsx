@@ -227,11 +227,11 @@ export function ManageReferrals() {
     setEndDate("");
   };
   
-  const isMessengerWebview = useBrowserCheck();
+  // const isMessengerWebview = useBrowserCheck();
     
-  if (isMessengerWebview) {
-      return <div> <OpenInExternalBrowser/> </div>;
-  }
+  // if (isMessengerWebview) {
+  //     return <div> <OpenInExternalBrowser/> </div>;
+  // }
 
   return (
    <>
