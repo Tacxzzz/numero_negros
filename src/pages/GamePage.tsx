@@ -83,11 +83,11 @@ export function GamePage() {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % scores.length);
   };
 
-  const isMessengerWebview = useBrowserCheck();
+  // const isMessengerWebview = useBrowserCheck();
     
-  if (isMessengerWebview) {
-      return <div> <OpenInExternalBrowser/> </div>;
-  }
+  // if (isMessengerWebview) {
+  //     return <div> <OpenInExternalBrowser/> </div>;
+  // }
 
   useEffect(() => {
     if (gameId && selectedDraw && selectedGameType) {
