@@ -50,11 +50,11 @@ export function GameHistoryPage() {
   const [selectedDate, setSelectedDate] = useState(getPhilippineDate());
   const [filteredDateDraws, setFilteredDateDraws] = useState<any[]>([]);
   const [totalBets, setTotalBets] = useState<{ [key: string]: number }>({});
-  const isMessengerWebview = useBrowserCheck();
+  // const isMessengerWebview = useBrowserCheck();
     
-  if (isMessengerWebview) {
-      return <div> <OpenInExternalBrowser/> </div>;
-  }
+  // if (isMessengerWebview) {
+  //     return <div> <OpenInExternalBrowser/> </div>;
+  // }
 
 
   useEffect(() => {
