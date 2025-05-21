@@ -478,14 +478,11 @@ export function SupportPage() {
                 <p className="text-sm text-gray-600 mb-4">Comprehensive guides to help you navigate our platform and make the most of your experience.</p>
                 {/* <Button variant="outline" className="w-full">View Guides</Button> */}
                 
-                  <a
-                    href={pdfFile}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <Link to="/pisoplaysguide"
                     className="w-full inline-block text-center bg-transparent border border-gray-300 text-gray-700 py-2 px-4 rounded hover:bg-gray-100 font-bold"
                   >
                     View Guides
-                  </a>
+                  </Link>
 
               </CardContent>
             </Card>
