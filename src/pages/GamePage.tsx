@@ -83,6 +83,11 @@ export function GamePage() {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % scores.length);
   };
 
+  const isMessengerWebview = useBrowserCheck();
+    
+  if (isMessengerWebview) {
+      return <div> <OpenInExternalBrowser/> </div>;
+  }
 
   useEffect(() => {
     if (gameId && selectedDraw && selectedGameType) {
@@ -308,12 +313,6 @@ const hasAllDistinctScores = (scores: string[]) => {
   const uniqueScores = new Set(scores.filter(score => score.trim() !== ""));
   return uniqueScores.size === scores.length;
 };
-
-  const isMessengerWebview = useBrowserCheck();
-    
-  if (isMessengerWebview) {
-      return <div> <OpenInExternalBrowser/> </div>;
-  }
 
     if (loading) {
         return (
