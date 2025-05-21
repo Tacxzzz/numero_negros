@@ -134,7 +134,11 @@ useEffect(() => {
       navigate(`/game/${gameId}/${gameType}/${drawId}`);
     };
 
-
+  const isMessengerWebview = useBrowserCheck();
+    
+  if (isMessengerWebview) {
+      return <div> <OpenInExternalBrowser/> </div>;
+  }
 
   if (!gameData) {
     return (
@@ -150,12 +154,6 @@ useEffect(() => {
       </div>
     );
   }
-  
-  // const isMessengerWebview = useBrowserCheck();
-    
-  // if (isMessengerWebview) {
-  //     return <div> <OpenInExternalBrowser/> </div>;
-  // }
 
   return (
     <div className="min-h-screen bg-gray-100">

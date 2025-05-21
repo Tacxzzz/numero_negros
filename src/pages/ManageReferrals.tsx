@@ -163,6 +163,12 @@ export function ManageReferrals() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userID]);
   
+    const isMessengerWebview = useBrowserCheck();
+    
+    if (isMessengerWebview) {
+        return <div> <OpenInExternalBrowser/> </div>;
+    }
+
     if (loading ) {
       return <div>...</div>;
     }
@@ -226,12 +232,6 @@ export function ManageReferrals() {
     setStartDate("");
     setEndDate("");
   };
-  
-  // const isMessengerWebview = useBrowserCheck();
-    
-  // if (isMessengerWebview) {
-  //     return <div> <OpenInExternalBrowser/> </div>;
-  // }
 
   return (
    <>

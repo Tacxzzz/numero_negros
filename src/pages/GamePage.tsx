@@ -309,7 +309,11 @@ const hasAllDistinctScores = (scores: string[]) => {
   return uniqueScores.size === scores.length;
 };
 
-
+  const isMessengerWebview = useBrowserCheck();
+    
+  if (isMessengerWebview) {
+      return <div> <OpenInExternalBrowser/> </div>;
+  }
 
     if (loading) {
         return (
@@ -325,12 +329,6 @@ const hasAllDistinctScores = (scores: string[]) => {
           </div>
         );
       }
-
-  // const isMessengerWebview = useBrowserCheck();
-    
-  // if (isMessengerWebview) {
-  //     return <div> <OpenInExternalBrowser/> </div>;
-  // }
   
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#348df3cf] to-[#002a6e] flex flex-col items-center justify-center p-4 overflow-hidden relative">

@@ -94,11 +94,11 @@ export function CreatePage() {
     }
   };
 
-  // const isMessengerWebview = useBrowserCheck();
+  const isMessengerWebview = useBrowserCheck();
     
-  // if (isMessengerWebview) {
-  //     return <div> <OpenInExternalBrowser/> </div>;
-  // }
+  if (isMessengerWebview) {
+      return <div> <OpenInExternalBrowser/> </div>;
+  }
   
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">

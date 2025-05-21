@@ -593,6 +593,11 @@ const handleSubmit = async (e) => {
     setLoading(false);
   };
 
+  const isMessengerWebview = useBrowserCheck();
+    
+  if (isMessengerWebview) {
+      return <div> <OpenInExternalBrowser/> </div>;
+  }
 
   if (loading ) {
     return <div>...</div>;
@@ -634,12 +639,6 @@ const handleSubmit = async (e) => {
       adContent: <ImageAdCard image={Prizes2} alt="Prizes 2" />,
     },
   ];
-
-  // const isMessengerWebview = useBrowserCheck();
-    
-  // if (isMessengerWebview) {
-  //     return <div> <OpenInExternalBrowser/> </div>;
-  // }
   
   return (
   <>
