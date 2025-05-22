@@ -49,13 +49,13 @@ export function AllowReferrer() {
       const handleUpdate = async () => {
   
               const data = await fetchUserData(userID,deviceID);
-              setAllowCashin(data[0].allow_cashin);
-              setAllowCashout(data[0].allow_cashout);
-              setAllowWins(data[0].allow_wins);
-              setAllowCommissions(data[0].allow_commissions);
-              setAllowBalance(data[0].allow_balance);
-              setAllowTotalBets(data[0].allow_total_bets);
-              setAllowBets(data[0].allow_bets);
+              setAllowCashin(data.allow_cashin);
+              setAllowCashout(data.allow_cashout);
+              setAllowWins(data.allow_wins);
+              setAllowCommissions(data.allow_commissions);
+              setAllowBalance(data.allow_balance);
+              setAllowTotalBets(data.allow_total_bets);
+              setAllowBets(data.allow_bets);
               
         
         };
@@ -66,26 +66,26 @@ export function AllowReferrer() {
         await allowAccessReferrer(userID,allow);
 
         const data = await fetchUserData(userID,deviceID);
-        setAllowCashin(data[0].allow_cashin);
-        setAllowCashout(data[0].allow_cashout);
-        setAllowWins(data[0].allow_wins);
-        setAllowCommissions(data[0].allow_commissions);
-        setAllowBalance(data[0].allow_balance);
-        setAllowTotalBets(data[0].allow_total_bets);
-        setAllowBets(data[0].allow_bets);
+        setAllowCashin(data.allow_cashin);
+        setAllowCashout(data.allow_cashout);
+        setAllowWins(data.allow_wins);
+        setAllowCommissions(data.allow_commissions);
+        setAllowBalance(data.allow_balance);
+        setAllowTotalBets(data.allow_total_bets);
+        setAllowBets(data.allow_bets);
     };
 
     const removeAccessClicked = async (allow: string) => {
       await removeAccessReferrer(userID,allow);
 
       const data = await fetchUserData(userID,deviceID);
-      setAllowCashin(data[0].allow_cashin);
-      setAllowCashout(data[0].allow_cashout);
-      setAllowWins(data[0].allow_wins);
-      setAllowCommissions(data[0].allow_commissions);
-      setAllowBalance(data[0].allow_balance);
-      setAllowTotalBets(data[0].allow_total_bets);
-      setAllowBets(data[0].allow_bets);
+      setAllowCashin(data.allow_cashin);
+      setAllowCashout(data.allow_cashout);
+      setAllowWins(data.allow_wins);
+      setAllowCommissions(data.allow_commissions);
+      setAllowBalance(data.allow_balance);
+      setAllowTotalBets(data.allow_total_bets);
+      setAllowBets(data.allow_bets);
   };
 
   const isMessengerWebview = useBrowserCheck();
