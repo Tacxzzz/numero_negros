@@ -50,12 +50,12 @@ const AutoScrollWinnersCarousel = () => {
         {[...winners, ...winners].map((winner, index) => (
           <div
             key={index}
-            className="min-w-[250px] bg-white rounded-xl shadow p-4 flex-shrink-0 text-center"
+            className="min-w-[200px] bg-white rounded-xl shadow p-4 flex-shrink-0 text-center"
           >
-            <p className="text-sm text-gray-500">{winner.game_name}</p>
-            <p className="text-xs text-gray-400">{winner.date}<br/>{winner.time}</p>
-            <p className="font-bold text-lg">{winner.results}</p>
-            <p className="text-sm text-gray-500">Winners : {winner.total_winners}</p>
+            <p className="text-xs font-bold text-gray-500">{winner.game_name}</p>
+            <p className="text-xs text-gray-400">{winner.date} {winner.time}</p>
+            <p className="font-bold text-l">{winner.results}</p>
+            <p className="text-xs text-gray-500">Winners : {winner.total_winners}</p>
             
           </div>
         ))}

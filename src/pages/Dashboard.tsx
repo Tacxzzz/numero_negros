@@ -45,6 +45,9 @@ import DailyCheckInCard from '@/components/DailyCheckInCard';
 import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 
+import ScatterViewCard from "@/components/ScatterViewCard";
+import ScatterCover from '../files/bet88_cover.jpg';
+
 // Tawk.to configuration
 const TAWK_SRC = "https://embed.tawk.to/67f4c61c846b7b190fd1ea14/1ioa2bnq9";
 
@@ -1062,6 +1065,11 @@ const handleSubmit = async (e) => {
             <div>
               <DashboardCarousel slides={carouselSlides} />
             </div>
+              <ScatterViewCard 
+              url='https://bet88.ph?ref=394386129b81'
+              img={ScatterCover}
+              title="BET88" 
+              height="200px"            />
               {/* <DailyCheckInCard /> */}
           </div>
         </section>

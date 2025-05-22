@@ -149,7 +149,7 @@ export const DailyCheckInCard: React.FC<DailyCheckInCardProps> = ({
 
   return (
     <div
-      className={`bg-white rounded-2xl shadow-2xl w-full p-2 lg:p-8 ${className}`}
+      className={`bg-white rounded-none shadow-2xl w-full p-2 lg:p-8 ${className}`}
       style={{
         ...style,
         boxShadow:
@@ -160,13 +160,13 @@ export const DailyCheckInCard: React.FC<DailyCheckInCardProps> = ({
         <h2 className="text-xs lg:text-lg font-extrabold mb-1 text-blue-700 tracking-wide drop-shadow">
           Daily Check-In
         </h2>
-        <p className="text-center text-blue-700 text-xs lg:text-base font-medium">
+        {/* <p className="text-center text-blue-700 text-xs lg:text-base font-medium">
           Check in every day to earn more coins!
-        </p>
+        </p> */}
       </div>
 
       <div
-        className="flex gap-1 mb-2 overflow-x-auto pb-2 pt-2 pl-1 scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-blue-100 lg:justify-center"
+        className="flex gap-1 mb-2 overflow-x-auto pb-2 pt-2 pl-1 scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-blue-100 justify-center"
         style={{ WebkitOverflowScrolling: "touch" }}
       >
         {REWARDS.map((r) => {
@@ -176,7 +176,7 @@ export const DailyCheckInCard: React.FC<DailyCheckInCardProps> = ({
           return (
             <div
               key={r.day}
-              className={`flex flex-col items-center flex-shrink-0 p-1 rounded-xl border-2 transition-all duration-200
+              className={`flex flex-col items-center flex-shrink-0 p-1 rounded-none border-2 transition-all duration-200
                 ${
                   claimed
                     ? "bg-gradient-to-br from-gray-100 to-gray-200 border-gray-300 text-gray-400 shadow-inner"
@@ -238,7 +238,7 @@ export const DailyCheckInCard: React.FC<DailyCheckInCardProps> = ({
         </button>
       </div>
 
-      <div
+      {/* <div
         className={`text-center mt-4 text-xs lg:text-base font-extrabold flex items-center justify-center gap-2 ${totalCoinsClassName}`}
         style={totalCoinsStyle}
       >
@@ -253,7 +253,7 @@ export const DailyCheckInCard: React.FC<DailyCheckInCardProps> = ({
           : canClaimToday
           ? "You can claim today's reward!"
           : "Come back tomorrow for your next reward."}
-      </div>
+      </div> */}
     </div>
   );
 };
