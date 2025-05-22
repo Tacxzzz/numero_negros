@@ -901,6 +901,7 @@ const handleSubmit = async (e) => {
       <main className="container mx-auto px-4 py-6">
         {/* Balance Card (Mobile) */}
         <div >
+        <DailyCheckInCard className=" mb-4"/>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
             <div>
@@ -1061,7 +1062,7 @@ const handleSubmit = async (e) => {
             <div>
               <DashboardCarousel slides={carouselSlides} />
             </div>
-              <DailyCheckInCard />
+              {/* <DailyCheckInCard /> */}
           </div>
         </section>
         
