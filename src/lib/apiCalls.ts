@@ -1,9 +1,9 @@
 import axios from "axios";
-import { Agent } from "http";
 import CryptoJS from "crypto-js";
-import { error } from "console";
 
 const API_URL = import.meta.env.VITE_DATABASE_URL;
+const rawToken = import.meta.env.VITE_API_KEY;
+const API_KEY = btoa(rawToken);
 
 export const createAccount = async (
   formData: FormData,
@@ -12,7 +12,9 @@ export const createAccount = async (
     const response = await axios.post(
       `${API_URL}/main/create`,
       formData,
-      { headers: { "Content-Type": "application/json" } }
+      { headers: { 
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${API_KEY}`,  } }
     );
 
     if (response.data && response.data.authenticated) {
@@ -36,7 +38,11 @@ export const updatePassword = async (
   userID: string, password: string , newPassword: string
 ) => {
   try {
-    const response = await axios.post(`${API_URL}/main/updatePassword`, { userID, password, newPassword });
+    const response = await axios.post(`${API_URL}/main/updatePassword`, { userID, password, newPassword },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (response.data && response.data.authenticated) {
       const userData = response.data;
@@ -59,7 +65,11 @@ export const verifyOTP = async (
   mobile: string, otp: string 
 ) => {
   try {
-    const response = await axios.post(`${API_URL}/main/verifyOTP`, { mobile, otp });
+    const response = await axios.post(`${API_URL}/main/verifyOTP`, { mobile, otp },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (response.data) {
       if(response.data.authenticated)
@@ -94,7 +104,11 @@ export const verifyOTPForgot = async (
   mobile: string, otp: string 
 ) => {
   try {
-    const response = await axios.post(`${API_URL}/main/verifyOTPForgot`, { mobile, otp });
+    const response = await axios.post(`${API_URL}/main/verifyOTPForgot`, { mobile, otp },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (response.data) {
       if(response.data.authenticated)
@@ -130,7 +144,11 @@ export const sendOTPForReset = async (
   mobile: string
 ) => {
   try {
-    const response = await axios.post(`${API_URL}/main/sendOTPForReset`, { mobile });
+    const response = await axios.post(`${API_URL}/main/sendOTPForReset`, { mobile },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (response.data) {
       if(response.data.authenticated)
@@ -166,7 +184,11 @@ export const verifyOTPLogin = async (
   mobile: string, otp: string 
 ) => {
   try {
-    const response = await axios.post(`${API_URL}/main/verifyOTPLogin`, { mobile, otp });
+    const response = await axios.post(`${API_URL}/main/verifyOTPLogin`, { mobile, otp },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (response.data) {
       if(response.data.authenticated)
@@ -206,7 +228,9 @@ export const loginAccount = async (
     const response = await axios.post(
       `${API_URL}/main/login`,
       formData,
-      { headers: { "Content-Type": "application/json" } }
+      { headers: { "Content-Type": "application/json",
+        Authorization: `Bearer ${API_KEY}`,
+       } }
     );
 
     if (response.data && response.data.authenticated) {
@@ -232,7 +256,11 @@ export const loginAccount = async (
 
 export const getTransactions = async (userID: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getTransactions`, { userID });
+    const response = await axios.post(`${API_URL}/main/getTransactions`, { userID },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -273,7 +301,9 @@ export const cashIn = async (
     const response = await axios.post(
       `${API_URL}/main/cashIn`,
       formData,
-      { headers: { "Content-Type": "application/json" } }
+      { headers: { "Content-Type": "application/json",
+        Authorization: `Bearer ${API_KEY}`,
+       } }
     );
 
     if (response.data && response.data.authenticated) {
@@ -296,7 +326,11 @@ export const cashIn = async (
 
 export const fetchUserData = async (userID: string, deviceID: string) => { 
   try {
-    const response = await axios.post(`${API_URL}/main/getUserData`, { userID, deviceID });
+    const response = await axios.post(`${API_URL}/main/getUserData`, { userID, deviceID },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     const data = response.data;
 
@@ -324,7 +358,11 @@ export const fetchUserData = async (userID: string, deviceID: string) => {
 
 export const fetchUserDataDyna = async (userID: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getUserDataDyna`, { userID });
+    const response = await axios.post(`${API_URL}/main/getUserDataDyna`, { userID },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -341,7 +379,11 @@ export const fetchUserDataDyna = async (userID: string) => {
 export const getReferrals = async (id: string
 ) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getReferrals`, { userID: id });
+    const response = await axios.post(`${API_URL}/main/getReferrals`, { userID: id },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (response.data && response.data.authenticated) {
       const userData = response.data;
@@ -364,7 +406,11 @@ export const getReferrals = async (id: string
 
 export const getBetsWinners = async () => {
   try {
-    const response = await axios.get(`${API_URL}/main/getBetsWinners`);
+    const response = await axios.get(`${API_URL}/main/getBetsWinners`,{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -379,7 +425,11 @@ export const getBetsWinners = async () => {
 
 export const getGamesToday = async () => {
   try {
-    const response = await axios.get(`${API_URL}/main/getGamesToday`);
+    const response = await axios.get(`${API_URL}/main/getGamesToday`,{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -394,7 +444,11 @@ export const getGamesToday = async () => {
 
 export const getGames = async () => {
   try {
-    const response = await axios.get(`${API_URL}/main/getGames`);
+    const response = await axios.get(`${API_URL}/main/getGames`,{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -410,7 +464,11 @@ export const getGames = async () => {
 
 export const getGameTypes = async (game_id: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getGameTypes`, { game_id });
+    const response = await axios.post(`${API_URL}/main/getGameTypes`, { game_id },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -425,7 +483,11 @@ export const getGameTypes = async (game_id: string) => {
 
 export const getGameByID = async (game_id: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getGameByID`, { game_id });
+    const response = await axios.post(`${API_URL}/main/getGameByID`, { game_id },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -441,7 +503,11 @@ export const getGameByID = async (game_id: string) => {
 
 export const getDrawByID = async (game_id: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getDrawByID`, { game_id });
+    const response = await axios.post(`${API_URL}/main/getDrawByID`, { game_id },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -456,7 +522,11 @@ export const getDrawByID = async (game_id: string) => {
 
 export const getDrawsByID = async (game_id: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getDrawsByID`, { game_id });
+    const response = await axios.post(`${API_URL}/main/getDrawsByID`, { game_id },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -471,7 +541,11 @@ export const getDrawsByID = async (game_id: string) => {
 
 export const getGameTypeByID = async (game_id: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getGameTypeByID`, { game_id });
+    const response = await axios.post(`${API_URL}/main/getGameTypeByID`, { game_id },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -486,7 +560,11 @@ export const getGameTypeByID = async (game_id: string) => {
 
 export const getGameTypesByID = async (game_id: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getGameTypesByID`, { game_id });
+    const response = await axios.post(`${API_URL}/main/getGameTypesByID`, { game_id },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -508,7 +586,9 @@ export const confirmBet = async (
     const response = await axios.post(
       `${API_URL}/main/confirmBet`,
       formData,
-      { headers: { "Content-Type": "application/json" } }
+      { headers: { "Content-Type": "application/json",
+        Authorization: `Bearer ${API_KEY}`,
+       } }
     );
 
     if (response.data) {
@@ -535,7 +615,11 @@ export const confirmBet = async (
 
 export const getBetsByUserAndDraw = async (game_id: string, userID: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getBetsByUserAndDraw`, { game_id, userID });
+    const response = await axios.post(`${API_URL}/main/getBetsByUserAndDraw`, { game_id, userID },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -550,7 +634,11 @@ export const getBetsByUserAndDraw = async (game_id: string, userID: string) => {
 
 export const getMyBets = async (userID: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getMyBets`, {userID });
+    const response = await axios.post(`${API_URL}/main/getMyBets`, {userID },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -566,7 +654,11 @@ export const getMyBets = async (userID: string) => {
 
 export const getDrawsResults = async () => {
   try {
-    const response = await axios.get(`${API_URL}/main/getDrawsResults`);
+    const response = await axios.get(`${API_URL}/main/getDrawsResults`,{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -582,7 +674,11 @@ export const getDrawsResults = async () => {
 
 export const checkCurrentBetsTotal = async (draw_id: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/checkCurrentBetsTotal`, {draw_id });
+    const response = await axios.post(`${API_URL}/main/checkCurrentBetsTotal`, {draw_id },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (response.data && response.data.authenticated) {
       const userData = response.data;
@@ -605,7 +701,11 @@ export const checkCurrentBetsTotal = async (draw_id: string) => {
 
 export const getMyBetClientsCount = async (userID: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getMyBetClientsCount`, {userID });
+    const response = await axios.post(`${API_URL}/main/getMyBetClientsCount`, {userID },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (response.data && response.data.authenticated) {
       const userData = response.data;
@@ -627,7 +727,11 @@ export const getMyBetClientsCount = async (userID: string) => {
 
 export const saveFavorite = async (userID: string, game_id: string, bet:string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/saveFavorite`, {userID,game_id,bet });
+    const response = await axios.post(`${API_URL}/main/saveFavorite`, {userID,game_id,bet },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (response.data && response.data.authenticated) {
       const userData = response.data;
@@ -646,7 +750,11 @@ export const saveFavorite = async (userID: string, game_id: string, bet:string) 
 
 export const readMyFavorite = async (userID: string, game_id: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/readMyFavorite`, {userID,game_id });
+    const response = await axios.post(`${API_URL}/main/readMyFavorite`, {userID,game_id },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (response.data && response.data.authenticated) {
       const userData = response.data;
@@ -668,7 +776,11 @@ export const readMyFavorite = async (userID: string, game_id: string) => {
 
 export const getMyBetClients = async (userID: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getMyBetClients`, {userID });
+    const response = await axios.post(`${API_URL}/main/getMyBetClients`, {userID },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -691,7 +803,7 @@ export const addBetClients = async (
     const response = await axios.post(
       `${API_URL}/main/addBetClients`,
       formData,
-      { headers: { "Content-Type": "application/json" } }
+      { headers: { "Content-Type": "application/json",Authorization: `Bearer ${API_KEY}`, } }
     );
 
     if (response.data) {
@@ -720,7 +832,7 @@ export const updateBetClient = async (
     const response = await axios.post(
       `${API_URL}/main/updateBetClient`,
       formData,
-      { headers: { "Content-Type": "application/json" } }
+      { headers: { "Content-Type": "application/json",Authorization: `Bearer ${API_KEY}`, } }
     );
 
     if (response.data) {
@@ -745,7 +857,11 @@ export const updateBetClient = async (
 
 export const getBetClientData = async (id: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getBetClientData`, { clientID: id });
+    const response = await axios.post(`${API_URL}/main/getBetClientData`, { clientID: id },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (response.data && response.data.length > 0) {
       const userData = response.data[0];
@@ -795,7 +911,11 @@ export const cashInCashko = async (
     if (response.data && response.data.success && response.data.code === 200) {
       const { orderNo, receiveAddr, chainName, coinUnit, requestAmount, status, payUrl, hrefbackurl, sign } = response.data.data;
 
-      const res = await axios.post(`${API_URL}/main/cashInRequest`, {userID, orderNo, creditCashin,amountToPay,clientNo });
+      const res = await axios.post(`${API_URL}/main/cashInRequest`, {userID, orderNo, creditCashin,amountToPay,clientNo },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
   
       if (res.data && res.data.authenticated) {
         window.location.href = payUrl;
@@ -886,6 +1006,10 @@ export const cashOutCashko = async (
         full_name,
         bank,
         account,
+      },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
       });
 
       if (res.data && res.data.authenticated) {
@@ -958,6 +1082,10 @@ export const cashOutCashkoCommission = async (
         full_name,
         bank,
         account,
+      },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
       });
 
       if (res.data && res.data.authenticated) {
@@ -980,7 +1108,11 @@ export const cashOutCashkoCommission = async (
 
 export const getAnnouncements = async () => {
   try {
-    const response = await axios.get(`${API_URL}/main/getAnnouncements`);
+    const response = await axios.get(`${API_URL}/main/getAnnouncements`,{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -1000,7 +1132,11 @@ export const getCommissions = async (
   id: string
 ) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getCommissions`, { userID:id });
+    const response = await axios.post(`${API_URL}/main/getCommissions`, { userID:id },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (response.data) {
       if(response.data.authenticated)
@@ -1040,7 +1176,11 @@ export const getCommissions = async (
 
 export const getRateChartDataTeam = async (id:string,start_date:string, end_date:string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getRateChartDataTeam`, { userID: id ,start_date: start_date, end_date: end_date});
+    const response = await axios.post(`${API_URL}/main/getRateChartDataTeam`, { userID: id ,start_date: start_date, end_date: end_date},{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
     
     if (Array.isArray(response.data)) {
       return response.data;
@@ -1056,7 +1196,11 @@ export const getRateChartDataTeam = async (id:string,start_date:string, end_date
 
 export const countBetsEarnedTeam = async (id:string,start_date:string, end_date:string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/countBetsEarnedTeam`, { userID: id ,start_date: start_date, end_date: end_date});
+    const response = await axios.post(`${API_URL}/main/countBetsEarnedTeam`, { userID: id ,start_date: start_date, end_date: end_date},{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
     
     if (response.data) 
       {
@@ -1080,7 +1224,11 @@ export const countBetsEarnedTeam = async (id:string,start_date:string, end_date:
 
 export const totalWinsTeam = async (id:string,start_date:string, end_date:string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/totalWinsTeam`, { userID: id ,start_date: start_date, end_date: end_date});
+    const response = await axios.post(`${API_URL}/main/totalWinsTeam`, { userID: id ,start_date: start_date, end_date: end_date},{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
     
     if (response.data) 
       {
@@ -1105,7 +1253,11 @@ export const totalWinsTeam = async (id:string,start_date:string, end_date:string
 export const totalBalancePlayersTeam = async (id:string,start_date:string, end_date:string) => {
   try {
 
-    const response = await axios.post(`${API_URL}/main/totalBalancePlayersTeam`, { userID: id ,start_date: start_date, end_date: end_date});
+    const response = await axios.post(`${API_URL}/main/totalBalancePlayersTeam`, { userID: id ,start_date: start_date, end_date: end_date},{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
     
     if (response.data) 
       {
@@ -1129,7 +1281,11 @@ export const totalBalancePlayersTeam = async (id:string,start_date:string, end_d
 export const totalCommissionsTeam = async (id:string,start_date:string, end_date:string) => {
   try {
 
-    const response = await axios.post(`${API_URL}/main/totalCommissionsTeam`, { userID: id ,start_date: start_date, end_date: end_date});
+    const response = await axios.post(`${API_URL}/main/totalCommissionsTeam`, { userID: id ,start_date: start_date, end_date: end_date},{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
     
     if (response.data) 
       {
@@ -1153,7 +1309,11 @@ export const totalCommissionsTeam = async (id:string,start_date:string, end_date
 export const totalPlayersTeam = async (id:string,start_date:string, end_date:string) => {
   try {
 
-    const response = await axios.post(`${API_URL}/main/totalPlayersTeam`, { userID: id ,start_date: start_date, end_date: end_date});
+    const response = await axios.post(`${API_URL}/main/totalPlayersTeam`, { userID: id ,start_date: start_date, end_date: end_date},{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
     
     if (response.data) 
       {
@@ -1177,7 +1337,11 @@ export const totalPlayersTeam = async (id:string,start_date:string, end_date:str
 export const totalClientsTeam = async (id:string,start_date:string, end_date:string) => {
   try {
 
-    const response = await axios.post(`${API_URL}/main/totalClientsTeam`, { userID: id ,start_date: start_date, end_date: end_date});
+    const response = await axios.post(`${API_URL}/main/totalClientsTeam`, { userID: id ,start_date: start_date, end_date: end_date},{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
     
     if (response.data) 
       {
@@ -1201,7 +1365,11 @@ export const totalClientsTeam = async (id:string,start_date:string, end_date:str
 export const totalCashinTeam = async (id:string,start_date:string, end_date:string) => {
   try {
 
-    const response = await axios.post(`${API_URL}/main/totalCashinTeam`, { userID: id ,start_date: start_date, end_date: end_date});
+    const response = await axios.post(`${API_URL}/main/totalCashinTeam`, { userID: id ,start_date: start_date, end_date: end_date},{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
     
     if (response.data) 
       {
@@ -1225,7 +1393,11 @@ export const totalCashinTeam = async (id:string,start_date:string, end_date:stri
 export const totalCashOutTeam = async (id:string,start_date:string, end_date:string) => {
   try {
 
-    const response = await axios.post(`${API_URL}/main/totalCashOutTeam`, { userID: id ,start_date: start_date, end_date: end_date});
+    const response = await axios.post(`${API_URL}/main/totalCashOutTeam`, { userID: id ,start_date: start_date, end_date: end_date},{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
     
     if (response.data) 
       {
@@ -1252,7 +1424,11 @@ export const allowAccessReferrer = async (
   userID: string, allow: string 
 ) => {
   try {
-    const response = await axios.post(`${API_URL}/main/allowAccessReferrer`, { userID, allow});
+    const response = await axios.post(`${API_URL}/main/allowAccessReferrer`, { userID, allow},{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (response.data && response.data.authenticated) {
       const userData = response.data;
@@ -1274,7 +1450,11 @@ export const removeAccessReferrer = async (
   userID: string, allow: string 
 ) => {
   try {
-    const response = await axios.post(`${API_URL}/main/removeAccessReferrer`, { userID, allow});
+    const response = await axios.post(`${API_URL}/main/removeAccessReferrer`, { userID, allow},{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (response.data && response.data.authenticated) {
       const userData = response.data;
@@ -1296,7 +1476,11 @@ export const removeAccessReferrer = async (
 
 export const getDownlinesTable = async (userID: string, type:string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getDownlinesTable`, { userID, type });
+    const response = await axios.post(`${API_URL}/main/getDownlinesTable`, { userID, type },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -1311,7 +1495,11 @@ export const getDownlinesTable = async (userID: string, type:string) => {
 
 export const getBetsEarnedTeamTable = async (userID: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getBetsEarnedTeamTable`, { userID });
+    const response = await axios.post(`${API_URL}/main/getBetsEarnedTeamTable`, { userID },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -1326,7 +1514,11 @@ export const getBetsEarnedTeamTable = async (userID: string) => {
 
 export const getBetsTableByUser = async (userID: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getBetsTableByUser`, { userID });
+    const response = await axios.post(`${API_URL}/main/getBetsTableByUser`, { userID },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -1341,7 +1533,11 @@ export const getBetsTableByUser = async (userID: string) => {
 
 export const getWinsTeamTable = async (userID: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getWinsTeamTable`, { userID });
+    const response = await axios.post(`${API_URL}/main/getWinsTeamTable`, { userID },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -1356,7 +1552,11 @@ export const getWinsTeamTable = async (userID: string) => {
 
 export const getCommissionsTeamTable = async (userID: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getCommissionsTeamTable`, { userID });
+    const response = await axios.post(`${API_URL}/main/getCommissionsTeamTable`, { userID },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -1371,7 +1571,11 @@ export const getCommissionsTeamTable = async (userID: string) => {
 
 export const totalCashinTeamTable = async (userID: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/totalCashinTeamTable`, { userID });
+    const response = await axios.post(`${API_URL}/main/totalCashinTeamTable`, { userID },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -1386,7 +1590,11 @@ export const totalCashinTeamTable = async (userID: string) => {
 
 export const getCashinsTableByUser = async (userID: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getCashinsTableByUser`, { userID });
+    const response = await axios.post(`${API_URL}/main/getCashinsTableByUser`, { userID },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -1401,7 +1609,11 @@ export const getCashinsTableByUser = async (userID: string) => {
 
 export const totalCashoutTeamTable = async (userID: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/totalCashoutTeamTable`, { userID });
+    const response = await axios.post(`${API_URL}/main/totalCashoutTeamTable`, { userID },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -1416,7 +1628,11 @@ export const totalCashoutTeamTable = async (userID: string) => {
 
 export const getCashoutsTableByUser = async (userID: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getCashoutsTableByUser`, { userID });
+    const response = await axios.post(`${API_URL}/main/getCashoutsTableByUser`, { userID },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       return response.data;
@@ -1440,6 +1656,10 @@ export const convertWinsToBalance = async (
 
       const res = await axios.post(`${API_URL}/main/convertWinsToBalance`, {
         userID,amount
+      },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
       });
 
       if (res.data && res.data.authenticated) {
@@ -1463,6 +1683,10 @@ export const convertCommissionsToBalance = async (
 
       const res = await axios.post(`${API_URL}/main/convertCommissionsToBalance`, {
         userID,amount
+      },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
       });
 
       if (res.data && res.data.authenticated) {
@@ -1482,7 +1706,11 @@ export const convertCommissionsToBalance = async (
 
 export const setDailyRewards = async (userID: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/setDailyRewards`, { userID });
+    const response = await axios.post(`${API_URL}/main/setDailyRewards`, { userID },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       console.log(response.data);
@@ -1501,7 +1729,11 @@ export const claimDailyReward = async (
   userID: string, reward: string 
 ) => {
   try {
-    const response = await axios.post(`${API_URL}/main/claimDailyReward`, { userID, reward});
+    const response = await axios.post(`${API_URL}/main/claimDailyReward`, { userID, reward},{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (response.data && response.data.authenticated) {
       const userData = response.data;
@@ -1524,7 +1756,11 @@ export const getBetByID = async (
   betID: string
 ) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getBetByID`, { betID});
+    const response = await axios.post(`${API_URL}/main/getBetByID`, { betID},{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
     if (Array.isArray(response.data)) {
       console.log(response.data);
