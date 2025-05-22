@@ -276,7 +276,9 @@ export function CreatePage() {
           <div className="mt-8 flex items-center justify-between">
             <div className="bg-gray-200 rounded-full py-3 px-6 flex items-center">
             <a 
-                href="#" 
+                href="https://www.youtube.com/watch?v=GYLa2dGGpTA" 
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center text-black-600 hover:text-blue-600 hover:underline"
               >
               <span className="mr-2 font-bold ">Click here to learn how to earn more</span>
