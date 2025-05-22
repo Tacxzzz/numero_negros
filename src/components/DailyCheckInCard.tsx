@@ -163,6 +163,14 @@ export const DailyCheckInCard: React.FC<DailyCheckInCardProps> = ({
         {/* <p className="text-center text-blue-700 text-xs lg:text-base font-medium">
           Check in every day to earn more coins!
         </p> */}
+        <div
+        className={`text-center text-xs lg:text-base font-extrabold flex items-center justify-center gap-2 ${totalCoinsClassName}`}
+        style={totalCoinsStyle}
+        >
+          <CoinIcon size={16} className="inline-block" />
+          <span className="text-blue-700">Total Earned:</span>
+          <span className="text-blue-600 drop-shadow">+{totalCoins.toFixed(2)} coins</span>
+        </div>
       </div>
 
       <div
