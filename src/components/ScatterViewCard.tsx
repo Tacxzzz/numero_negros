@@ -14,12 +14,14 @@ const ScatterViewCard: React.FC<ScatterViewCardProps> = ({ url, img, title, heig
     <Card className="w-full max-w-3xl mx-auto shadow-xl rounded-none bg-gray-800 overflow-hidden">
       {title && <div className="bg-gray-800 px-4 py-2 text-lg font-bold text-yellow-400">{title}</div>}
       <CardContent className="p-0 relative">
-        <img
-          src={img}
-          alt={title || "Card Image"}
-          className="w-full h-full object-fit"
-          style={{ height }}
-        />
+        <a href={url} target="_blank" rel="noopener noreferrer">
+            <img
+                src={img}
+                alt={title || "Card Image"}
+                className="w-full h-full object-fit cursor-pointer"
+                style={{ height }}
+            />
+        </a>
         <div className="absolute bottom-2 right-2">
           <Button size="sm" className="bg-gray-800 text-yellow-400 font-bold rounded-none" 
           onClick={() => window.open(url, "_blank")}>
