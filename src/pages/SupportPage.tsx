@@ -493,7 +493,14 @@ export function SupportPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-gray-600 mb-4">Watch step-by-step video tutorials on how to use various features of our platform.</p>
-                <Button variant="outline" className="w-full">Watch Videos</Button>
+                <a
+                  href="https://www.youtube.com/@PisoPlayPH"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full inline-block text-center bg-transparent border border-gray-300 text-gray-700 py-2 px-4 rounded hover:bg-gray-100 font-bold"
+                >
+                  Watch Videos
+                </a>
               </CardContent>
             </Card>
             
