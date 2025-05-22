@@ -51,6 +51,10 @@ export function CreatePage() {
       return;
     }
 
+    if (mobile.charAt(0) !== '9') {
+      setError("Please enter the 10 digits of your number starting with 9 e.g. 9123456789");
+      return;
+    }
 
     setIsLoading(true);
 
