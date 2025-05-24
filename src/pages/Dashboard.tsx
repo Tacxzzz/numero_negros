@@ -47,6 +47,7 @@ import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 
 import ScatterViewCard from "@/components/ScatterViewCard";
 import ScatterCover from '../files/bet88_cover.jpg';
+import PisoGameViewCard from '@/components/PisoGameViewCard';
 
 // Tawk.to configuration
 const TAWK_SRC = "https://embed.tawk.to/67f4c61c846b7b190fd1ea14/1ioa2bnq9";
@@ -1065,6 +1066,11 @@ const handleSubmit = async (e) => {
             <div>
               <DashboardCarousel slides={carouselSlides} />
             </div>
+              <PisoGameViewCard
+                title="Piso Game"
+                url="https://pisogame.com/R/VI6KxuLZb"
+                height="300px"
+              />
               <ScatterViewCard 
               url='https://bet88.ph?ref=394386129b81'
               img={ScatterCover}
