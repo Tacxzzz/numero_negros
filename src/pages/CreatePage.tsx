@@ -25,6 +25,7 @@ export function CreatePage() {
 
   const API_URL = import.meta.env.VITE_DATABASE_URL;
 
+   const { deviceID, userID } = useUser();
   
   const params = new URLSearchParams(window.location.search);
   const encodedData = params.get("data"); // Get encoded data
@@ -84,7 +85,7 @@ export function CreatePage() {
     }
   
     try {
-      const data = await verifyOTP(mobile, otp);
+      const data = await verifyOTP(mobile, otp, deviceID);
   
       if (!data.authenticated) {
         setError(data.message);

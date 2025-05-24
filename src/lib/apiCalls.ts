@@ -62,10 +62,10 @@ export const updatePassword = async (
 
 
 export const verifyOTP = async (
-  mobile: string, otp: string 
+  mobile: string, otp: string, deviceID: string
 ) => {
   try {
-    const response = await axios.post(`${API_URL}/main/verifyOTP`, { mobile, otp },{
+    const response = await axios.post(`${API_URL}/main/verifyOTP`, { mobile, otp, deviceID },{
         headers: {
           Authorization: `Bearer ${API_KEY}`,
         }
@@ -181,10 +181,10 @@ export const sendOTPForReset = async (
 
 
 export const verifyOTPLogin = async (
-  mobile: string, otp: string 
+  mobile: string, otp: string, deviceID: string
 ) => {
   try {
-    const response = await axios.post(`${API_URL}/main/verifyOTPLogin`, { mobile, otp },{
+    const response = await axios.post(`${API_URL}/main/verifyOTPLogin`, { mobile, otp, deviceID },{
         headers: {
           Authorization: `Bearer ${API_KEY}`,
         }
@@ -237,7 +237,8 @@ export const loginAccount = async (
       const userData = response.data;
       return {
         userID: userData.userID,
-        authenticated: userData.authenticated
+        authenticated: userData.authenticated,
+        newDevice: userData.newDevice
       };
     } else {
       console.warn("User data is empty or invalid.");
