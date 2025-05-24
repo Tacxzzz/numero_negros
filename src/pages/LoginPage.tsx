@@ -28,8 +28,7 @@ export function LoginPage() {
   const [forgotPass, setForgotPass] = useState(false);
   const [openOTPforgot, setOpenOTPforgot] = useState(false);
 
-
-
+  const { deviceID, userID } = useUser();
 
   useEffect(() => {
     const rememberedEmail = localStorage.getItem("rememberedEmail");
@@ -50,6 +49,26 @@ export function LoginPage() {
       navigate('/dashboard'); // Redirect to dashboard if token exists
     }
   }, [navigate]);
+
+  const handleSuccessfulLogin = (
+  userID: string,
+  navigate: (path: string) => void
+  ) => {
+    setUserID(userID);
+    setClientId(null);
+    localStorage.setItem('authToken', 'user_authenticated');
+
+    if (rememberMe) {
+      localStorage.setItem("rememberedEmail", mobile);
+      localStorage.setItem("rememberedPassword", password);
+    } else {
+      localStorage.removeItem("rememberedEmail");
+      localStorage.removeItem("rememberedPassword");
+    }
+
+    navigate('/dashboard');
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -58,6 +77,7 @@ export function LoginPage() {
     const formData = new FormData();
     formData.append("mobile", mobile);
     formData.append('password', password);
+    formData.append("deviceID", deviceID)
     const data = await loginAccount(formData);
     if(!data.authenticated){
       setError("Invalid mobile number or password.");
@@ -66,7 +86,14 @@ export function LoginPage() {
     }
 
     setError("");
-    setShowOtpInput(true);
+    if (data.newDevice)
+    {
+      setShowOtpInput(true);
+    }
+    else
+    {
+      handleSuccessfulLogin(data.userID, navigate);
+    }
     
   };
 
@@ -75,26 +102,14 @@ export function LoginPage() {
     e.preventDefault();
   
     setError("");
-    const data = await verifyOTPLogin(mobile, otp);
+    const data = await verifyOTPLogin(mobile, otp, deviceID);
   
     if (!data.authenticated) {
       setError(data.message);
       return;
     }
   
-    setUserID(data.userID);
-    setClientId(null);
-    localStorage.setItem('authToken', 'user_authenticated');
-  
-    if (rememberMe) {
-      localStorage.setItem("rememberedEmail", mobile);
-      localStorage.setItem("rememberedPassword", password);
-    } else {
-      localStorage.removeItem("rememberedEmail");
-      localStorage.removeItem("rememberedPassword");
-    }
-  
-    navigate('/dashboard');
+    handleSuccessfulLogin(data.userID, navigate);
   };
 
   const handleMobile = async (e: React.FormEvent) => {
