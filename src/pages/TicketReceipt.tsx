@@ -170,17 +170,21 @@ const TicketReceipt: React.FC = () => {
                 <div className="flex">
                   <span>{bet.bets}</span>
                 </div>
-                <div className="text-sm">
-                  {bet.created_date} {bet.created_time}
-                </div>
-                <div className="flex">
+                <div className="flex justify-between items-start w-full text-sm">
                   <span className="mr-2">Ticket Price:</span>
                   <span>{formatPeso(bet.bet)}</span>
+                </div>
+                <div className="text-sm">
+                  {bet.created_date} {bet.created_time}
                 </div>
                 {/* <div className="text-sm">{getTransCode(bet.created_date + " " + bet.created_time) + bet.id}</div> */}
               </div>
               <div className="space-y-1 text-right">
                 <div>{bet.game_type_name} {formatPeso(bet.bet)}</div>
+                <div> </div>
+                <div className="text-sm">
+                    {bet.draw_date} {bet.draw_time}
+                </div>
               </div>
             </div>
 
