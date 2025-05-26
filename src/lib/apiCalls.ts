@@ -967,46 +967,20 @@ export const cashOutCashko = async (
     const clientNo = `PPCO${timestamp}`;
     const clientCode = import.meta.env.VITE_CLIENT_CODE;
     const privateKey = import.meta.env.VITE_PRIVATE_KEY;
-    const chainName = "BANK";
-    const coinUnit = "PHP";
+    const callbackurl = `${API_URL}/main/requestCashOutCashko`;
+    const sign = generateSign(clientCode, clientNo, timestamp, privateKey);
 
-    const formData = new FormData();
-    formData.append("clientCode", clientCode);
-    formData.append("chainName", chainName);
-    formData.append("coinUnit", coinUnit);
-    formData.append("bankCardNum", account);
-    formData.append("bankUserName", full_name);
-    formData.append("ifsc", "null");
-    formData.append("bankName", bank);
-    formData.append("amount", (parseFloat(winnings) - 6).toString());
-    formData.append("clientNo", clientNo);
-    formData.append("requestTimestamp", timestamp);
-    formData.append("callbackurl", `${API_URL}/main/requestCashOutCashko`);
-    formData.append("sign", generateSign(clientCode, clientNo, timestamp, privateKey));
-
-    const response = await axios.post(
-      "https://gw01.ckogway.com/api/bank/agentPay/request",
-      formData
-    );
-    console.log(response);
-
-    if (
-      response.data &&
-      response.data.success &&
-      response.data.code === 200 &&
-      response.data.data &&
-      response.data.data.orderNo
-    ) {
-      const { orderNo } = response.data.data;
-
-      const res = await axios.post(`${API_URL}/main/cashOutRequest`, {
+    const res = await axios.post(`${API_URL}/main/cashOutRequest`, {
         userID,
         clientNo,
-        orderNo,
         winnings,
         full_name,
         bank,
         account,
+        clientCode,
+        callbackurl,
+        sign,
+        timestamp
       },{
         headers: {
           Authorization: `Bearer ${API_KEY}`,
@@ -1017,16 +991,11 @@ export const cashOutCashko = async (
         return { error: false };
       } else {
         const message = res.data?.error || "User data is empty or invalid.";
-        console.warn("Backend error:", message);
         return { error: true, message };
       }
-    } else {
-      console.warn("Cashko request failed.");
-      return { error: true, message:"Transaction response is missing orderNo." };
-    }
   } catch (error) {
     console.error("Cashko request failed:", error);
-    return { error: true , message:"Cashko request failed." };
+    return { error: true , message:"Cashko api request failed." };
   }
 };
 
@@ -1068,8 +1037,6 @@ export const cashOutCashkoCommission = async (
         return { error: false };
       } else {
         const message = res.data?.error || "User data is empty or invalid.";
-        console.warn("Backend error:", message);
-        console.warn("Full backend response:", res.data);
         return { error: true, message };
       }
   } catch (error) {
@@ -1639,12 +1606,10 @@ export const convertWinsToBalance = async (
       if (res.data && res.data.authenticated) {
         return { error: false };
       } else {
-        console.warn("User data is empty or invalid.");
-        return { error: true, message:"User data is empty or invalid." };
+        return { error: true, message:res.data.error };
       }
     
   } catch (error) {
-    console.error("Cashko request failed:", error);
     return { error: true , message:"conversion failed." };
   }
 };
@@ -1666,12 +1631,10 @@ export const convertCommissionsToBalance = async (
       if (res.data && res.data.authenticated) {
         return { error: false };
       } else {
-        console.warn("User data is empty or invalid.");
-        return { error: true, message:"User data is empty or invalid." };
+        return { error: true, message:res.data.error };
       }
     
   } catch (error) {
-    console.error("Cashko request failed:", error);
     return { error: true , message:"conversion failed." };
   }
 };
