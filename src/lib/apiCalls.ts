@@ -424,6 +424,25 @@ export const getBetsWinners = async () => {
   }
 };
 
+export const getDrawResultsToday = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/main/getDrawResultsToday`, {
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+      }
+    });
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error('Failed to fetch draws today:', error);
+    return[];
+  }
+}
+
 export const getGamesToday = async () => {
   try {
     const response = await axios.get(`${API_URL}/main/getGamesToday`,{

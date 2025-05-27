@@ -42,8 +42,15 @@ const AutoScrollWinnersCarousel = () => {
 
   if (winners.length === 0) {
     return (
-      <div className="overflow-hidden bg-blue-500 py-3 flex justify-center items-center min-h-[120px]">
-        <span className="text-white">Loading winners...</span>
+      <div className="overflow-hidden bg-white-500 py-2 flex justify-center items-center">
+        <div
+        className={`w-full rounded-xl shadow-lg p-2 pr-6 pl-6 flex-shrink-0 text-center transition-opacity ${
+            fade ? 'opacity-100' : 'opacity-0'
+        }`}
+        style={{
+            backgroundImage: 'linear-gradient(to right, #348df3cf, #485ebd)'
+        }}
+        ><span className="text-white">Loading Winners...</span></div>
       </div>
     );
   }
@@ -95,9 +102,9 @@ const AutoScrollWinnersCarousel = () => {
     //     </p>
     //   </div>
 
-    <div className="overflow-hidden bg-white-500 py-3 flex justify-center items-center min-h-[120px]">
+    <div className="overflow-hidden bg-white-500 py-2 flex justify-center items-center">
       <div
-        className={`min-w-[330px] rounded-xl shadow-lg p-4 flex-shrink-0 text-center transition-opacity ${
+        className={`w-full rounded-xl shadow-lg p-2 flex-shrink-0 text-center transition-opacity ${
           fade ? 'opacity-100' : 'opacity-0'
         }`}
         style={{
@@ -106,14 +113,18 @@ const AutoScrollWinnersCarousel = () => {
           transitionDuration: `${FADE_DURATION}ms`,
         }}
       >
-        <p className="text-base font-bold text-orange-300">{winner.game_name}</p>
-        <p className="text-base text-gray-100">
-          {winner.date} {winner.time}
-        </p>
-        <p className="font-bold text-lg text-yellow-300">{winner.results}</p>
-        <p className="text-base text-gray-100">
-          Winners : <span className="text-base font-bold text-green-300"> {winner.total_winners} </span>
-        </p>
+        <div className='flex justify-center items-center'>
+          <p className="text-base font-bold text-orange-300 mr-2">{winner.game_name}</p>
+          <p className="text-xs text-gray-100">
+            {winner.date} {winner.time}
+          </p>
+        </div>
+        <div className='flex justify-center items-center'>
+          <p className="font-bold text-sm text-yellow-300 mr-2">{winner.results}</p>
+          <p className="text-base text-gray-100">
+            Winners : <span className="text-base font-bold text-green-300"> {winner.total_winners} </span>
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -39,6 +39,7 @@ import AdvertisementImage from "@/files/advertisement.svg";
 
 const AnnouncementsMarquee = lazy(() => import("@/components/AnnouncementsMarque"));
 const AutoScrollWinnersCarousel = lazy(() => import("@/components/AutoScrollWinnersCarousel"));
+const AutoScrollResultsToday = lazy(() => import("@/components/AutoScrollResultsToday"));
 import { setTawkWidgetVisible } from '@/lib/tawkWidgetUtils';
 import DailyCheckInCard from '@/components/DailyCheckInCard';
 
@@ -894,9 +895,6 @@ const handleSubmit = async (e) => {
       </header>
 
       <AnnouncementsMarquee />
-
-      <AutoScrollWinnersCarousel />
-
       {/* Account Management Modal */}
         {showAccountModal && (
         <AccountManagementModal onClose={handleCloseModal} />
@@ -905,6 +903,20 @@ const handleSubmit = async (e) => {
       <main className="container mx-auto px-4 py-6">
         {/* Balance Card (Mobile) */}
         <div >
+        <Tabs defaultValue="todayDraws" className='m-0'>
+          <div className="flex justify-end items-center">
+            <TabsList>
+              <TabsTrigger value="todayDraws">Today Draws</TabsTrigger>
+              <TabsTrigger value="winners">Winners</TabsTrigger>
+            </TabsList>
+          </div>
+          <TabsContent value="todayDraws" className="mt-0">
+            <AutoScrollResultsToday />
+          </TabsContent>
+          <TabsContent value="winners" className="mt-0">
+            <AutoScrollWinnersCarousel />
+          </TabsContent>
+        </Tabs>
         <DailyCheckInCard className=" mb-4"/>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
@@ -1081,7 +1093,7 @@ const handleSubmit = async (e) => {
         </section>
         
         {/* Games Tabs */}
-        <Tabs defaultValue="today" className="mb-8">
+        <Tabs defaultValue="today" className="mb-20">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-gray-800">Games</h2>
             <TabsList>
