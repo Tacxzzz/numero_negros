@@ -1,10 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getBetsWinners } from '@/lib/apiCalls'; // replace with your actual fetch
 import { formatPeso } from '@/lib/utils';
 
+const FADE_DURATION = 500; // ms
+const DISPLAY_DURATION = 2500; // ms
+
 const AutoScrollWinnersCarousel = () => {
   const [winners, setWinners] = useState<any[]>([]);
-  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [fade, setFade] = useState(true);
 
   useEffect(() => {
     const fetchWinners = async () => {
@@ -15,50 +19,101 @@ const AutoScrollWinnersCarousel = () => {
   }, []);
 
   useEffect(() => {
-    const container = scrollRef.current;
-    if (!container || winners.length === 0) return;
+    if (winners.length === 0) return;
 
-    let scrollAmount = 0;
-    const scrollStep = 1;
-    const scrollInterval = 30;
+    let fadeTimeout: NodeJS.Timeout;
+    let displayTimeout: NodeJS.Timeout;
 
-    const scroll = () => {
-      if (!container) return;
+    // Fade out, then change index, then fade in
+    displayTimeout = setTimeout(() => {
+      setFade(false); // start fade out
 
-      scrollAmount += scrollStep;
-      container.scrollLeft += scrollStep;
+      fadeTimeout = setTimeout(() => {
+        setCurrentIndex((prev) => (prev + 1) % winners.length);
+        setFade(true); // fade in next
+      }, FADE_DURATION);
+    }, DISPLAY_DURATION);
 
-      // When we've scrolled past the original list
-      if (scrollAmount >= container.scrollWidth / 2) {
-        container.style.scrollBehavior = 'auto'; // disable animation for reset
-        container.scrollLeft = 0;
-        scrollAmount = 0;
-        container.style.scrollBehavior = 'smooth'; // re-enable smooth scrolling
-      }
+    return () => {
+      clearTimeout(displayTimeout);
+      clearTimeout(fadeTimeout);
     };
+  }, [currentIndex, winners.length]);
 
-    const interval = setInterval(scroll, scrollInterval);
-    return () => clearInterval(interval);
-  }, [winners]);
+  if (winners.length === 0) {
+    return (
+      <div className="overflow-hidden bg-blue-500 py-3 flex justify-center items-center min-h-[120px]">
+        <span className="text-white">Loading winners...</span>
+      </div>
+    );
+  }
+
+  const winner = winners[currentIndex];
 
   return (
-    <div className="overflow-hidden bg-blue-50 py-3">
+    // <div className="overflow-hidden bg-blue-500 py-3 flex justify-center items-center min-h-[120px]">
+    //   <div
+    //     className={`min-w-[330px] bg-gray-100 rounded-xl shadow-lg p-4 flex-shrink-0 text-center transition-opacity ${
+    //       fade ? 'opacity-100' : 'opacity-0'
+    //     }`}
+    //     style={{
+    //       transitionProperty: 'opacity',
+    //       transitionDuration: `${FADE_DURATION}ms`,
+    //     }}
+    //   >
+    //     <p className="text-base font-bold text-blue-500">{winner.game_name}</p>
+    //     <p className="text-base text-gray-500">
+    //       {winner.date} {winner.time}
+    //     </p>
+    //     <p className="font-bold text-lg text-green-700">{winner.results}</p>
+    //     <p className="text-base text-gray-500">
+    //       Winners : <span className="text-base font-bold text-green-500"> {winner.total_winners} </span>
+    //     </p>
+    //   </div>
+    // </div>
+
+    // <div
+    //     className={`min-w-[300px]  shadow-lg p-4 flex-shrink-0 text-center transition-opacity ${
+    //       fade ? 'opacity-100' : 'opacity-0'
+    //     }`}
+    //     style={{
+    //       backgroundImage: `url(${winner.backgroundImage || 'default-image.jpg'})`,
+    //       backgroundSize: 'cover',
+    //       backgroundPosition: 'center',
+    //       backgroundColor: winner.color || 'gray', // Fallback color
+    //       transitionProperty: 'opacity',
+    //       transitionDuration: `${FADE_DURATION}ms`,
+    //     }}
+    //   >
+    //     <p className="text-base font-bold text-blue-500">{winner.game_name}</p>
+    //     <p className="text-base text-gray-100">
+    //       {winner.date} {winner.time}
+    //     </p>
+    //     <p className="font-bold text-lg text-green-700">{winner.results}</p>
+    //     <p className="text-base text-gray-100">
+    //       Winners : <span className="text-base font-bold text-green-500"> {winner.total_winners} </span>
+    //     </p>
+    //   </div>
+
+    <div className="overflow-hidden bg-white-500 py-3 flex justify-center items-center min-h-[120px]">
       <div
-        ref={scrollRef}
-        className="flex gap-4 whitespace-nowrap overflow-x-scroll scroll-smooth scrollbar-hide"
+        className={`min-w-[330px] rounded-xl shadow-lg p-4 flex-shrink-0 text-center transition-opacity ${
+          fade ? 'opacity-100' : 'opacity-0'
+        }`}
+        style={{
+          backgroundImage: 'linear-gradient(to right, #348df3cf, #485ebd)', // Gradient background
+          transitionProperty: 'opacity',
+          transitionDuration: `${FADE_DURATION}ms`,
+        }}
       >
-        {[...winners, ...winners].map((winner, index) => (
-          <div
-            key={index}
-            className="min-w-[200px] bg-white rounded-xl shadow p-4 flex-shrink-0 text-center"
-          >
-            <p className="text-xs font-bold text-gray-500">{winner.game_name}</p>
-            <p className="text-xs text-gray-400">{winner.date} {winner.time}</p>
-            <p className="font-bold text-l">{winner.results}</p>
-            <p className="text-xs text-gray-500">Winners : {winner.total_winners}</p>
-            
-          </div>
-        ))}
+        <p className="text-base font-bold text-orange-300">{winner.game_name}</p>
+        <p className="text-base text-gray-100">
+          {winner.date} {winner.time}
+        </p>
+        <p className="font-bold text-lg text-yellow-300">{winner.results}</p>
+        <p className="text-base text-gray-100">
+          Winners : <span className="text-base font-bold text-green-300"> {winner.total_winners} </span>
+        </p>
       </div>
     </div>
   );
