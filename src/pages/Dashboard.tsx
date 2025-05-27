@@ -1093,7 +1093,7 @@ const handleSubmit = async (e) => {
         </section>
         
         {/* Games Tabs */}
-        <Tabs defaultValue="today" className="mb-8">
+        <Tabs defaultValue="today" className="mb-20">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-gray-800">Games</h2>
             <TabsList>
