@@ -27,7 +27,7 @@ import { FiCopy } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from "./UserContext";
-import { addBetClients, cashIn, cashInCashko, cashOutCashko, cashOutCashkoCommission, convertCommissionsToBalance, convertWinsToBalance, fetchUserData, getBetClientData, getCommissions, getGames, getGamesToday, getMyBetClientsCount, getReferrals, updatePassword } from '@/lib/apiCalls';
+import { addBetClients, cashIn, cashInCashko, cashOutCashko, cashOutCashkoCommission, convertCommissionsToBalance, convertWinsToBalance, fetchUserData, getBetClientData, getCommissions, getGames, getGamesToday, getMyBetClientsCount, getReferrals, updatePassword, checkMaintainingBalance } from '@/lib/apiCalls';
 import { formatPeso } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -598,6 +598,24 @@ const handleSubmit = async (e) => {
     setLoading(false);
   };
 
+  const handleMaintaingBalance = async (e, sourceType: 'winnings' | 'commission') =>{
+    e.preventDefault();
+
+    const data = await checkMaintainingBalance(userID);
+
+    if (!data.authenticated || !data.proceed)
+    {
+      alert(data.message);
+      return;
+    }
+
+    if (sourceType == "winnings"){ 
+      setShowCashOutDialog(true);
+    } else {
+      setShowCashOutComDialog(true);
+    }
+  }
+
   const isMessengerWebview = useBrowserCheck();
     
   if (isMessengerWebview) {
@@ -942,7 +960,7 @@ const handleSubmit = async (e) => {
               >Convert</Button>
               <Button className="bg-green-500 hover:bg-green-600" 
               disabled={!winnings || winnings < 108} 
-              onClick={() => setShowCashOutDialog(true)}>Cash Out</Button>
+              onClick={(e) => handleMaintaingBalance(e, "winnings")}>Cash Out</Button>
             </div>
             
           </div>
@@ -990,8 +1008,8 @@ const handleSubmit = async (e) => {
     >Convert</Button>
      <Button className="bg-green-500 hover:bg-green-600" 
      disabled={!commissions || commissions < 108} 
-      onClick={() => {
-        setShowCashOutComDialog(true);
+      onClick={(e) => {
+        handleMaintaingBalance(e, "commission");
         setCommissionsCashout(commissions); // Add your second function here
       }}
     >
