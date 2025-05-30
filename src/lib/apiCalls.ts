@@ -1085,7 +1085,25 @@ export const getAnnouncements = async () => {
   }
 };
 
+export const checkMaintainingBalance = async (userID : string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/checkMaintainingBalance`, {userID},{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
 
+    if (!response.data.authenticated || !response.data.proceed) {
+      const message = response.data.message;
+      return { error: true, message };
+    } 
+
+    return response.data;
+
+  } catch (error) {
+    return [];
+  }
+};
 
 
 export const getCommissions = async (
