@@ -906,9 +906,20 @@ const handleSubmit = async (e) => {
         <Tabs defaultValue="todayDraws" className='m-0'>
           <div className="flex justify-end items-center">
             <TabsList>
-              <TabsTrigger value="todayDraws">Today Draws</TabsTrigger>
-              <TabsTrigger value="winners">Winners</TabsTrigger>
+              <TabsTrigger
+                value="todayDraws"
+                className="p-2 mr-2 bg-gray-200 text-gray-800 hover:bg-gray-300 md:max-w-full md:mr-2"
+              >
+                Today Draws
+              </TabsTrigger>
+              <TabsTrigger
+                value="winners"
+                className="p-2 bg-gray-200 text-gray-800 hover:bg-gray-300 md:max-w-full"
+              >
+                Winners
+              </TabsTrigger>
             </TabsList>
+
           </div>
           <TabsContent value="todayDraws" className="mt-0">
             <AutoScrollResultsToday />
