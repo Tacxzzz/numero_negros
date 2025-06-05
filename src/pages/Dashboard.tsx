@@ -105,7 +105,12 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const [quota, setQuota] = useState(0);
   const [quotaTime, setQuotaTime] = useState("");
   const [quotaAllow, setQuotaAllow] = useState("");
+  const [refLevel, setRefLevel] = useState("");
+  const [underEmployer, setUnderEmployer] = useState("");
   const [commissions, setCommissions] = useState(0);
+  const [level1Percent, setLevel1Percent] = useState(0);
+  const [level2Percent, setLevel2Percent] = useState(0);
+  const [noLimitPercent, setNoLimitPercent] = useState(0);
   const [commissionsConvert, setCommissionsConvert] = useState(0);
   const [unclaimedCommissions, setUnclaimedCommissions] = useState(0);
   const [mobile, setMobile] = useState("");
@@ -142,6 +147,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
 
   const [level1,setLevel1] = useState(0);
   const [level2,setLevel2] = useState(0);
+  const [noLimit,setNoLimit] = useState(0);
 
   useEffect(() => {
     // Load Tawk.to widget
@@ -196,6 +202,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
         const dataRef = await getReferrals(userID);
         setLevel1(dataRef.level1);
         setLevel2(dataRef.level2);
+        setNoLimit(dataRef.nolimit);
 
         const data = await fetchUserData(userID,deviceID);
         console.log(data);
@@ -209,8 +216,12 @@ export function Dashboard({ onLogout }: SidebarProps) {
         setReferral(data.referral);
         setStatus(data.status);
         setAgent(data.agent);
+        setRefLevel(data.level);
+        setUnderEmployer(data.under_employer);
+        setLevel1Percent(data.level_one_percent);
+        setLevel2Percent(data.level_two_percent);
+        setNoLimitPercent(data.nolimit_percent);
         setLoading(false);
-
 
         
         
@@ -291,6 +302,11 @@ export function Dashboard({ onLogout }: SidebarProps) {
     setReferral(data.referral);
     setStatus(data.status);
     setAgent(data.agent);
+    setRefLevel(data.level);
+    setUnderEmployer(data.under_employer);
+    setLevel1Percent(data.level_one_percent);
+    setLevel2Percent(data.level_two_percent);
+    setNoLimitPercent(data.nolimit_percent);
     setShowAccountModal(false);
   };
 
@@ -326,6 +342,11 @@ export function Dashboard({ onLogout }: SidebarProps) {
     setReferral(data.referral);
     setStatus(data.status);
     setAgent(data.agent);
+    setRefLevel(data.level);
+    setUnderEmployer(data.under_employer);
+    setLevel1Percent(data.level_one_percent);
+        setLevel2Percent(data.level_two_percent);
+        setNoLimitPercent(data.nolimit_percent);
     setLoading(false);
 
     
@@ -422,6 +443,11 @@ const handleSubmit = async (e) => {
       setReferral(data.referral);
       setStatus(data.status);
       setAgent(data.agent);
+      setRefLevel(data.level);
+      setUnderEmployer(data.under_employer);
+      setLevel1Percent(data.level_one_percent);
+        setLevel2Percent(data.level_two_percent);
+        setNoLimitPercent(data.nolimit_percent);
 
       if(clientId)
       {
@@ -476,6 +502,11 @@ const handleSubmit = async (e) => {
       setReferral(data.referral);
       setStatus(data.status);
       setAgent(data.agent);
+      setRefLevel(data.level);
+      setUnderEmployer(data.under_employer);
+      setLevel1Percent(data.level_one_percent);
+        setLevel2Percent(data.level_two_percent);
+        setNoLimitPercent(data.nolimit_percent);
 
       if(clientId)
       {
@@ -528,6 +559,11 @@ const handleSubmit = async (e) => {
       setReferral(data.referral);
       setStatus(data.status);
       setAgent(data.agent);
+      setRefLevel(data.level);
+      setUnderEmployer(data.under_employer);
+      setLevel1Percent(data.level_one_percent);
+        setLevel2Percent(data.level_two_percent);
+        setNoLimitPercent(data.nolimit_percent);
 
       if(clientId)
       {
@@ -580,6 +616,11 @@ const handleSubmit = async (e) => {
       setReferral(data.referral);
       setStatus(data.status);
       setAgent(data.agent);
+      setRefLevel(data.level);
+      setUnderEmployer(data.under_employer);
+      setLevel1Percent(data.level_one_percent);
+        setLevel2Percent(data.level_two_percent);
+        setNoLimitPercent(data.nolimit_percent);
 
       if(clientId)
       {
@@ -1038,11 +1079,11 @@ const handleSubmit = async (e) => {
                   <div>
                     
                       <p className="text-gray-500 text-sm">Referrals</p>
-                      <p className="text-2xl font-bold text-gray-800">{level1+level2}</p>
+                      <p className="text-2xl font-bold text-gray-800">{(refLevel === 'level2' ? level1+level2 : noLimit)}</p>
                     
                   </div>
                   <div className="flex flex-col gap-2">
-                    {referral && (
+                    {referral && underEmployer !== 'yes' && (
                       <Button
                         onClick={() => {
                           navigate('/allowReferrer');
@@ -1874,16 +1915,22 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
   const [status,setStatus] = useState("");
   const [level1, setLevel1] = useState(0);
   const [level2, setLevel2] = useState(0);
-  const [level3, setLevel3] = useState(0);
+  const [nolimit, setNoLimit] = useState(0);
+  const [refLevel, setRefLevel] = useState("");
+  const [employer, setEmployer] = useState("");
+  const [level1Percent, setLevel1Percent] = useState(0);
+  const [level2Percent, setLevel2Percent] = useState(0);
+  const [noLimitPercent, setNoLimitPercent] = useState(0);
   const [transLimit, setTransLimit] = useState(5000);
   const [cashInAmount, setCashInAmount] = useState(0);
 
   const currentURL = window.location.origin; // Gets the base URL
   const randomKey = Math.random().toString(36).substring(2, 23); // 21-character random key
   const encodedParams = btoa(`ref=${userID}&key=${randomKey}`); // Encode full params
+  const employerEncodedParams = btoa(`ref=${userID}&fromEmployer=yes&mobile=${mobile}&key=${randomKey}`);
 
   const referralLink = `${currentURL}/create-account?data=${encodedParams}`;
-
+  const employerReferralLink = `${currentURL}/create-account?data=${employerEncodedParams}`;
 
 
   const [passFormData, setPassFormData] = useState({
@@ -1946,11 +1993,16 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
         setMobile(data.mobile);
         setReferral(data.referral);
         setStatus(data.status);
+        setRefLevel(data.level);
+        setLevel1Percent(data.level_one_percent);
+        setLevel2Percent(data.level_two_percent);
+        setNoLimitPercent(data.nolimit_percent);
+        setEmployer(data.employer);
 
         const dataRef = await getReferrals(userID);
         setLevel1(dataRef.level1);
         setLevel2(dataRef.level2);
-        setLevel3(dataRef.level3);
+        setNoLimit(dataRef.nolimit);
       };
       handleUpdate();
     }
@@ -1961,6 +2013,10 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
     toast.success("Link copied to clipboard!", { autoClose: 1500 });
   };
 
+  const handleEmployeeCopy = () => {
+    navigator.clipboard.writeText(employerReferralLink);
+    toast.success("Link copied to clipboard!", { autoClose: 1500 });
+  };
 
   const cashInSubmit =  async () => {
   
@@ -2053,20 +2109,50 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                       </button>
                     </div>
                 </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred Lvl 1 (3% Rewards)</label>
+                {employer === 'yes' && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Employee Referral Link</label>
                     <div className="flex items-center">
-                      <Input readOnly value={level1} disabled className="mr-2" />
-                      
+                      <Input defaultValue={employerReferralLink} disabled className="mr-2" />
+                      <button 
+                        onClick={handleEmployeeCopy} 
+                        className="p-2 hover:bg-gray-200"
+                      >
+                        <FiCopy />
+                      </button>
                     </div>
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred Lvl 2 (2% Rewards)</label>
-                    <div className="flex items-center">
-                      <Input readOnly value={level2} disabled className="mr-2" />
-                      
+                  </div>
+                )}
+                
+                {refLevel === 'level2' ? (
+                  <>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred Lvl 1 ({level1Percent}% Rewards)</label>
+                      <div className="flex items-center">
+                        <Input readOnly value={level1} disabled className="mr-2" />
+                        
+                      </div>
                     </div>
-                </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred Lvl 2 ({level2Percent}% Rewards)</label>
+                        <div className="flex items-center">
+                          <Input readOnly value={level2} disabled className="mr-2" />
+                          
+                        </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred (No Limit) ({noLimitPercent}% Rewards)</label>
+                      <div className="flex items-center">
+                        <Input readOnly value={nolimit} disabled className="mr-2" />
+                        
+                      </div>
+                    </div>
+                  </>
+                )}
+                
                 {/* <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred Lvl 3 (2% Rewards)</label>
                     <div className="flex items-center">

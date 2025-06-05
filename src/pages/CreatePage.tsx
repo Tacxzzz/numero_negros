@@ -30,6 +30,9 @@ export function CreatePage() {
   const params = new URLSearchParams(window.location.search);
   const encodedData = params.get("data"); // Get encoded data
   let decodedRef = "";
+  let decodedFromEmployer = "";
+  let decodedMobile = "";
+
   if (encodedData) {
     try {
       const decodedParams = atob(encodedData); // Decode the full params
@@ -37,8 +40,13 @@ export function CreatePage() {
 
       const ref = searchParams.get("ref"); // Extract referral ID
       const key = searchParams.get("key"); // Extract key
+      const fromEmployer = searchParams.get("fromEmployer") ?? ''; // Extract fromEmployer
+      const employerMobile = searchParams.get("mobile") ?? ''; // Extract fromEmployer
       decodedRef = ref;
+      decodedFromEmployer = fromEmployer;
+      decodedMobile = employerMobile;
       console.log("Decoded Ref:", ref);
+      console.log("Decoded fromEmployer:", fromEmployer);
       console.log("Decoded Key:", key);
     } catch (err) {
       console.error("Invalid referral code:", err.message);
@@ -63,6 +71,7 @@ export function CreatePage() {
     formData.append("mobile", mobile);
     formData.append('password', password);
     formData.append('referral', decodedRef);
+    formData.append('fromEmployer', decodedFromEmployer)
     const data = await createAccount(formData);
     if(!data.authenticated){
       setError("An error occurred. Please try again.");
@@ -129,6 +138,8 @@ export function CreatePage() {
         {/* <div className="bg-white rounded-3xl shadow-xl overflow-hidden"> */}
           <div className="p-8">
             <h2 className="text-2xl font-bold text-center mb-4 text-blue-600 uppercase">Create an Account</h2>
+            {decodedMobile !== '' && <p className="text-red-500 text-sm text-center mt-2">This link is from an Employer : {decodedMobile}, 
+              Note that this employer can view all your data since your signing up as an Employee</p>}
             {error && <p className="text-red-500 text-sm text-center mt-2">{error}</p>}
             {!showOtp ? (
               <form onSubmit={handleLogin} className="space-y-4">
