@@ -19,6 +19,7 @@ const TicketReceipt: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const betID = location.state?.betID;
+  const fromPage = location.state?.from;
   const ticketRef = useRef<HTMLDivElement>(null);
   const [shareModalOpen, setShareModalOpen] = React.useState(false);
   const [sendModalOpen, setSendModalOpen] = React.useState(false);
@@ -28,7 +29,6 @@ const TicketReceipt: React.FC = () => {
 
     useEffect(() => {
         const handleUpdate = async () => {
-          console.log(betID);
           const gameBetData = await getBetByID(betID);
           console.log(gameBetData);
           setTicketData(gameBetData);
@@ -133,7 +133,7 @@ const TicketReceipt: React.FC = () => {
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
-            Back to My Bets
+            { fromPage === "My Bets" ? "Back to My Bets" : "Back to Game"}
           </button>
           
           <h1 className="text-xl font-bold text-center flex-1">My Bet Receipt</h1>
@@ -184,6 +184,9 @@ const TicketReceipt: React.FC = () => {
                 <div> </div>
                 <div className="text-sm">
                     {bet.draw_date} {bet.draw_time}
+                </div>
+                <div className="text-sm font-bold">
+                    {bet.bakas_full_name}
                 </div>
               </div>
             </div>
