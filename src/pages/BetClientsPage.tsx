@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { addBetClients, getDrawsResults, getMyBetClients, updateBetClient } from '@/lib/apiCalls';
+import { addBetClients, addLog, getDrawsResults, getMyBetClients, updateBetClient } from '@/lib/apiCalls';
 import { getTransCode } from '@/lib/utils';
 import { useUser } from "./UserContext";
 import { useClient } from "./ClientContext";
@@ -47,6 +47,9 @@ export function BetClientsPage() {
 
       const gameBetData = await getMyBetClients(userID);
       setClients(gameBetData);
+
+      const addViewLog = await addLog(userID, "visited Bet Clients");
+      console.log(addViewLog.authenticated);
       };
       handleUpdate();
   }, [userID]);

@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { getBetsEarnedTeamTable, getCashoutsTableByUser, getDownlinesTable, getTransactions, totalCashinTeamTable, totalCashOutTeam, totalCashoutTeamTable } from '@/lib/apiCalls';
+import { addLog, getBetsEarnedTeamTable, getCashoutsTableByUser, getDownlinesTable, getTransactions, totalCashinTeamTable, totalCashOutTeam, totalCashoutTeamTable } from '@/lib/apiCalls';
 import { useLocation } from 'react-router-dom';
 import { formatPeso, getTransCode } from '@/lib/utils';
 import useBrowserCheck from '@/components/WebBrowserChecker';
@@ -47,6 +47,9 @@ export function PlayerCashout() {
         const handleUpdate = async () => {
           const data = await getCashoutsTableByUser(userID);
           setTransactionsHistory(data);
+
+          const addViewLog = await addLog(userID, "visited Referral Cashouts");
+          console.log(addViewLog.authenticated);
         };
         handleUpdate();
       }

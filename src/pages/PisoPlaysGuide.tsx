@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 import {
   Card,
@@ -34,7 +35,21 @@ import manual_25 from "../files/manual-svg/25.svg";
 import controller_icon from "../files/manual-svg/icon.svg";
 import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
+import { addLog } from "@/lib/apiCalls";
+import { useUser } from "./UserContext";
 const PisoPlayGuide = () => {
+  const { setUserID,userID,deviceID } = useUser();
+  useEffect(() => {
+        if (userID) {
+          const handleUpdate = async () => {
+            const addViewLog = await addLog(userID, "visited Help Guide Manual");
+            console.log(addViewLog.authenticated);
+          };
+          handleUpdate();
+        }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, []);
+    
   const navigate = useNavigate();
 
   const isMessengerWebview = useBrowserCheck();

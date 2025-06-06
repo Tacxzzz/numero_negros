@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { checkCurrentBetsTotal, getBetsByUserAndDraw, getDrawsByID, getGameByID, getGames, getGameTypeByID, getGameTypesByID } from '@/lib/apiCalls';
+import { addLog, checkCurrentBetsTotal, getBetsByUserAndDraw, getDrawsByID, getGameByID, getGames, getGameTypeByID, getGameTypesByID } from '@/lib/apiCalls';
 import { formatPeso, getPhilippineDate, getTransCode } from '@/lib/utils';
 import { useUser } from "./UserContext";
 // import { popularGames } from './Dashboard';
@@ -102,6 +102,8 @@ useEffect(() => {
           }
         });
       }
+
+      
     };
     handleUpdate();
 }, [filteredDateDraws]);
@@ -121,7 +123,8 @@ useEffect(() => {
       const gameBetData = await getBetsByUserAndDraw(gameId,userID);
       setBetsData(gameBetData);
 
-      
+      const addViewLog = await addLog(userID, "visited " + gamesData[0].name);
+      console.log(addViewLog.authenticated);
 
       };
       handleUpdate();

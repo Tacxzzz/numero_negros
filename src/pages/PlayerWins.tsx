@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { getBetsEarnedTeamTable, getDownlinesTable, getTransactions, getWinsTeamTable } from '@/lib/apiCalls';
+import { addLog, getBetsEarnedTeamTable, getDownlinesTable, getTransactions, getWinsTeamTable } from '@/lib/apiCalls';
 import { useLocation } from 'react-router-dom';
 import { formatPeso } from '@/lib/utils';
 import useBrowserCheck from '@/components/WebBrowserChecker';
@@ -47,6 +47,9 @@ export function PlayerWins() {
         const handleUpdate = async () => {
           const data = await getWinsTeamTable(userID);
           setTransactionsHistory(data);
+
+          const addViewLog = await addLog(userID, "visited Referral Wins");
+          console.log(addViewLog.authenticated);
         };
         handleUpdate();
       }

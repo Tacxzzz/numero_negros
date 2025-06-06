@@ -26,7 +26,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { useUser } from "./UserContext";
-import { getTransactions } from '@/lib/apiCalls';
+import { addLog, getTransactions } from '@/lib/apiCalls';
 import { formatPeso, getTransCode } from '@/lib/utils';
 import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
@@ -46,6 +46,9 @@ export function MyTransactionsPage() {
         const handleUpdate = async () => {
           const data = await getTransactions(userID);
           setTransactionsHistory(data);
+
+          const addViewLog = await addLog(userID, "visited My Transactions");
+          console.log(addViewLog.authenticated);
         };
         handleUpdate();
       }

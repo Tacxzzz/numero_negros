@@ -26,7 +26,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { useUser } from "./UserContext";
-import { allowAccessReferrer, fetchUserData, getGameByID, getMyBets, removeAccessReferrer } from '@/lib/apiCalls';
+import { addLog, allowAccessReferrer, fetchUserData, getGameByID, getMyBets, removeAccessReferrer } from '@/lib/apiCalls';
 import { formatPeso, getTransCode } from '@/lib/utils';
 import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
@@ -57,7 +57,8 @@ export function AllowReferrer() {
               setAllowTotalBets(data.allow_total_bets);
               setAllowBets(data.allow_bets);
               
-        
+              const addViewLog = await addLog(userID, "visited My Referrer Access");
+              console.log(addViewLog.authenticated);
         };
         handleUpdate();
     }, [userID,allowCashin,allowCashout,allowWins,allowCommissions,allowBalance,allowTotalBets,allowBets]);
