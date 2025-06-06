@@ -278,6 +278,8 @@ export function GamePage() {
         alert(data.message);
         setScores(Array.from({ length: digits }, () => ""));
         setLoading(false);
+
+        navigate('/ticketreceipt', { state: { betID: data.bet_id, from: 'Game' } })
       }
       else
       {

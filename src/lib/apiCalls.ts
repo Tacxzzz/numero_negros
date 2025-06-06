@@ -617,6 +617,7 @@ export const confirmBet = async (
       return {
         authenticated: userData.authenticated,
         message: userData.message,
+        bet_id: userData.bet_id,
         back: userData.back,
       };
 
