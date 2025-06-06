@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { getDownlinesTable, getTransactions } from '@/lib/apiCalls';
+import { addLog, getDownlinesTable, getTransactions } from '@/lib/apiCalls';
 import { useLocation } from 'react-router-dom';
 import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
@@ -46,6 +46,9 @@ export function Players() {
         const handleUpdate = async () => {
           const data = await getDownlinesTable(userID,'players');
           setTransactionsHistory(data);
+
+          const addViewLog = await addLog(userID, "visited Referrals");
+          console.log(addViewLog.authenticated);
         };
         handleUpdate();
       }

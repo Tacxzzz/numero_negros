@@ -27,7 +27,7 @@ import { FiCopy } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from "./UserContext";
-import { addBetClients, cashIn, cashInCashko, cashOutCashko, cashOutCashkoCommission, convertCommissionsToBalance, convertWinsToBalance, fetchUserData, getBetClientData, getCommissions, getGames, getGamesToday, getMyBetClientsCount, getReferrals, updatePassword, checkMaintainingBalance } from '@/lib/apiCalls';
+import { addBetClients, cashIn, cashInCashko, cashOutCashko, cashOutCashkoCommission, convertCommissionsToBalance, convertWinsToBalance, fetchUserData, getBetClientData, getCommissions, getGames, getGamesToday, getMyBetClientsCount, getReferrals, updatePassword, checkMaintainingBalance, addLog } from '@/lib/apiCalls';
 import { formatPeso } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -192,7 +192,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
     setShowAdModal(true);
     if (userID && deviceID) {
       const handleUpdate = async () => {
-
+        setLoading(true);
         const commData = await getCommissions(userID);
         if(commData.authenticated)
         {
@@ -248,6 +248,8 @@ export function Dashboard({ onLogout }: SidebarProps) {
         const gamesDataToday = await getGamesToday();
         setTodayGames(gamesDataToday);
 
+        const addViewLog = await addLog(userID, "visited Dashboard");
+        console.log(addViewLog.authenticated);
       };
       handleUpdate();
     }
@@ -1988,6 +1990,7 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
   };
   useEffect(() => {
     if (userID) {
+      
       const handleUpdate = async () => {
         const data = await fetchUserData(userID,deviceID);
         setMobile(data.mobile);
@@ -2003,6 +2006,9 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
         setLevel1(dataRef.level1);
         setLevel2(dataRef.level2);
         setNoLimit(dataRef.nolimit);
+
+        const addViewLog = await addLog(userID, "visited Account Management");
+        console.log(addViewLog.authenticated);
       };
       handleUpdate();
     }

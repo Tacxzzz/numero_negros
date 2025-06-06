@@ -27,7 +27,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { useUser } from "./UserContext";
-import { getGameByID, getMyBets } from '@/lib/apiCalls';
+import { addLog, getGameByID, getMyBets } from '@/lib/apiCalls';
 import { formatPeso, getTransCode } from '@/lib/utils';
 import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
@@ -47,6 +47,9 @@ export function MyBetsPage() {
   
         const gameBetData = await getMyBets(userID);
         setBetsHistory(gameBetData);
+
+        const addViewLog = await addLog(userID, "visited My Bets");
+        console.log(addViewLog.authenticated);
         };
         handleUpdate();
     }, [userID]);

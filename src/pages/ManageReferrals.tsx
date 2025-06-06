@@ -26,7 +26,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { useUser } from "./UserContext";
-import { getGameByID, getMyBets, countBetsEarnedTeam, getRateChartDataTeam, totalBalancePlayersTeam, totalCashinTeam, totalCashOutTeam, totalClientsTeam, totalCommissionsTeam, totalPlayersTeam, totalWinsTeam, fetchUserData, fetchUserDataDyna} from '@/lib/apiCalls';
+import { getGameByID, getMyBets, countBetsEarnedTeam, getRateChartDataTeam, totalBalancePlayersTeam, totalCashinTeam, totalCashOutTeam, totalClientsTeam, totalCommissionsTeam, totalPlayersTeam, totalWinsTeam, fetchUserData, fetchUserDataDyna, addLog} from '@/lib/apiCalls';
 import { formatPeso, getTransCode } from '@/lib/utils';
 
 import useBrowserCheck from '@/components/WebBrowserChecker';
@@ -155,6 +155,10 @@ export function ManageReferrals() {
   
             const data8= await totalCashOutTeam(userID,startDate,endDate);
             setTotalCashouts(data8.count);
+
+            const addViewLog = await addLog(userID, "visited Referrals Dashboard");
+            console.log(addViewLog.authenticated);
+
             setLoading(false);
           
         };

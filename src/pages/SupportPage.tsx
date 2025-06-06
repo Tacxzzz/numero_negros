@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -38,6 +38,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import pdfFile from '../files/PisoPlay Manual - Tagalog.pdf';
 import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
+import { useUser } from './UserContext';
+import { addLog } from '@/lib/apiCalls';
 
 export function SupportPage() {
   const navigate = useNavigate();
@@ -46,6 +48,18 @@ export function SupportPage() {
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [activeTab, setActiveTab] = useState('faq');
+  const { setUserID,userID,deviceID } = useUser();
+    
+  useEffect(() => {
+          if (userID) {
+            const handleUpdate = async () => {
+              const addViewLog = await addLog(userID, "visited Support");
+              console.log(addViewLog.authenticated);
+            };
+            handleUpdate();
+          }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, []);
   
   // Mock data for support tickets
   const supportTickets = [

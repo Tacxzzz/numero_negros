@@ -1749,3 +1749,29 @@ export const getBetByID = async (
     return [];
   }
 };
+
+export const addLog = async (
+  userID: string, activity: string 
+) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/addLog`, { userID, activity},{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
+
+    if (response.data && response.data.authenticated) {
+      const userData = response.data;
+      return {
+        authenticated: userData.authenticated
+      };
+    } else { 
+      console.warn("User data is empty or invalid.");
+      return { authenticated: false };
+    }
+    
+  } catch (error) {
+    console.error("Failed to send remittance:", error);
+    return {  authenticated: false };
+  }
+};

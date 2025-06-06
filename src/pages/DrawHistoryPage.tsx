@@ -25,15 +25,17 @@ import {
 } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { getDrawsResults } from '@/lib/apiCalls';
+import { addLog, getDrawsResults } from '@/lib/apiCalls';
 import { getTransCode } from '@/lib/utils';
 import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
+import { useUser } from './UserContext';
 
 
 export function DrawHistoryPage() {
   const navigate = useNavigate();
   const [filter, setFilter] = useState('all');
+  const { setUserID,userID,deviceID } = useUser();
   const [searchQuery, setSearchQuery] = useState('');
   const [dateRange, setDateRange] = useState('all');
   const [transactionsHistory, setTransactionsHistory] = useState<any[]>([]);
@@ -43,6 +45,9 @@ export function DrawHistoryPage() {
 
       const gameBetData = await getDrawsResults();
       setTransactionsHistory(gameBetData);
+
+      const addViewLog = await addLog(userID, "visited Draws History");
+      console.log(addViewLog.authenticated);
       };
       handleUpdate();
   }, []);

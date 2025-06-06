@@ -6,9 +6,10 @@ import { ShareModal } from "@/components/ShareModal";
 import { SendModal } from "@/components/SendModal";
 import { useLocation } from 'react-router-dom';
 import { useNavigate, Link } from 'react-router-dom';
-import { getBetByID } from "@/lib/apiCalls";
+import { addLog, getBetByID } from "@/lib/apiCalls";
 import { formatPeso, getTransCode } from "@/lib/utils";
 import Barcode from 'react-barcode';
+import { useUser } from "./UserContext";
 
 // Import html2canvas and jsPDF dynamically to avoid SSR issues
 let html2canvas: any = null;
@@ -26,12 +27,16 @@ const TicketReceipt: React.FC = () => {
   const [capturedImage, setCapturedImage] = React.useState<string | null>(null);
   const [isClient, setIsClient] = React.useState(false);
   const [ticketData, setTicketData] = useState<any[]>([]);
+  const { setUserID,userID,deviceID } = useUser();
 
     useEffect(() => {
         const handleUpdate = async () => {
           const gameBetData = await getBetByID(betID);
           console.log(gameBetData);
           setTicketData(gameBetData);
+
+          const addViewLog = await addLog(userID, "visited Bet Receipt");
+          console.log(addViewLog.authenticated);
           };
           handleUpdate();
       }, [betID]);

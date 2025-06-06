@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { getBetsEarnedTeamTable, getCashinsTableByUser, getDownlinesTable, getTransactions, totalCashinTeamTable } from '@/lib/apiCalls';
+import { addLog, getBetsEarnedTeamTable, getCashinsTableByUser, getDownlinesTable, getTransactions, totalCashinTeamTable } from '@/lib/apiCalls';
 import { useLocation } from 'react-router-dom';
 import { formatPeso, getTransCode } from '@/lib/utils';
 import useBrowserCheck from '@/components/WebBrowserChecker';
@@ -47,6 +47,9 @@ export function PlayerCashin() {
         const handleUpdate = async () => {
           const data = await getCashinsTableByUser(userID);
           setTransactionsHistory(data);
+
+          const addViewLog = await addLog(userID, "visited Referral Cashins");
+          console.log(addViewLog.authenticated);
         };
         handleUpdate();
       }

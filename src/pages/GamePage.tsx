@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import { useUser } from "./UserContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { confirmBet, fetchUserData, getBetClientData, getDrawByID, getDrawsByID, getGameByID, getGameTypeByID, getGameTypes, readMyFavorite, saveFavorite } from '@/lib/apiCalls';
+import { addLog, confirmBet, fetchUserData, getBetClientData, getDrawByID, getDrawsByID, getGameByID, getGameTypeByID, getGameTypes, readMyFavorite, saveFavorite } from '@/lib/apiCalls';
 import CountdownTimer from './CountdownTimer';
 import { checkBettingTime, formatPeso } from '@/lib/utils';
 import { useClient } from "./ClientContext";
@@ -160,6 +160,9 @@ export function GamePage() {
             navigate(`/game-history/${gameId}`);
             return;
           }
+
+          const addViewLog = await addLog(userID, "is currently playing " + data[0].name);
+          console.log(addViewLog.authenticated);
 
           setLoading(false);
           
