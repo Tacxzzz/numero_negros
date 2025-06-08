@@ -49,6 +49,7 @@ export function Players() {
   useEffect(() => {
       if (userID) {
         fetchTransactionsHistory();
+        handleAddViewLog();
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -57,6 +58,10 @@ export function Players() {
     setSelectedEmployee(employee);
     setIsAdjustCommissionModalOpen(true);
   };
+
+  const handleAddViewLog = async () => {
+    const addViewLog = await addLog(userID, "visited Referrals");
+  }
 
   const fetchTransactionsHistory = async () => {
     if (!userID) return;
