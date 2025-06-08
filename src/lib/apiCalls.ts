@@ -1775,3 +1775,30 @@ export const addLog = async (
     return {  authenticated: false };
   }
 };
+
+export const adjustEmployeeCommission = async (
+  userID: string, amount: string 
+) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/adjustEmployeeCommission`, { userID, amount},{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
+
+    if (response.data && response.data.authenticated) {
+      const userData = response.data;
+      return {
+        authenticated: userData.authenticated,
+        error: userData.error
+      };
+    } else { 
+      console.warn("User data is empty or invalid.");
+      return { authenticated: false };
+    }
+    
+  } catch (error) {
+    console.error("Failed to send remittance:", error);
+    return {  authenticated: false };
+  }
+};
