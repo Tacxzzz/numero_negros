@@ -25,36 +25,75 @@ import {
 } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { addLog, getDownlinesTable, getTransactions } from '@/lib/apiCalls';
+import { addLog, adjustEmployeeCommission, getDownlinesTable, getTransactions } from '@/lib/apiCalls';
 import { useLocation } from 'react-router-dom';
 import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
+import { Dialog, DialogTitle } from '@radix-ui/react-dialog';
+import { DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog';
 
 export function Players() {
   const location = useLocation();
   const navigate = useNavigate();
   const userID = location.state?.userID;
+  const [updating, setUpdating] = useState(false);
   console.log(userID);
   const [filter, setFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [dateRange, setDateRange] = useState('all');
   const [transactionsHistory, setTransactionsHistory] = useState<any[]>([]);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [isAdjustCommissionModalOpen, setIsAdjustCommissionModalOpen] = useState(false);
   
   // Mock data for bets history
   useEffect(() => {
       if (userID) {
-        const handleUpdate = async () => {
-          const data = await getDownlinesTable(userID,'players');
-          setTransactionsHistory(data);
-
-          const addViewLog = await addLog(userID, "visited Referrals");
-          console.log(addViewLog.authenticated);
-        };
-        handleUpdate();
+        fetchTransactionsHistory();
+        handleAddViewLog();
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
   
+  const handleEditComissionClick = (employee) => {
+    setSelectedEmployee(employee);
+    setIsAdjustCommissionModalOpen(true);
+  };
+
+  const handleAddViewLog = async () => {
+    const addViewLog = await addLog(userID, "visited Referrals");
+  }
+
+  const fetchTransactionsHistory = async () => {
+    if (!userID) return;
+    const data = await getDownlinesTable(userID, 'players');
+    setTransactionsHistory(data);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSelectedEmployee((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleAdjustCommission = async (e: React.FormEvent) => { 
+  e.preventDefault();
+    setUpdating(true);
+
+    const adjustCommission = await adjustEmployeeCommission(selectedEmployee.id, selectedEmployee.amount);
+    const isAuthenticated = adjustCommission.authenticated;
+
+    setUpdating(false);
+    setIsAdjustCommissionModalOpen(false);
+
+    if (!isAuthenticated) {
+      alert(adjustCommission.error);
+      return;
+    }
+
+    alert("Adjusted Commission successfully.");
+
+    fetchTransactionsHistory();
+ };
+
   // Filter bets based on status
   const filterBetsByStatus = (bets: any[]) => {
     if (!Array.isArray(bets) || bets.length === 0) {
@@ -266,6 +305,7 @@ export function Players() {
                     <TableHead className="text-center">Allowed Access to bets</TableHead>
                     <TableHead className="text-center">Allowed Access to Dashboard (allowed all)</TableHead>
                     <TableHead className="text-center">Status</TableHead>
+                    <TableHead className="text-center">Adjust Commission (If Employee)</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -380,6 +420,17 @@ export function Players() {
                           {bet.status === 'pending' ? 'Active' : bet.status === 'blocked' ? 'Blocked' : 'Pending'}
                         </Badge>
                       </TableCell>
+                      <TableCell className="text-center">
+                        {bet.under_employer === 'yes' ? 
+                          (<>
+                          <Button 
+                              className="bg-blue-500 hover:bg-blue-600"
+                              onClick={() => handleEditComissionClick(bet)}
+                            >
+                              Adjust Commission
+                            </Button>
+                          </>) : 'Not Employee'}
+                      </TableCell>
                       {/* <TableCell>
                         <Button 
                           variant="ghost" 
@@ -399,6 +450,71 @@ export function Players() {
           
         </Tabs>
       </main>
+
+      {/* Adjust Commission Dialog */}
+        {isAdjustCommissionModalOpen && (
+          <Dialog open={isAdjustCommissionModalOpen} onOpenChange={setIsAdjustCommissionModalOpen}>
+            <DialogContent className="bg-gray-50 border-[#34495e] max-h-[90vh] w-96 overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle className="text-xl text-blue-600">Adjust {selectedEmployee.mobile} Commission</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-3">
+                <form onSubmit={handleAdjustCommission}>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                Max Bet Commission: {selectedEmployee.bet_commission_percent}% <br></br>
+                Current Bet Commission: {selectedEmployee.bet_commission_percent - selectedEmployee.employer_commission_share}% <br></br>
+                Your Shared Commission: {selectedEmployee.employer_commission_share === '' ? 0 : selectedEmployee.employer_commission_share}% <br></br>
+                <Input
+                  type="number"
+                  name="amount"
+                  value={selectedEmployee?.amount || ""}
+                  onChange={handleChange}
+                  required
+                  min="0"
+                  max={selectedEmployee.bet_commission_percent}
+                  className="border p-1 mt-2 w-full"
+                  placeholder="Enter commission percentage"
+                  style={{ appearance: 'textfield' }}
+                />
+                  <style>{`
+                            input[type=number]::-webkit-outer-spin-button,
+                            input[type=number]::-webkit-inner-spin-button {
+                            -webkit-appearance: none;
+                            margin: 0;
+                            }
+                            input[type=number] {
+                            -moz-appearance: textfield;
+                            }
+                            `}
+                  </style> 
+              </label>
+                  <DialogFooter className="flex flex-col gap-2 sm:flex-row">
+                    {!updating ? (
+                      <Button
+                        variant="outline"
+                        className="w-full sm:w-auto bg-blue-500 border-blue-500 text-black-600 hover:bg-blue-500/20 hover:text-blue-700"
+                        type="submit"
+                      >
+                        Adjust Commission
+                      </Button>
+                    ) : (
+                      <>Updating....</>
+                    )}
+                    <Button
+                      variant="outline"
+                      className="w-full sm:w-auto border-red-500 text-red-600 hover:bg-red-900/20"
+                      onClick={() => setIsAdjustCommissionModalOpen(false)}
+                      type="button"
+                    >
+                      Cancel
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
+
     </div>
   );
 }
