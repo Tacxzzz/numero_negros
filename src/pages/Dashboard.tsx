@@ -135,6 +135,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showAdModal, setShowAdModal] = useState(false);
+  const [showAdModal2, setShowAdModal2] = useState(false);
   const [newClient, setNewClient] = useState({
     full_name: "",
     bank: "",
@@ -190,6 +191,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
 
   useEffect(() => {
     setShowAdModal(true);
+    setShowAdModal2(true);
     if (userID && deviceID) {
       const handleUpdate = async () => {
         setLoading(true);
@@ -269,7 +271,10 @@ export function Dashboard({ onLogout }: SidebarProps) {
     // setTawkWidgetVisible(true);
   };
 
-  
+  const handleCloseAdModal2 = () => {
+    setShowAdModal2(false);
+    // setTawkWidgetVisible(true);
+  };
 
   const handleCashIn = () => {
     setShowCashInDialog(false);
@@ -720,6 +725,23 @@ const handleSubmit = async (e) => {
         }
         imageUrl={AdvertisementImage}// Replace with your ad image URL
         youtubeUrl="https://www.youtube.com/shorts/lTGTs5M4geE"
+        zIndex={1001}
+      />
+      <AdvertisementModal
+        isOpen={showAdModal2}
+        onClose={handleCloseAdModal2}
+        title="Magandang Balita!"
+        // description="Sa Isang Pindot, Isang Bente ₱20. Isang Libo kada Kita Araw-Araw!"
+        description={
+          <>
+            <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded shadow-md">
+              <h2 className="text-lg font-bold mb-2">📢 Anunsyo sa Lahat ng Mananaya!</h2>
+              <p>Simula <span className="font-semibold">June 23</span>, puwede na kayong tumaya ng kahit <span className="font-bold text-blue-600">isang piso lang</span>!</p>
+            </div>
+          </>
+        }
+        imageUrl=''// Replace with your ad image URL
+        zIndex={1000}
       />
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
