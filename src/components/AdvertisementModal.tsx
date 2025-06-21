@@ -9,6 +9,7 @@ interface AdvertisementModalProps {
   title: string;
   description: React.ReactNode;
   imageUrl: string;
+  zIndex: number;
   youtubeUrl?: string; // Optional prop for YouTube video
 }
 
@@ -48,14 +49,15 @@ const AdvertisementModal: React.FC<AdvertisementModalProps> = ({
   title, 
   description, 
   imageUrl,
-  youtubeUrl 
+  youtubeUrl,
+  zIndex
 }) => {
   if (!isOpen) return null;
   
   const embedUrl = youtubeUrl ? getYouTubeEmbedUrl(youtubeUrl) : '';
 
   return (
-<div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" style={{ zIndex: 9999 }}>
+<div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" style={{ zIndex: zIndex }}>
   <div className="
     bg-white 
     shadow-lg 
@@ -100,11 +102,13 @@ const AdvertisementModal: React.FC<AdvertisementModalProps> = ({
             style={{ minHeight: 350, minWidth: 320 }}
           ></iframe>
         </div>
-      ) : (
+      ) : imageUrl !== '' ? (
         <a href={AdvertisementImageContent} target="_blank" rel="noopener noreferrer">
           <img src={imageUrl || AdvertisementImage} alt="Advertisement Link" className="max-w-full max-h-[70vh] object-contain rounded-md" />
         </a>
-      )}
+      ) :
+        description
+      }
     </div>
     <h2 className="text-lg font-bold mb-2" style={{ display: 'none' }}>{title}</h2>
     <p className="text-sm text-gray-600 mb-4" style={{ display: 'none' }}>{description}</p>
