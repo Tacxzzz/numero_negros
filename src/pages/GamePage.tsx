@@ -613,7 +613,7 @@ const hasAllDistinctScores = (scores: string[]) => {
                         )} 
                         <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg">
                               <Label htmlFor="multiplier" className="text-[#002a6e] font-medium block mb-2">
-                                Bet Multiplier
+                                Bet Amount
                               </Label>
                               <input
                                 type="number"
