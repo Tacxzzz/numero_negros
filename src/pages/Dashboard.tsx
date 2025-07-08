@@ -734,9 +734,9 @@ const handleSubmit = async (e) => {
         // description="Sa Isang Pindot, Isang Bente ₱20. Isang Libo kada Kita Araw-Araw!"
         description={
           <>
-            <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded shadow-md">
+            <div className="bg-gray-100 border-l-4 border-blue-500 text-black p-4 rounded shadow-md">
               <h2 className="text-lg font-bold mb-2">📢 Anunsyo sa Lahat ng Mananaya!</h2>
-              <p>Simula <span className="font-semibold">June 23</span>, puwede na kayong tumaya ng kahit <span className="font-bold text-blue-600">isang piso lang</span>!</p>
+              <p>Ang <strong className='text-green-800'>MAYA</strong> ay pansamantalang <strong>hindi available para sa cash in</strong>. Maaari ninyong gamitin ang <strong className='text-blue-800'>QRPH</strong> o <strong className='text-blue-800'>GCASH</strong> bilang alternatibong paraan. Salamat sa inyong pang-unawa!</p>
             </div>
           </>
         }
