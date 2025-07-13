@@ -88,8 +88,8 @@ export function CreatePage() {
     e.preventDefault();
     setError("");
   
-    if (!otp || otp.length !== 8) {
-      setError("Please enter a valid 8-digit OTP.");
+    if (!otp || otp.length !== 4) {
+      setError("Please enter a valid 4-digit OTP.");
       return;
     }
   
@@ -261,11 +261,11 @@ export function CreatePage() {
                   <Input
                     id="otp"
                     type="text"
-                    placeholder="12345678"
+                    placeholder="1234"
                     value={otp}
-                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 8))}
-                    maxLength={8}
-                    pattern="\d{8}"
+                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                    maxLength={4}
+                    pattern="\d{4}"
                     className="rounded-xl text-center tracking-widest text-xl"
                     required
                   />

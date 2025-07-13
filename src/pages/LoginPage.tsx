@@ -354,9 +354,9 @@ export function LoginPage() {
                 type="text"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
-                maxLength={8}
-                pattern="[0-9]{8}"
-                placeholder="Enter 8-digit OTP"
+                maxLength={4}
+                pattern="[0-9]{4}"
+                placeholder="Enter 4-digit OTP"
                 required
               />
               <Button  disabled={isLoading} type="submit" className="w-full custom-signup-button">
@@ -385,9 +385,9 @@ export function LoginPage() {
                 type="text"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
-                maxLength={8}
-                pattern="[0-9]{8}"
-                placeholder="Enter 8-digit OTP"
+                maxLength={4}
+                pattern="[0-9]{4}"
+                placeholder="Enter 4-digit OTP"
                 className="flex-1 h-14 bg-gray-200 border-0 rounded-none text-lg"
                 required
               />
