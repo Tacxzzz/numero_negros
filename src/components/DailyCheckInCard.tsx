@@ -87,8 +87,7 @@ export const DailyCheckInCard: React.FC<DailyCheckInCardProps> = ({
   const [canClaimToday, setCanClaimToday] = useState(false);
   const [claimedDays, setClaimedDays] = useState(0);
   const [totalCoins, setTotalCoins] = useState(0);
-  const [todayIndex, setTodayIndex] = useState(0);
-  const [claimedMap, setClaimedMap] = useState<Record<number, "claimed" | "skipped" | "available" | "unavailable">>({});
+  const [claimedMap, setClaimedMap] = useState<Record<number, boolean>>({});
 
   useEffect(() => {
     if (userID) {
@@ -105,50 +104,28 @@ export const DailyCheckInCard: React.FC<DailyCheckInCardProps> = ({
         let total = 0;
         let claimedToday = false;
 
-        const newClaimedMap: Record<number, "claimed" | "skipped" | "available" | "unavailable"> = {};
+        const newClaimedMap: Record<number, boolean> = {};
 
         dailyRewardsData.forEach((entry, index) => {
-        const isClaimed = entry.reward?.claimed === "yes";
-        const isToday = entry.reward?.date === todayDateStr;
-        
-        const entryDate = new Date(entry.date);
-        const today = new Date(todayDateStr);
-
-        // Remove time component for clean comparison
-        entryDate.setHours(0, 0, 0, 0);
-        today.setHours(0, 0, 0, 0);
-
-        const isLessThanToday = entryDate < today;
-
-        // Only add reward if claimed and reward config exists
+        const isClaimed = entry.claimed === "yes" || entry.claimed === "yes_last";
+        const isToday = entry.date === todayDateStr;
+        console.log(index);
         if (isClaimed) {
           total += REWARDS[index]?.reward ?? 0;
         }
 
-        // Track if today's reward was already claimed
         if (isToday && !isClaimed) {
           claimedToday = true;
         }
 
-        if (isLessThanToday) {
-          newClaimedMap[index + 1] = isClaimed ? "claimed" : "skipped";
-        }
-
-        if (isToday) {
-          newClaimedMap[index + 1] = isClaimed ? "claimed" : "available";
-          setTodayIndex(index + 1);
-        }
-        
-        if (!isToday && !isLessThanToday) {
-          newClaimedMap[index + 1] = "unavailable";
-        }
+        newClaimedMap[index + 1] = isClaimed;
       });
 
         setClaimedMap(newClaimedMap);
-        console.log(newClaimedMap);
-        setClaimedDays(Object.values(newClaimedMap).filter(val => val === "claimed").length);
+        setClaimedDays(Object.values(newClaimedMap).filter(Boolean).length);
         setCanClaimToday(claimedToday);
         setTotalCoins(total);
+        console.log(Object.values(newClaimedMap).length);
       };
 
       handleUpdate();
@@ -157,7 +134,15 @@ export const DailyCheckInCard: React.FC<DailyCheckInCardProps> = ({
 
   const handleClaim = async (reward: string) => {
     console.log(reward);
-    const claimRewardData = await claimDailyReward(userID, reward);
+    let claimInput = "";
+
+    if (Object.values(claimedMap).length === 7) {
+      claimInput = "yes_last";
+    } else {
+      claimInput = "yes";
+    }
+
+    const claimRewardData = await claimDailyReward(userID, reward, claimInput);
     if (claimRewardData.authenticated) {
       alert("Reward claimed successfully!");
       window.location.reload(); // Refresh to update the state
@@ -167,9 +152,9 @@ export const DailyCheckInCard: React.FC<DailyCheckInCardProps> = ({
   };
 
   const latestReward = REWARDS.find(
-    (r) => todayIndex === r.day && claimedMap[r.day] === "available"
+    (r) => claimedDays + 1 === r.day && !claimedMap[r.day]
   );
-  const latestRewardClaimed = !latestReward || claimedMap[latestReward.day] === "claimed";
+  const latestRewardClaimed = !latestReward || claimedMap[latestReward.day];
   const isToday = canClaimToday && !latestRewardClaimed;
 
   return (
@@ -203,17 +188,15 @@ export const DailyCheckInCard: React.FC<DailyCheckInCardProps> = ({
         style={{ WebkitOverflowScrolling: "touch" }}
       >
         {REWARDS.map((r) => {
-          const status = claimedMap[r.day];
-          const isToday = canClaimToday && status === "available" && todayIndex === r.day;
+          const claimed = claimedMap[r.day] ?? false;
+          const isToday = canClaimToday && !claimed && claimedDays + 1 === r.day;
 
           return (
             <div
               key={r.day}
               className={`flex flex-col items-center flex-shrink-0 p-1 rounded-none border-2 transition-all duration-200
                 ${
-                  status === "claimed"
-                    ? "bg-gradient-to-br from-gray-100 to-gray-200 border-green-300 text-gray-400 shadow-inner"
-                    : status === "skipped"
+                  claimed
                     ? "bg-gradient-to-br from-gray-100 to-gray-200 border-gray-300 text-gray-400 shadow-inner"
                     : isToday
                     ? "bg-gradient-to-br from-blue-200 via-blue-100 to-blue-50 border-blue-400 text-blue-900 shadow-lg scale-105"
@@ -242,23 +225,27 @@ export const DailyCheckInCard: React.FC<DailyCheckInCardProps> = ({
 
       <div className="claim-button-container text-center ">
         <button
-          disabled={!canClaimToday}
+          disabled={latestRewardClaimed || !isToday}
           className={`px-3 py-1.5 rounded-lg text-xs lg:text-base font-bold transition-all duration-150 shadow
             ${
-              !canClaimToday
+              latestRewardClaimed
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-lg"
+                : isToday
+                ? "bg-gradient-to-r from-blue-400 to-blue-500 text-white hover:from-blue-500 hover:to-blue-600 shadow-lg"
+                : "bg-blue-50 text-blue-300"
             }
             ${claimButtonClassName}
           `}
           style={claimButtonStyle}
           onClick={() =>
-            canClaimToday
+            isToday && latestReward
               ? handleClaim(latestReward.reward.toString())
               : undefined
           }
         >
-          {canClaimToday
+          {latestRewardClaimed
+            ? "Claimed"
+            : isToday
             ? (
               <span className="flex items-center">
                 <CoinIcon size={16} className="mr-1" />
