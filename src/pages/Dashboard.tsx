@@ -49,6 +49,7 @@ import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 import ScatterViewCard from "@/components/ScatterViewCard";
 import ScatterCover from '../files/bet88_cover.jpg';
 import PisoGameViewCard from '@/components/PisoGameViewCard';
+import QRCodeComponent from '@/components/QRCodeComponent';
 
 // Tawk.to configuration
 const TAWK_SRC = "https://embed.tawk.to/67f4c61c846b7b190fd1ea14/1ioa2bnq9";
@@ -1956,6 +1957,11 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
   const referralLink = `${currentURL}/create-account?data=${encodedParams}`;
   const employerReferralLink = `${currentURL}/create-account?data=${employerEncodedParams}`;
 
+  const [isNestedModalOpen, setIsNestedModalOpen] = useState(false);
+  const [isEmployer, setIsEmployer] = useState(false);
+
+  const openNestedModal = () => setIsNestedModalOpen(true);
+  const closeNestedModal = () => setIsNestedModalOpen(false);
 
   const [passFormData, setPassFormData] = useState({
     password: "",
@@ -2065,7 +2071,23 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   
 };
 
+const handleShare = () => {
+  const canvas = document.querySelector('canvas');
+  if (!canvas || !navigator.canShare) return;
 
+  const dataUrl = canvas.toDataURL();
+  fetch(dataUrl)
+    .then(res => res.blob())
+    .then(blob => {
+      const file = new File([blob], 'qrcode.png', { type: 'image/png' });
+      if (navigator.canShare({ files: [file] })) {
+        navigator.share({
+          title: 'QR Code',
+          files: [file],
+        });
+      }
+    });
+};
   
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -2137,6 +2159,12 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                       </button>
                     </div>
                 </div>
+                <Button onClick={() => {
+                  openNestedModal();
+                  setIsEmployer(false);
+                }} className="w-full bg-blue-600 text-white">
+                  Share QR
+                </Button>
                 {employer === 'yes' && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Employee Referral Link</label>
@@ -2149,9 +2177,15 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                         <FiCopy />
                       </button>
                     </div>
+                    <Button onClick={() => {
+                      openNestedModal();
+                      setIsEmployer(true);
+                    }} className="w-full bg-blue-600 text-white mt-2">
+                      Share QR
+                    </Button>
                   </div>
                 )}
-                
+
                 {refLevel === 'level2' ? (
                   <>
                     <div>
@@ -2245,6 +2279,31 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         </div>
       </div>
       
+      {isNestedModalOpen && (
+        <div className="fixed inset-0 bg-black/60 z-60 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h2 className="text-lg font-bold">QR Code</h2>
+              <button onClick={closeNestedModal} className="text-gray-500 hover:text-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+                  strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div className="p-4 space-y-4">
+              <div className="flex justify-center items-center">
+                <QRCodeComponent value={isEmployer ? employerReferralLink : referralLink} />
+              </div>
+              <Button onClick={handleShare} className="bg-blue-600 text-white w-full">
+                Share
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
