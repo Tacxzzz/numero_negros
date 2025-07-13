@@ -1701,10 +1701,10 @@ export const setDailyRewards = async (userID: string) => {
 
 
 export const claimDailyReward = async (
-  userID: string, reward: string 
+  userID: string, reward: string, input: string
 ) => {
   try {
-    const response = await axios.post(`${API_URL}/main/claimDailyReward`, { userID, reward},{
+    const response = await axios.post(`${API_URL}/main/claimDailyReward`, { userID, reward, input},{
         headers: {
           Authorization: `Bearer ${API_KEY}`,
         }
