@@ -757,8 +757,10 @@ const handleSubmit = async (e) => {
         description={
           <>
             <div className="bg-gray-100 border-l-4 border-blue-500 text-black p-4 rounded shadow-md">
-              <h2 className="text-lg font-bold mb-2">📢 Anunsyo sa Lahat ng Mananaya!</h2>
-              <p>Ang <strong className='text-green-800'>MAYA</strong> ay pansamantalang <strong>hindi available para sa cash in</strong>. Maaari ninyong gamitin ang <strong className='text-blue-800'>QRPH</strong> o <strong className='text-blue-800'>GCASH</strong> bilang alternatibong paraan. Salamat sa inyong pang-unawa!</p>
+              <h2 className="text-lg font-bold mb-2">📢 Anunsyo para sa Lahat ng Betting Agents!</h2>
+              <p>
+                Walang puhunan? Walang problema! Maaari ka nang <strong className="text-blue-800">mag-save ng taya</strong> at <strong className="text-green-800">magbayad kapag may pondo na</strong>.
+              </p>
             </div>
           </>
         }
