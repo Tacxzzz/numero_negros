@@ -6,7 +6,7 @@ import { ShareModal } from "@/components/ShareModal";
 import { SendModal } from "@/components/SendModal";
 import { useLocation } from 'react-router-dom';
 import { useNavigate, Link } from 'react-router-dom';
-import { addLog, getBetByID } from "@/lib/apiCalls";
+import { addLog, getBetByID, getSavedBetByID } from "@/lib/apiCalls";
 import { formatPeso, getTransCode } from "@/lib/utils";
 import Barcode from 'react-barcode';
 import { useUser } from "./UserContext";
@@ -21,6 +21,7 @@ const TicketReceipt: React.FC = () => {
   const location = useLocation();
   const betID = location.state?.betID;
   const fromPage = location.state?.from;
+  const isSavedBet = location.state?.isSavedBet;
   const ticketRef = useRef<HTMLDivElement>(null);
   const [shareModalOpen, setShareModalOpen] = React.useState(false);
   const [sendModalOpen, setSendModalOpen] = React.useState(false);
@@ -31,9 +32,16 @@ const TicketReceipt: React.FC = () => {
 
     useEffect(() => {
         const handleUpdate = async () => {
-          const gameBetData = await getBetByID(betID);
-          console.log(gameBetData);
-          setTicketData(gameBetData);
+          if (!isSavedBet) {
+            const gameBetData = await getBetByID(betID);
+            console.log(gameBetData);
+            setTicketData(gameBetData);
+          }
+          else {
+            const gameBetData = await getSavedBetByID(betID);
+            console.log(gameBetData);
+            setTicketData(gameBetData);
+          }
 
           const addViewLog = await addLog(userID, "visited Bet Receipt");
           console.log(addViewLog.authenticated);

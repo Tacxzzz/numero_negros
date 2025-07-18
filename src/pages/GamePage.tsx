@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import { useUser } from "./UserContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { addLog, confirmBet, fetchUserData, getBetClientData, getDrawByID, getDrawsByID, getGameByID, getGameTypeByID, getGameTypes, readMyFavorite, saveFavorite } from '@/lib/apiCalls';
+import { addLog, confirmBet, fetchUserData, getBetClientData, getDrawByID, getDrawsByID, getGameByID, getGameTypeByID, getGameTypes, readMyFavorite, saveBet, saveFavorite } from '@/lib/apiCalls';
 import CountdownTimer from './CountdownTimer';
 import { checkBettingTime, formatPeso } from '@/lib/utils';
 import { useClient } from "./ClientContext";
@@ -282,7 +282,7 @@ export function GamePage() {
         setScores(Array.from({ length: digits }, () => ""));
         setLoading(false);
 
-        navigate('/ticketreceipt', { state: { betID: data.bet_id, from: 'Game' } })
+        navigate('/ticketreceipt', { state: { betID: data.bet_id, from: 'Game', isSavedBet: false } });
       }
       else
       {
@@ -300,6 +300,49 @@ export function GamePage() {
         
       }
     };
+
+    const handleBetSave= async () => {
+      setPlayModalOpen(false);
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("draw_id", drawId);
+      formData.append("multiplier", multiplier.toString());
+      formData.append('userID', userID);
+      formData.append('clientID', clientId || "");  
+      formData.append('game_type', gameType);
+      formData.append('bets', scores.filter((score) => score !== "").join("-"));
+      formData.append('jackpot', gameTypeData[0].jackpot);
+
+      console.log(multiplier.toString());
+      console.log(gameTypeData[0].jackpot);
+
+      const data = await saveBet(formData);
+      
+      if(data.authenticated)
+      {
+        alert(data.message);
+        setScores(Array.from({ length: digits }, () => ""));
+        setLoading(false);
+
+        navigate('/ticketreceipt', { state: { betID: data.bet_id, from: 'Game', isSavedBet: true } })
+      }
+      else
+      {
+        alert(data.message);
+        if(data.back)
+        {
+          navigate(`/game-history/${gameId}`);
+        }
+        else
+        {
+
+          setScores(Array.from({ length: digits }, () => ""));
+          setLoading(false);
+        }
+        
+      }
+    };
+
     // Check if there are exactly 2 matching values in scores
 const hasTwoMatchingScores = (scores: string[]) => {
   const countMap: { [key: string]: number } = {};
@@ -630,6 +673,13 @@ const hasAllDistinctScores = (scores: string[]) => {
                     onClick={handleBetConfirm}
                     >
                     CONFIRM BET
+                  </Button>
+                  <Button 
+                    className="w-full bg-gradient-to-r from-green-500 to-emerald-700 hover:from-green-600 hover:to-green-800 text-white rounded-full py-6 text-lg font-bold mt-4"
+                    disabled={balance < gameTypeData[0]?.bet || betAllow === false}
+                    onClick={handleBetSave}
+                  >
+                    SAVE BET
                   </Button>
                 </div>
                 <DialogFooter>

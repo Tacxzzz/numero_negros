@@ -27,7 +27,7 @@ import { FiCopy } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from "./UserContext";
-import { addBetClients, cashIn, cashInCashko, cashOutCashko, cashOutCashkoCommission, convertCommissionsToBalance, convertWinsToBalance, fetchUserData, getBetClientData, getCommissions, getGames, getGamesToday, getMyBetClientsCount, getReferrals, updatePassword, checkMaintainingBalance, addLog } from '@/lib/apiCalls';
+import { addBetClients, cashIn, cashInCashko, cashOutCashko, cashOutCashkoCommission, convertCommissionsToBalance, convertWinsToBalance, fetchUserData, getBetClientData, getCommissions, getGames, getGamesToday, getMyBetClientsCount, getReferrals, updatePassword, checkMaintainingBalance, addLog, getMySavedBetsCount } from '@/lib/apiCalls';
 import { formatPeso } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -119,6 +119,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const [status,setStatus] = useState("");
   const [agent,setAgent] = useState("");
   const [clients,setClients] = useState(0);
+  const [savedBetsCount,setSavedBetsCount] = useState(0);
   const [showAccountModal, setShowAccountModal] = useState(false);
   // const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showCashInDialog, setShowCashInDialog] = useState(false);
@@ -142,6 +143,8 @@ export function Dashboard({ onLogout }: SidebarProps) {
     bank: "",
     account: "",
   });
+
+  const [totalSavedBets, setTotalSavedBets] = useState(0);
 
   const [channel, setChannel] = useState("GCASH_NATIVE");
 
@@ -226,9 +229,8 @@ export function Dashboard({ onLogout }: SidebarProps) {
         setNoLimitPercent(data.nolimit_percent);
         setLoading(false);
 
-        
-        
-
+        const totalSavedBets= await getMySavedBetsCount(userID);
+        setSavedBetsCount(totalSavedBets.count);
 
         if(clientId)
         {
@@ -316,6 +318,9 @@ export function Dashboard({ onLogout }: SidebarProps) {
     setLevel2Percent(data.level_two_percent);
     setNoLimitPercent(data.nolimit_percent);
     setShowAccountModal(false);
+
+    const totalSavedBets= await getMySavedBetsCount(userID);
+        setSavedBetsCount(totalSavedBets.count);
   };
 
   const cashInSubmit =  async () => {
@@ -355,6 +360,10 @@ export function Dashboard({ onLogout }: SidebarProps) {
     setLevel1Percent(data.level_one_percent);
         setLevel2Percent(data.level_two_percent);
         setNoLimitPercent(data.nolimit_percent);
+
+        const totalSavedBets= await getMySavedBetsCount(userID);
+        setSavedBetsCount(totalSavedBets.count);
+
     setLoading(false);
 
     
@@ -457,6 +466,9 @@ const handleSubmit = async (e) => {
         setLevel2Percent(data.level_two_percent);
         setNoLimitPercent(data.nolimit_percent);
 
+        const totalSavedBets= await getMySavedBetsCount(userID);
+        setSavedBetsCount(totalSavedBets.count);
+
       if(clientId)
       {
         const clientData = await getBetClientData(clientId);
@@ -516,6 +528,9 @@ const handleSubmit = async (e) => {
         setLevel2Percent(data.level_two_percent);
         setNoLimitPercent(data.nolimit_percent);
 
+        const totalSavedBets= await getMySavedBetsCount(userID);
+        setSavedBetsCount(totalSavedBets.count);
+
       if(clientId)
       {
         const clientData = await getBetClientData(clientId);
@@ -573,6 +588,9 @@ const handleSubmit = async (e) => {
         setLevel2Percent(data.level_two_percent);
         setNoLimitPercent(data.nolimit_percent);
 
+        const totalSavedBets= await getMySavedBetsCount(userID);
+        setSavedBetsCount(totalSavedBets.count);
+
       if(clientId)
       {
         const clientData = await getBetClientData(clientId);
@@ -629,6 +647,9 @@ const handleSubmit = async (e) => {
       setLevel1Percent(data.level_one_percent);
         setLevel2Percent(data.level_two_percent);
         setNoLimitPercent(data.nolimit_percent);
+
+        const totalSavedBets= await getMySavedBetsCount(userID);
+        setSavedBetsCount(totalSavedBets.count);
 
       if(clientId)
       {
@@ -1130,18 +1151,31 @@ const handleSubmit = async (e) => {
                   </div>
 
                 </div>
-              <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
-                <div>
-                  <p className="text-gray-500 text-sm">Betting Clients</p>
-                  <p className="text-2xl font-bold text-gray-800">{clients}</p>
-                  
+                <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
+                  <div>
+                    <p className="text-gray-500 text-sm">Betting Clients</p>
+                    <p className="text-2xl font-bold text-gray-800">{clients}</p>
+                    
+                  </div>
+                  <Button
+                  onClick={() => {
+                    navigate('/betclients');
+                  }} 
+                  className="bg-green-500 hover:bg-green-600"  >Manage</Button>
                 </div>
-                <Button
-                onClick={() => {
-                  navigate('/betclients');
-                }} 
-                className="bg-green-500 hover:bg-green-600"  >Manage</Button>
-              </div>
+                {agent === 'yes' && (
+                  <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
+                    <div>
+                      <p className="text-gray-500 text-sm">Saved Bets</p>
+                      <p className="text-2xl font-bold text-gray-800">{savedBetsCount}</p>
+                    </div>
+                    <Button
+                    onClick={() => {
+                      navigate('/savedbets');
+                    }} 
+                    className="bg-green-500 hover:bg-green-600"  >Manage</Button>
+                  </div>
+                )}
               </div>
               {clientId && (
                 <>

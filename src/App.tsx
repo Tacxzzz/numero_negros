@@ -25,6 +25,7 @@ const AllowReferrer = lazy(() => import("./pages/AllowReferrer").then(module => 
 const Players = lazy(() => import("./pages/Players").then(module => ({ default: module.Players })));
 const PlayerBets = lazy(() => import("./pages/PlayerBets").then(module => ({ default: module.PlayerBets })));
 const PlayerTotalBets = lazy(() => import("./pages/PlayerTotalBets").then(module => ({ default: module.PlayerTotalBets })));
+const SavedBets = lazy(() => import("./pages/SavedBets").then(module => ({ default: module.SavedBets })));
 
 const PlayerWins = lazy(() => import("./pages/PlayerWins").then(module => ({ default: module.PlayerWins })));
 const PlayerBalances = lazy(() => import("./pages/PlayerBalances").then(module => ({ default: module.PlayerBalances })));
@@ -72,6 +73,7 @@ function App() {
               <Route path="/transactions" element={<MyTransactionsPage />} />
               <Route path="/drawhistory" element={<DrawHistoryPage />} />
               <Route path="/betclients" element={<BetClientsPage />} />
+              <Route path="/savedbets" element={<SavedBets />} />
               <Route path="/pisoplaysguide" element={<PisoPlaysGuide />} />
               <Route path="/manageTeam" element={<ManageReferrals />} />
               <Route path="/allowReferrer" element={<AllowReferrer />} />
