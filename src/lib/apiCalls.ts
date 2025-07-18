@@ -632,7 +632,38 @@ export const confirmBet = async (
   }
 };
 
+export const saveBet = async (
+  formData: FormData,
+) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/main/saveBet`,
+      formData,
+      { headers: { "Content-Type": "application/json",
+        Authorization: `Bearer ${API_KEY}`,
+       } }
+    );
 
+    if (response.data) {
+      console.log(response.data)
+      const userData = response.data;
+      return {
+        authenticated: userData.authenticated,
+        bet_id: userData.bet_id,
+        message: userData.message,
+        back: userData.back,
+      };
+
+    } else {
+      console.warn("User data is empty or invalid.");
+      return { authenticated: false, message: "no response on the api",back:true };
+    }
+    
+  } catch (error) {
+    console.error("Failed to send remittance:", error);
+    return { authenticated: false, message: "no response on the api",back:true };
+  }
+};
 
 export const getBetsByUserAndDraw = async (game_id: string, userID: string) => {
   try {
@@ -672,6 +703,71 @@ export const getMyBets = async (userID: string) => {
   }
 };
 
+export const getMySavedBets = async (userID: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getMySavedBets`, {userID },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
+
+      console.log(response.data);
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch game types:", error);
+    return [];
+  }
+};
+
+export const confirmSavedBets = async (userID: string, selectedBets: any[]) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/main/confirmSavedBets`,
+      {
+        userID,
+        bets: selectedBets
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        },
+      }
+    );
+    
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to confirm saved bets:", error);
+    throw error;
+  }
+};
+
+export const deleteSavedBets = async (userID: string, selectedBets: any[]) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/main/deleteSavedBets`,
+      {
+        userID,
+        bets: selectedBets
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        },
+      }
+    );
+    
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to confirm saved bets:", error);
+    throw error;
+  }
+};
 
 export const getDrawsResults = async () => {
   try {
@@ -1750,6 +1846,29 @@ export const getBetByID = async (
   }
 };
 
+export const getSavedBetByID = async (
+  betID: string
+) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getSavedBetByID`, { betID},{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
+
+    if (Array.isArray(response.data)) {
+      console.log(response.data);
+      
+    } else if (response.data.error) {
+      return [];
+    }
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch recipients:", error);
+    return [];
+  }
+};
+
 export const addLog = async (
   userID: string, activity: string 
 ) => {
@@ -1800,5 +1919,32 @@ export const adjustEmployeeCommission = async (
   } catch (error) {
     console.error("Failed to send remittance:", error);
     return {  authenticated: false };
+  }
+};
+
+export const getMySavedBetsCount = async (userID:string) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getMySavedBetsCount`, { userID: userID},{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
+    
+    if (response.data) 
+      {
+      const userData = response.data;
+      console.log(response);
+      return {
+        count: userData.count,
+      };
+    } 
+    else 
+    {
+      console.warn("User data is empty or invalid.");
+      return { count: '-' };
+    }
+  } catch (error) {
+    console.error("Failed to fetch games:", error);
+    return { count: '-' };
   }
 };
