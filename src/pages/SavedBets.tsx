@@ -36,6 +36,15 @@ export function SavedBets() {
   const [loading, setLoading] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [actionType, setActionType] = useState<"delete" | "confirm" | null>(null);
+  const [selectedDrawDateTimes, setSelectedDrawDateTimes] = useState<string[]>([]);
+  
+  const uniqueDrawDateTimes = [
+    ...new Set(
+        savedBets
+        .filter((b) => !b.response || b.response.trim() === "")
+        .map((b) => `${b.draw_date} ${b.draw_time}`)
+    ),
+    ];
 
   const handleAction = (type: "delete" | "confirm") => {
     setActionType(type);
@@ -209,12 +218,56 @@ export function SavedBets() {
             }}
             className="border border-gray-300 rounded px-3 py-2 w-full max-w-xs"
           />
-          <button
-            onClick={toggleSelectAll}
-            className="ml-4 text-sm text-blue-600 hover:underline"
-          >
-            {filteredBets.every((b) => selectedIds.includes(b.id)) ? "Unselect All" : "Select All"}
-          </button>
+        </div>
+
+        <div className="mb-4">
+        <p className="font-medium mb-2">Select by Draw Date & Time:</p>
+        <div className="flex flex-wrap gap-3">
+        {uniqueDrawDateTimes.map((dt) => {
+            // Calculate the total bet amount for this date-time
+            const totalAmount = filteredBets
+            .filter(
+                (b) =>
+                `${b.draw_date} ${b.draw_time}` === dt &&
+                (!b.response || b.response.trim() === "")
+            )
+            .reduce((sum, b) => sum + Number(b.bet || 0), 0);
+
+            return (
+            <label key={dt} className="flex items-center space-x-2">
+                <input
+                type="checkbox"
+                checked={selectedDrawDateTimes.includes(dt)}
+                onChange={() => {
+                    const isSelected = selectedDrawDateTimes.includes(dt);
+                    const newSelected = isSelected
+                    ? selectedDrawDateTimes.filter((d) => d !== dt)
+                    : [...selectedDrawDateTimes, dt];
+
+                    setSelectedDrawDateTimes(newSelected);
+
+                    const relatedIds = filteredBets
+                    .filter(
+                        (b) =>
+                        `${b.draw_date} ${b.draw_time}` === dt &&
+                        (!b.response || b.response.trim() === "")
+                    )
+                    .map((b) => b.id);
+
+                    setSelectedIds((prevSelected) =>
+                    isSelected
+                        ? prevSelected.filter((id) => !relatedIds.includes(id))
+                        : Array.from(new Set([...prevSelected, ...relatedIds]))
+                    );
+                }}
+                />
+                <span className="text-sm text-gray-700">
+                {dt} <span className="text-green-600 font-semibold">₱{totalAmount.toFixed(2)}</span>
+                </span>
+            </label>
+            );
+        })}
+        </div>
         </div>
 
         {/* Bets List */}
@@ -222,9 +275,6 @@ export function SavedBets() {
           <p className="text-gray-500 text-center mt-10">No saved bets found.</p>
         ) : (
           <div className="grid gap-4">
-            <div className="mt-6 text-right text-lg font-semibold text-blue-700">
-            Total Bet Amount: ₱{totalBetAmount.toFixed(2)}
-            </div>
             {paginatedBets.map((bet) => (
               <div
                 key={bet.id}
@@ -232,6 +282,7 @@ export function SavedBets() {
               >
                 <input
                   type="checkbox"
+                  disabled
                   checked={selectedIds.includes(bet.id)}
                   onChange={() => toggleSelection(bet.id)}
                   className="mt-1"
@@ -332,13 +383,6 @@ export function SavedBets() {
         {/* Actions */}
       {filteredBets.length > 0 && (
         <div className="flex justify-end gap-3 mt-6">
-          <button
-            onClick={() => handleAction("delete")}
-            disabled={selectedIds.length === 0}
-            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded disabled:opacity-50"
-          >
-            Delete Selected
-          </button>
           <button
             onClick={() => handleAction("confirm")}
             disabled={selectedIds.length === 0}
