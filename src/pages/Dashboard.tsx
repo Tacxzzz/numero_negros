@@ -1165,7 +1165,7 @@ const handleSubmit = async (e) => {
                   }} 
                   className="bg-green-500 hover:bg-green-600"  >Manage</Button>
                 </div>
-                {agent === 'not available' && (
+                {agent === 'yes' && (
                   <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
                     <div>
                       <p className="text-gray-500 text-sm">Saved Bets</p>

@@ -641,7 +641,7 @@ const hasAllDistinctScores = (scores: string[]) => {
                         </p>
                         </DialogTitle>
                       </DialogHeader>
-                      <div className="space-y-4 my-2">
+                      <div className="space-y-4 my-0">
                         <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg">
                           <Label htmlFor="bet" className="text-[#002a6e] font-medium block mb-2">
                             Your Current Balance : {formatPeso(balance)}
@@ -671,27 +671,30 @@ const hasAllDistinctScores = (scores: string[]) => {
                               />
                 </div>
                   <Button 
-                    className="w-full bg-gradient-to-r from-[#348df3cf] to-[#002a6e] hover:from-pink-600 hover:to-orange-600 text-white rounded-full py-6 text-lg font-bold"
+                    className="w-full bg-gradient-to-r from-[#348df3cf] to-[#002a6e] hover:from-pink-600 hover:to-orange-600 text-white rounded-full py-4 text-sm font-bold"
                     disabled={balance < gameTypeData[0]?.bet || betAllow===false}
                     onClick={handleBetConfirm}
                     >
                     CONFIRM BET
                   </Button>
-                  {agent === "not available" && (
-                    <Button 
-                    className="w-full bg-gradient-to-r from-green-500 to-emerald-700 hover:from-green-600 hover:to-green-800 text-white rounded-full py-6 text-lg font-bold mt-4"
+                  {agent === "yes" && (
+                  <>
+                  <Button 
+                    className="w-full bg-gradient-to-r from-green-500 to-emerald-700 hover:from-green-600 hover:to-green-800 text-white rounded-full py-4 text-sm font-bold"
                     disabled={balance < gameTypeData[0]?.bet || betAllow === false}
                     onClick={handleBetSave}
                   >
                     SAVE BET
                   </Button>
+                  <h5 className='text-xxs text-white'>*Note that you can't edit or delete it once you save a bet</h5>
+                  </>
                   )}
                 </div>
                 <DialogFooter>
                   <Button 
                       onClick={() => setPlayModalOpen(false)}
                       variant="outline"
-                      className="w-full border-[#348df3cf] text-[#002a6e] rounded-full"
+                      className="w-full border-[#348df3cf] text-[#002a6e] rounded-full py-4"
                       >
                       Back
                   </Button>
