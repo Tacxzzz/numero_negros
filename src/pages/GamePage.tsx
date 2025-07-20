@@ -677,7 +677,7 @@ const hasAllDistinctScores = (scores: string[]) => {
                     >
                     CONFIRM BET
                   </Button>
-                  {agent === "yes" && (
+                  {agent === "not available" && (
                     <Button 
                     className="w-full bg-gradient-to-r from-green-500 to-emerald-700 hover:from-green-600 hover:to-green-800 text-white rounded-full py-6 text-lg font-bold mt-4"
                     disabled={balance < gameTypeData[0]?.bet || betAllow === false}
