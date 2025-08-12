@@ -686,6 +686,24 @@ const handleSubmit = async (e) => {
     }
   }
 
+  const handleMaintaingBalanceConvert = async (e, sourceType: 'winnings' | 'commission') =>{
+    e.preventDefault();
+
+    const data = await checkMaintainingBalance(userID);
+
+    if (!data.authenticated || !data.proceed)
+    {
+      alert(data.message);
+      return;
+    }
+
+    if (sourceType == "winnings"){ 
+      setShowWinConvertDialog(true);
+    } else {
+      setShowComConvertDialog(true);
+    }
+  }
+
   const isMessengerWebview = useBrowserCheck();
     
   if (isMessengerWebview) {
@@ -1053,8 +1071,8 @@ const handleSubmit = async (e) => {
             <div className="flex flex-col gap-2">
               <Button className="bg-green-500 hover:bg-green-600" 
               disabled={!winnings || winnings < 50} 
-              onClick={() => {
-                setShowWinConvertDialog(true);
+              onClick={(e) => {
+                handleMaintaingBalanceConvert(e, "winnings");
                 setWinningsConvert(winnings); // Add your second function here
               }}
               >Convert</Button>
@@ -1101,8 +1119,8 @@ const handleSubmit = async (e) => {
     <div className="flex flex-col gap-2">
     <Button className="bg-green-500 hover:bg-green-600" 
     disabled={!commissions || commissions < 50} 
-    onClick={() => {
-      setShowComConvertDialog(true);
+    onClick={(e) => {
+      handleMaintaingBalanceConvert(e, "commission");
       setCommissionsConvert(commissions); // Add your second function here
     }}
     >Convert</Button>
