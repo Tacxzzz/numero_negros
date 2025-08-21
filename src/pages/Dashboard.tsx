@@ -1324,8 +1324,7 @@ const handleSubmit = async (e) => {
                               <br/><br/>
                               <div className="flex flex-wrap gap-2">
                                   {[
-                                    channel === "GCASH_NATIVE" ? 100 : 50,
-                                    100, 200, 300, 500, 1000, 2000, 3000, 5000,
+                                    channel === "GCASH_NATIVE" ? 200 : 200, 300, 500, 1000, 2000, 3000, 5000,
                                   ]
                                     .filter((v, i, arr) => arr.indexOf(v) === i) // remove duplicates
                                     .map((value) => (
