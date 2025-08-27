@@ -101,6 +101,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
   //console.log(userID);
   //console.log("playing as : "+clientId);
   const [balance, setBalance] = useState(0);
+  const [freeCredits, setFreeCredits] = useState(0);
   const [winnings, setWinnings] = useState(0);
   const [winningsConvert, setWinningsConvert] = useState(0);
   const [quota, setQuota] = useState(0);
@@ -213,6 +214,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
         const data = await fetchUserData(userID,deviceID);
         console.log(data);
         setBalance(data.balance);
+        setFreeCredits(data.free_credits);
         setWinnings(data.wins);
         setCommissions(data.commissions);
         setQuota(data.quota);
@@ -303,6 +305,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
 
     const data = await fetchUserData(userID,deviceID);
     setBalance(data.balance);
+    setFreeCredits(data.free_credits);
     setWinnings(data.wins);
     setCommissions(data.commissions);
     setQuota(data.quota);
@@ -346,6 +349,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
 
     const data = await fetchUserData(userID,deviceID);
     setBalance(data.balance);
+    setFreeCredits(data.free_credits);
     setWinnings(data.wins);
     setCommissions(data.commissions);
     setQuota(data.quota);
@@ -451,6 +455,7 @@ const handleSubmit = async (e) => {
 
       const data = await fetchUserData(userID,deviceID);
       setBalance(data.balance);
+      setFreeCredits(data.free_credits);
       setWinnings(data.wins);
       setCommissions(data.commissions);
       setQuota(data.quota);
@@ -513,6 +518,7 @@ const handleSubmit = async (e) => {
 
       const data = await fetchUserData(userID,deviceID);
       setBalance(data.balance);
+      setFreeCredits(data.free_credits);
       setWinnings(data.wins);
       setCommissions(data.commissions);
       setQuota(data.quota);
@@ -573,6 +579,7 @@ const handleSubmit = async (e) => {
 
       const data = await fetchUserData(userID,deviceID);
       setBalance(data.balance);
+      setFreeCredits(data.free_credits);
       setWinnings(data.wins);
       setCommissions(data.commissions);
       setQuota(data.quota);
@@ -633,6 +640,7 @@ const handleSubmit = async (e) => {
 
       const data = await fetchUserData(userID,deviceID);
       setBalance(data.balance);
+      setFreeCredits(data.free_credits);
       setWinnings(data.wins);
       setCommissions(data.commissions);
       setQuota(data.quota);
@@ -1065,6 +1073,13 @@ const handleSubmit = async (e) => {
 
           <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
             <div>
+              <p className="text-gray-500 text-sm">Free Credits</p>
+              <p className="text-2xl font-bold text-gray-800">{formatPeso(freeCredits)}</p>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
+            <div>
               <p className="text-gray-500 text-sm">Your Winnings</p>
               <p className="text-2xl font-bold text-gray-800">{formatPeso(winnings)}</p>
             </div>
@@ -1080,12 +1095,9 @@ const handleSubmit = async (e) => {
               disabled={!winnings || winnings < 108} 
               onClick={(e) => handleMaintaingBalance(e, "winnings")}>Cash Out</Button>
             </div>
-            
           </div>
-        </div>
-          <br/>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-  {/* Box 1 */}
+
+          {/* Box 1 */}
   {quotaAllow==="no" && (
   <div className="bg-white rounded-xl shadow p-4 flex flex-col justify-between">
     <div>
@@ -1138,7 +1150,11 @@ const handleSubmit = async (e) => {
 
    
   </div>
-</div>
+        </div>
+          <br/>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  
+          </div>
                 <br/>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">

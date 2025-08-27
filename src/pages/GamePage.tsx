@@ -24,7 +24,8 @@ export function GamePage() {
   console.log(userID);
   const { gameId, gameType, drawId } = useParams();
   const [balance, setBalance] = useState(10);
-
+  const [freeCredits, setFreeCredits] = useState(10);
+  const [selectedSource, setSelectedSource] = useState("");
 
   const [lengthStart, setLengthStart] = useState(0);
   const [lengthChoice, setLengthChoice] = useState(0); 
@@ -123,7 +124,15 @@ export function GamePage() {
         const handleUpdate = async () => {
           const userData = await fetchUserData(userID,deviceID);
           setBalance(userData.balance);
+          setFreeCredits(userData.free_credits);
           setAgent(userData.agent)
+
+          if (freeCredits > balance) {
+            setSelectedSource("freeCredits");
+          } else {
+            setSelectedSource("balance");
+          } 
+
           const dataFave = await readMyFavorite(userID,gameId);
           if(dataFave.authenticated)
           {
@@ -277,6 +286,13 @@ export function GamePage() {
       formData.append('game_type', gameType);
       formData.append('bets', scores.filter((score) => score !== "").join("-"));
       formData.append('jackpot', gameTypeData[0].jackpot);
+
+      if (selectedSource == 'freeCredits') {
+        formData.append('free_credit', 'yes')
+      } else {
+        formData.append('free_credit', 'no')
+      }
+
       const data = await confirmBet(formData);
       
       if(data.authenticated)
@@ -646,6 +662,37 @@ const hasAllDistinctScores = (scores: string[]) => {
                           <Label htmlFor="bet" className="text-[#002a6e] font-medium block mb-2">
                             Your Current Balance : {formatPeso(balance)}
                           </Label>
+                          <Label htmlFor="bet" className="text-[#002a6e] font-medium block mb-2">
+                            Your Free Credit : {formatPeso(freeCredits)}
+                          </Label>
+
+                          <div className="mt-2 flex">
+                            {freeCredits > 0 && (
+                              <label className="flex items-center space-x-2 mr-2">
+                                <input
+                                  type="radio"
+                                  name="paymentSource"
+                                  value="freeCredits"
+                                  checked={selectedSource === "freeCredits"}
+                                  onChange={() => setSelectedSource("freeCredits")}
+                                />
+                                <span className="text-[#002a6e] text-xs font-medium">Use Free Credits</span>
+                              </label>
+                            )}
+
+                            {balance > 0 && (
+                              <label className="flex items-center space-x-2">
+                                <input
+                                  type="radio"
+                                  name="paymentSource"
+                                  value="balance"
+                                  checked={selectedSource === "balance"}
+                                  onChange={() => setSelectedSource("balance")}
+                                />
+                                <span className="text-[#002a6e] text-xs font-medium">Use Balance</span>
+                              </label>
+                            )}
+                          </div>
                         </div>
 
                         {clientId && (
