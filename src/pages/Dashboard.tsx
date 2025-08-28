@@ -1379,7 +1379,6 @@ const handleSubmit = async (e) => {
                                 </option>
                                 <option value="GCASH_NATIVE">GCASH</option>
                                 <option value="QRPH_SCAN">QRPH</option>
-                                <option value="MAYA_NATIVE">MAYA</option>
                                 {/* Add more options as needed */}
                               </select>
                             </div>
