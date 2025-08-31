@@ -783,9 +783,20 @@ const handleSubmit = async (e) => {
         description={
           <>
             <div className="bg-gray-100 border-l-4 border-blue-500 text-black p-4 rounded shadow-md">
-              <h2 className="text-lg font-bold mb-2">📢 Anunsyo para sa Lahat ng Betting Agents!</h2>
-              <p>
-                Walang puhunan? Walang problema! Maaari ka nang <strong className="text-blue-800">mag-save ng taya</strong> at <strong className="text-green-800">magbayad kapag may pondo na</strong>.
+              <h2 className="text-lg font-bold mb-2">📢 Anunsyo para sa Lahat ng Mananaya!</h2>
+              <p className="mb-2">
+                Kasalukuyang <span className="font-semibold">down</span> pa ang cash in. 
+              </p>
+              <p className="mb-2">
+                Ang aming team ay kasalukuyang gumagawa ng paraan upang maibalik ito sa normal 
+                sa lalong madaling panahon.
+              </p>
+              <p className="mb-2">
+                Pansamantala, maaari pa rin kayong makapaglaro gamit ang inyong available na 
+                balanse. Mangyaring maghintay at mag-abang ng update mula sa amin.
+              </p>
+              <p className="font-semibold text-blue-600">
+                Salamat sa inyong pang-unawa at patuloy na pagtangkilik!
               </p>
             </div>
           </>
