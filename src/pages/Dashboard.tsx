@@ -782,21 +782,17 @@ const handleSubmit = async (e) => {
         // description="Sa Isang Pindot, Isang Bente ₱20. Isang Libo kada Kita Araw-Araw!"
         description={
           <>
-            <div className="bg-gray-100 border-l-4 border-blue-500 text-black p-4 rounded shadow-md">
+            <div className="bg-gray-100 border-l-4 border-green-500 text-black p-4 rounded shadow-md">
               <h2 className="text-lg font-bold mb-2">📢 Anunsyo para sa Lahat ng Mananaya!</h2>
               <p className="mb-2">
-                Kasalukuyang <span className="font-semibold">down</span> pa ang cash in. 
+                ✅ Ang <span className="font-semibold">GCash Cash In</span> ay balik na sa normal at stable na ulit.
               </p>
               <p className="mb-2">
-                Ang aming team ay kasalukuyang gumagawa ng paraan upang maibalik ito sa normal 
-                sa lalong madaling panahon.
+                ⚠️ Paalala: Ang <span className="font-semibold">QRPH</span> cash in ay nananatiling hindi pa available sa ngayon. 
+                Inaayos pa ito ng aming team.
               </p>
-              <p className="mb-2">
-                Pansamantala, maaari pa rin kayong makapaglaro gamit ang inyong available na 
-                balanse. Mangyaring maghintay at mag-abang ng update mula sa amin.
-              </p>
-              <p className="font-semibold text-blue-600">
-                Salamat sa inyong pang-unawa at patuloy na pagtangkilik!
+              <p className="font-semibold text-green-600">
+                Salamat sa inyong pagtitiyaga at patuloy na pagtangkilik!
               </p>
             </div>
           </>
