@@ -27,7 +27,7 @@ import { FiCopy } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from "./UserContext";
-import { addBetClients, cashIn, cashInCashko, cashOutCashko, cashOutCashkoCommission, convertCommissionsToBalance, convertWinsToBalance, fetchUserData, getBetClientData, getCommissions, getGames, getGamesToday, getMyBetClientsCount, getReferrals, updatePassword, checkMaintainingBalance, addLog, getMySavedBetsCount } from '@/lib/apiCalls';
+import { addBetClients, cashIn, cashInCashko, cashOutCashko, cashOutCashkoCommission, convertCommissionsToBalance, convertWinsToBalance, fetchUserData, getBetClientData, getCommissions, getGames, getGamesToday, getMyBetClientsCount, getReferrals, updatePassword, checkMaintainingBalance, addLog, getMySavedBetsCount, getMyBetClients } from '@/lib/apiCalls';
 import { formatPeso } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -95,7 +95,7 @@ interface SidebarProps {
 export function Dashboard({ onLogout }: SidebarProps) {
 
   const navigate = useNavigate();
-  const { setUserID,userID,deviceID  } = useUser();
+  const { setUserType,setUserID,userID,deviceID  } = useUser();
   const { clientId, setClientId } = useClient();
   const [clientFullName, setClientFullName] = useState("");
   //console.log(userID);
@@ -120,6 +120,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const [status,setStatus] = useState("");
   const [agent,setAgent] = useState("");
   const [clients,setClients] = useState(0);
+  const [clientsData,setClientsData] = useState<any[]>([]);
   const [savedBetsCount,setSavedBetsCount] = useState(0);
   const [showAccountModal, setShowAccountModal] = useState(false);
   // const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -128,6 +129,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const [showCashOutComDialog, setShowCashOutComDialog] = useState(false);
   const [showWinConvertDialog, setShowWinConvertDialog] = useState(false);
   const [showComConvertDialog, setShowComConvertDialog] = useState(false);
+  const [showClientsDialog, setShowClientsDialog] = useState(false);
 
   const [transLimit, setTransLimit] = useState(5000);
   const [commissionsCashout, setCommissionsCashout] = useState(0);
@@ -229,6 +231,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
         setLevel1Percent(data.level_one_percent);
         setLevel2Percent(data.level_two_percent);
         setNoLimitPercent(data.nolimit_percent);
+        setUserType(data.type);
         setLoading(false);
 
         const totalSavedBets= await getMySavedBetsCount(userID);
@@ -261,7 +264,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
       handleUpdate();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userID,deviceID ]);
+  }, [userID,deviceID,clientId ]);
 
   // const handleCashInClick = () => {
   //   setShowSuccessModal(true);
@@ -288,7 +291,6 @@ export function Dashboard({ onLogout }: SidebarProps) {
   const handleChangeClient = (e) => {
     setNewClient({ ...newClient, [e.target.name]: e.target.value });
   };
-
 
 
   const handleCloseModal = async () => {
@@ -320,6 +322,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
     setLevel1Percent(data.level_one_percent);
     setLevel2Percent(data.level_two_percent);
     setNoLimitPercent(data.nolimit_percent);
+    setUserType(data.type);
     setShowAccountModal(false);
 
     const totalSavedBets= await getMySavedBetsCount(userID);
@@ -364,6 +367,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
     setLevel1Percent(data.level_one_percent);
         setLevel2Percent(data.level_two_percent);
         setNoLimitPercent(data.nolimit_percent);
+        setUserType(data.type);
 
         const totalSavedBets= await getMySavedBetsCount(userID);
         setSavedBetsCount(totalSavedBets.count);
@@ -429,6 +433,23 @@ const removePlayer = () => {
   
 };
 
+const handleLogoClick = () => {
+  onLogout();
+  window.location.href = "https://bet88.ph";
+};
+
+const handleClientsClick = async () => {
+  const data = await getMyBetClients(userID);
+  setClientsData(data);
+  setShowClientsDialog(true);
+}
+
+const [searchTerm, setSearchTerm] = useState("");
+
+  // ✅ Filter clients by search term
+  const filteredClients = clientsData.filter((client) =>
+    client.full_name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
 const handleSubmit = async (e) => {
     e.preventDefault();
@@ -470,6 +491,7 @@ const handleSubmit = async (e) => {
       setLevel1Percent(data.level_one_percent);
         setLevel2Percent(data.level_two_percent);
         setNoLimitPercent(data.nolimit_percent);
+        setUserType(data.type);
 
         const totalSavedBets= await getMySavedBetsCount(userID);
         setSavedBetsCount(totalSavedBets.count);
@@ -533,6 +555,7 @@ const handleSubmit = async (e) => {
       setLevel1Percent(data.level_one_percent);
         setLevel2Percent(data.level_two_percent);
         setNoLimitPercent(data.nolimit_percent);
+        setUserType(data.type);
 
         const totalSavedBets= await getMySavedBetsCount(userID);
         setSavedBetsCount(totalSavedBets.count);
@@ -594,6 +617,7 @@ const handleSubmit = async (e) => {
       setLevel1Percent(data.level_one_percent);
         setLevel2Percent(data.level_two_percent);
         setNoLimitPercent(data.nolimit_percent);
+        setUserType(data.type);
 
         const totalSavedBets= await getMySavedBetsCount(userID);
         setSavedBetsCount(totalSavedBets.count);
@@ -655,6 +679,7 @@ const handleSubmit = async (e) => {
       setLevel1Percent(data.level_one_percent);
         setLevel2Percent(data.level_two_percent);
         setNoLimitPercent(data.nolimit_percent);
+        setUserType(data.type);
 
         const totalSavedBets= await getMySavedBetsCount(userID);
         setSavedBetsCount(totalSavedBets.count);
@@ -761,7 +786,7 @@ const handleSubmit = async (e) => {
   
   return (
   <>
-      <AdvertisementModal
+      {/* <AdvertisementModal
         isOpen={showAdModal}
         onClose={handleCloseAdModal}
         title="Magandang Balita!"
@@ -799,7 +824,7 @@ const handleSubmit = async (e) => {
         }
         imageUrl=''// Replace with your ad image URL
         zIndex={1000}
-      />
+      /> */}
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
       <header className="bg-white shadow-sm sticky top-0 z-10">
@@ -907,7 +932,7 @@ const handleSubmit = async (e) => {
             </div> */}
         <div className="flex flex-col items-center justify-center mb-auto sm:flex-row">
           <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg">
+          <div onClick={handleLogoClick}  className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg">
             <img src={PisoPlayLogo} alt="PisoPlay Logo" width="44" height="44" />
           </div>
           </div>
@@ -927,7 +952,6 @@ const handleSubmit = async (e) => {
             <Link to="/my-bets" className="text-gray-600 hover:text-gray-900">My Bets</Link>
             <Link to="/drawhistory" className="text-gray-600 hover:text-gray-900">Draws</Link>
             <Link to="/support" className="text-gray-600 hover:text-gray-900">Support</Link>
-            <Link to="/pisoplaysguide" className="text-gray-600 hover:text-gray-900">Help Guide</Link>
                       {/* <a
             href="https://tawk.to/chat/67ec009ce808511907a28002/1inou4plh"
             className="text-gray-600 hover:text-gray-900"
@@ -1011,14 +1035,6 @@ const handleSubmit = async (e) => {
                   </svg>
                   <span>Support</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/pisoplaysguide')}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <path d="M12 17h.01"></path>
-                  <path d="M12 13a3 3 0 1 0-3-3"></path>
-                  </svg>
-                  <span>Help Guide</span>
-                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="cursor-pointer text-red-500">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
@@ -1068,7 +1084,6 @@ const handleSubmit = async (e) => {
             <AutoScrollWinnersCarousel />
           </TabsContent>
         </Tabs>
-        <DailyCheckInCard className=" mb-4"/>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
             <div>
@@ -1076,13 +1091,6 @@ const handleSubmit = async (e) => {
               <p className="text-2xl font-bold text-gray-800">{formatPeso(balance)}</p>
             </div>
             <Button className="bg-green-500 hover:bg-green-600" onClick={() => setShowCashInDialog(true)}>Cash In</Button>
-          </div>
-
-          <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
-            <div>
-              <p className="text-gray-500 text-sm">Free Credits</p>
-              <p className="text-2xl font-bold text-gray-800">{formatPeso(freeCredits)}</p>
-            </div>
           </div>
 
           <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
@@ -1157,14 +1165,8 @@ const handleSubmit = async (e) => {
 
    
   </div>
-        </div>
-          <br/>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-  
-          </div>
-                <br/>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
+
+  <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
                   <div>
                     
                       <p className="text-gray-500 text-sm">Referrals</p>
@@ -1194,18 +1196,39 @@ const handleSubmit = async (e) => {
                   </div>
 
                 </div>
+        </div>
+          <br/>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  
+          </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
                 <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
                   <div>
                     <p className="text-gray-500 text-sm">Betting Clients</p>
                     <p className="text-2xl font-bold text-gray-800">{clients}</p>
-                    
                   </div>
-                  <Button
-                  onClick={() => {
-                    navigate('/betclients');
-                  }} 
-                  className="bg-green-500 hover:bg-green-600"  >Manage</Button>
+
+                  {/* ✅ Wrap buttons in flex container */}
+                  <div className="flex flex-col gap-2">
+                    <Button
+                      onClick={() => handleClientsClick()}
+                      className="bg-green-500 hover:bg-green-600"
+                    >
+                      Clients
+                    </Button>
+
+                    <Button
+                      onClick={() => {
+                        navigate("/betclients");
+                      }}
+                      className="bg-green-500 hover:bg-green-600"
+                    >
+                      Manage
+                    </Button>
+                  </div>
                 </div>
+
                 {agent === 'yes' && (
                   <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
                     <div>
@@ -1241,28 +1264,7 @@ const handleSubmit = async (e) => {
             
         </div>
 
-        
-        {/* Live Streams */}
-        <section className="mb-8"><br/>
-          {/* <h2 className="text-xl font-bold mb-4 text-gray-800">Live Now</h2> */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Left column: Carousel */}
-            <div>
-              <DashboardCarousel slides={carouselSlides} />
-            </div>
-              <PisoGameViewCard
-                title="Piso Game"
-                url="https://pisogame.com/R/VI6KxuLZb"
-                height="300px"
-              />
-              <ScatterViewCard 
-              url='https://bet88.ph?ref=394386129b81'
-              img={ScatterCover}
-              title="BET88" 
-              height="200px"            />
-              {/* <DailyCheckInCard /> */}
-          </div>
-        </section>
+        <br/>
         
         {/* Games Tabs */}
         <Tabs defaultValue="today" className="mb-20">
@@ -1347,7 +1349,7 @@ const handleSubmit = async (e) => {
                               <br/><br/>
                               <div className="flex flex-wrap gap-2">
                                   {[
-                                    channel === "GCASH_NATIVE" ? 200 : 200, 300, 500, 1000, 2000, 3000, 5000,
+                                    channel === "GCASH_NATIVE" ? 100 : 200, 300, 500, 1000, 2000, 3000, 5000,
                                   ]
                                     .filter((v, i, arr) => arr.indexOf(v) === i) // remove duplicates
                                     .map((value) => (
@@ -1386,6 +1388,7 @@ const handleSubmit = async (e) => {
                                 </option>
                                 <option value="GCASH_NATIVE">GCASH</option>
                                 <option value="QRPH_SCAN">QRPH</option>
+                                {/* <option value="MAYA_NATIVE">MAYA</option> */}
                                 {/* Add more options as needed */}
                               </select>
                             </div>
@@ -1396,7 +1399,7 @@ const handleSubmit = async (e) => {
                               disabled={
                                 !cashInAmount || 
                                 !termsAccepted || 
-                                (channel === "GCASH_NATIVE" ? cashInAmount < 100 : cashInAmount < 50)
+                                (channel === "GCASH_NATIVE" ? cashInAmount < 100 : cashInAmount < 200)
                               } 
                               type="button"
                               variant="outline" 
@@ -1865,6 +1868,56 @@ const handleSubmit = async (e) => {
                   </DialogContent>
                 </Dialog>
 
+                <Dialog open={showClientsDialog} onOpenChange={setShowClientsDialog}>
+                  <DialogContent className="bg-gray-200 border-[#34495e]">
+                    <DialogHeader>
+                      <DialogTitle className="text-xl text-blue-600">Choose a Client</DialogTitle>
+                    </DialogHeader>
+                    
+                    {/* Body */}
+
+                    <div className="p-2">
+                      <input
+                        type="text"
+                        placeholder="Search clients..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+
+                    <div className="max-h-64 overflow-y-auto space-y-3 p-2">
+                      {filteredClients.map((client) => (
+                        <div
+                          key={client.id}
+                          className="flex items-center justify-between bg-white rounded-lg p-2 shadow-sm"
+                        >
+                          <span className="text-gray-800 font-medium">{client.full_name}</span>
+                          <Button
+                            onClick={() => {
+                              setClientId(client.id);
+                              setShowClientsDialog(false);
+                            }}
+                            className="bg-green-500 hover:bg-green-600 text-white"
+                          >
+                            Choose
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+
+                    <DialogFooter className="flex flex-col gap-2 sm:flex-row">
+                      <Button 
+                        variant="outline" 
+                        onClick={() => setShowClientsDialog(false)}
+                        className="w-full sm:w-auto border-blue-500 text-blue-600 hover:bg-blue-900/20"
+                      >
+                        Cancel
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+
         
         {/* Quick Access */}
         {/* <section>
@@ -1950,14 +2003,6 @@ const handleSubmit = async (e) => {
               <path d="M12 13a3 3 0 1 0-3-3"></path>
               </svg>
               <span className="text-xs mt-1">Support</span>
-            </Link>
-            <Link to="/pisoplaysguide" className="flex flex-col items-center p-2 text-gray-500" onClick={() => navigate('/pisoplaysguide')}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-book-heart-icon lucide-book-heart">
-            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/>
-            <path d="M12 17h.01"></path>
-            <path d="M10 8a2 2 0 1 1 2 2c0 1-2 1.5-0 3"></path>
-            </svg>
-              <span className="text-xs mt-1">Help Guide</span>
             </Link>
           </div>
         </div>
@@ -2068,6 +2113,12 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
 
     if (newPassword !== conPassword) {
       setError("New passwords do not match.");
+      return;
+    }
+
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      setError("Password must be at least 8 characters long and include 1 uppercase letter, 1 number, and 1 special character.");
       return;
     }
 
@@ -2242,7 +2293,7 @@ const handleShare = () => {
                 </Button>
                 {employer === 'yes' && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Employee Referral Link</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Coordinator Referral Link</label>
                     <div className="flex items-center">
                       <Input defaultValue={employerReferralLink} disabled className="mr-2" />
                       <button 
@@ -2270,13 +2321,13 @@ const handleShare = () => {
                         
                       </div>
                     </div>
-                    <div>
+                    {/* <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred Lvl 2 ({level2Percent}% Rewards)</label>
                         <div className="flex items-center">
                           <Input readOnly value={level2} disabled className="mr-2" />
                           
                         </div>
-                    </div>
+                    </div> */}
                   </>
                 ) : (
                   <>

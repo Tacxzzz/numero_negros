@@ -4,6 +4,8 @@ import FingerprintJS from '@fingerprintjs/fingerprintjs';
 interface UserContextType {
   userID: string | null;
   setUserID: (id: string | null) => void;
+  userType: string | null;              
+  setUserType: (type: string | null) => void; 
   deviceID: string | null;
 }
 
@@ -12,6 +14,10 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [userID, setUserID] = useState<string | null>(() => {
     return localStorage.getItem("identifier");
+  });
+
+  const [userType, setUserType] = useState<string | null>(() => {
+    return localStorage.getItem("userType");
   });
 
   const [deviceID, setDeviceID] = useState<string | null>(null);
@@ -40,10 +46,18 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [userID]);
 
+  useEffect(() => {
+    if (userType) {
+      localStorage.setItem("userType", userType);
+    } else {
+      localStorage.removeItem("userType");
+    }
+  }, [userType]);
+
   if (!deviceID) return null; // Optional: Display loading or fallback content until deviceID is ready
 
   return (
-    <UserContext.Provider value={{ userID, setUserID, deviceID }}>
+    <UserContext.Provider value={{ userID, setUserID, userType, setUserType, deviceID }}>
       {children}
     </UserContext.Provider>
   );

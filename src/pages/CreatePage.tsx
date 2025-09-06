@@ -65,6 +65,12 @@ export function CreatePage() {
       return;
     }
 
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setError("Password must be at least 8 characters long and include 1 uppercase letter, 1 number, and 1 special character.");
+      return;
+    }
+
     setIsLoading(true);
 
     const formData = new FormData();
@@ -118,9 +124,9 @@ export function CreatePage() {
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Top promotional banner */}
-        <div className="w-full bg-blue-500 text-white text-center py-4 px-6 rounded-xl mb-5">
+        {/* <div className="w-full bg-blue-500 text-white text-center py-4 px-6 rounded-xl mb-5">
           <h2 className="text-xl font-bold">Sign Up and Get your free ₱15 credits</h2>
-        </div>
+        </div> */}
         {/* Logo */}
         <div className="flex justify-center">
         <img src={PisoPlayLogo} alt="PisoPlay Logo" width="100" height="100" />
@@ -138,8 +144,8 @@ export function CreatePage() {
         {/* <div className="bg-white rounded-3xl shadow-xl overflow-hidden"> */}
           <div className="p-8">
             <h2 className="text-2xl font-bold text-center mb-4 text-blue-600 uppercase">Create an Account</h2>
-            {decodedMobile !== '' && <p className="text-red-500 text-sm text-center mt-2">This link is from an Employer : {decodedMobile}, 
-              Note that this employer can view all your data since your signing up as an Employee</p>}
+            {decodedMobile !== '' && <p className="text-red-500 text-sm text-center mt-2">This link is from Coordinator : {decodedMobile}, 
+              Note that this coordinator can view all your data since your signing up as his/her usher</p>}
             {error && <p className="text-red-500 text-sm text-center mt-2">{error}</p>}
             {!showOtp ? (
               <form onSubmit={handleLogin} className="space-y-4">
@@ -285,7 +291,7 @@ export function CreatePage() {
             
           {/* </div> */}
 
-          <div className="mt-8 flex items-center justify-between">
+          {/* <div className="mt-8 flex items-center justify-between">
             <div className="bg-gray-200 rounded-full py-3 px-6 flex items-center">
             <a 
                 href="https://www.youtube.com/watch?v=GYLa2dGGpTA" 
@@ -295,12 +301,6 @@ export function CreatePage() {
               >
               <span className="mr-2 font-bold ">Click here to learn how to earn more</span>
                 <div className="flex">
-                  {/* <div className="w-6 h-6 bg-yellow-400 rounded-full -mr-1"></div>
-                  <div className="w-6 h-6 bg-yellow-400 rounded-full -mr-1"></div>
-                  <div className="w-6 h-6 bg-yellow-400 rounded-full"></div> */}
-                  {/* <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-500">
-                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
-                  </svg> */}
                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-3 -3 32 32" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-500">
                     <ellipse cx="10" cy="7" rx="6" ry="2.5" />
                     <path d="M4 7v6c0 1.5 2.7 2.5 6 2.5s6-1 6-2.5V7" />
@@ -309,7 +309,7 @@ export function CreatePage() {
                 </div>
                 </a>
               </div>
-          </div>
+          </div> */}
 
         </div>
       </div>

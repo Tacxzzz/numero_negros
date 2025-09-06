@@ -305,7 +305,7 @@ export function Players() {
                     <TableHead className="text-center">Allowed Access to bets</TableHead>
                     <TableHead className="text-center">Allowed Access to Dashboard (allowed all)</TableHead>
                     <TableHead className="text-center">Status</TableHead>
-                    <TableHead className="text-center">Adjust Commission (If Employee)</TableHead>
+                    <TableHead className="text-center">See Commission (If Usher)</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -427,9 +427,9 @@ export function Players() {
                               className="bg-blue-500 hover:bg-blue-600"
                               onClick={() => handleEditComissionClick(bet)}
                             >
-                              Adjust Commission
+                              See Commission
                             </Button>
-                          </>) : 'Not Employee'}
+                          </>) : 'Not Usher'}
                       </TableCell>
                       {/* <TableCell>
                         <Button 
@@ -456,15 +456,15 @@ export function Players() {
           <Dialog open={isAdjustCommissionModalOpen} onOpenChange={setIsAdjustCommissionModalOpen}>
             <DialogContent className="bg-gray-50 border-[#34495e] max-h-[90vh] w-96 overflow-y-auto">
               <DialogHeader>
-                <DialogTitle className="text-xl text-blue-600">Adjust {selectedEmployee.mobile} Commission</DialogTitle>
+                <DialogTitle className="text-xl text-blue-600">{selectedEmployee.mobile} Commission</DialogTitle>
               </DialogHeader>
               <div className="space-y-3">
                 <form onSubmit={handleAdjustCommission}>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                Max Bet Commission: {selectedEmployee.bet_commission_percent}% <br></br>
+                Total Bet Commission: {selectedEmployee.bet_commission_percent}% <br></br>
                 Current Bet Commission: {selectedEmployee.bet_commission_percent - selectedEmployee.employer_commission_share}% <br></br>
                 Your Shared Commission: {selectedEmployee.employer_commission_share === '' ? 0 : selectedEmployee.employer_commission_share}% <br></br>
-                <Input
+                {/* <Input
                   type="number"
                   name="amount"
                   value={selectedEmployee?.amount || ""}
@@ -475,7 +475,7 @@ export function Players() {
                   className="border p-1 mt-2 w-full"
                   placeholder="Enter commission percentage"
                   style={{ appearance: 'textfield' }}
-                />
+                /> */}
                   <style>{`
                             input[type=number]::-webkit-outer-spin-button,
                             input[type=number]::-webkit-inner-spin-button {
@@ -488,7 +488,7 @@ export function Players() {
                             `}
                   </style> 
               </label>
-                  <DialogFooter className="flex flex-col gap-2 sm:flex-row">
+                  {/* <DialogFooter className="flex flex-col gap-2 sm:flex-row">
                     {!updating ? (
                       <Button
                         variant="outline"
@@ -508,7 +508,7 @@ export function Players() {
                     >
                       Cancel
                     </Button>
-                  </DialogFooter>
+                  </DialogFooter> */}
                 </form>
               </div>
             </DialogContent>
