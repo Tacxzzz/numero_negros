@@ -252,14 +252,14 @@ export function DrawHistoryPage() {
                         </svg>
                         <span className="text-xs mt-1">Support</span>
                       </Link>
-                      <Link to="/pisoplaysguide" className="flex flex-col items-center p-2 text-gray-500" onClick={() => navigate('/pisoplaysguide')}>
+                      {/* <Link to="/pisoplaysguide" className="flex flex-col items-center p-2 text-gray-500" onClick={() => navigate('/pisoplaysguide')}>
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-book-heart-icon lucide-book-heart">
                       <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/>
                       <path d="M12 17h.01"></path>
                       <path d="M10 8a2 2 0 1 1 2 2c0 1-2 1.5-0 3"></path>
                       </svg>
                         <span className="text-xs mt-1">Help Guide</span>
-                      </Link>
+                      </Link> */}
                     </div>
                   </div>
           

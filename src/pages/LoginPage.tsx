@@ -86,14 +86,7 @@ export function LoginPage() {
     }
 
     setError("");
-    if (data.newDevice)
-    {
-      setShowOtpInput(true);
-    }
-    else
-    {
-      handleSuccessfulLogin(data.userID, navigate);
-    }
+    handleSuccessfulLogin(data.userID, navigate);
     
   };
 
@@ -170,11 +163,11 @@ export function LoginPage() {
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Top promotional banner - only shown when not in OTP input mode */}
-        {!showOtpInput && !forgotPass && !openOTPforgot && (
+        {/* {!showOtpInput && !forgotPass && !openOTPforgot && (
           <div className="w-full bg-blue-500 text-white text-center py-4 px-6 rounded-xl mb-5">
             <h2 className="text-xl font-bold">Sign Up and Get your Free ₱15 credits</h2>
           </div>
-        )}
+        )} */}
 
 
         {/* Logo */}

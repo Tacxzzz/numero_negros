@@ -37,11 +37,14 @@ export function SavedBets() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [actionType, setActionType] = useState<"delete" | "confirm" | null>(null);
   const [selectedDrawDateTimes, setSelectedDrawDateTimes] = useState<string[]>([]);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
   
   const uniqueDrawDateTimes = [
     ...new Set(
         savedBets
-        .filter((b) => !b.response || b.response.trim() === "")
+        .filter((b) => !b.response || b.response.trim() === "" || b.response === "insufficient balance")
         .map((b) => `${b.draw_date} ${b.draw_time}`)
     ),
     ];
@@ -229,7 +232,7 @@ export function SavedBets() {
             .filter(
                 (b) =>
                 `${b.draw_date} ${b.draw_time}` === dt &&
-                (!b.response || b.response.trim() === "")
+                (!b.response || b.response.trim() === "" || b.response === "insufficient balance")
             )
             .reduce((sum, b) => sum + Number(b.bet || 0), 0);
 
@@ -250,7 +253,7 @@ export function SavedBets() {
                     .filter(
                         (b) =>
                         `${b.draw_date} ${b.draw_time}` === dt &&
-                        (!b.response || b.response.trim() === "")
+                        (!b.response || b.response.trim() === "" || b.response === "insufficient balance")
                     )
                     .map((b) => b.id);
 

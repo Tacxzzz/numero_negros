@@ -451,6 +451,7 @@ export const getGamesToday = async () => {
         }
       });
 
+    console.log(response);
     if (Array.isArray(response.data)) {
       return response.data;
     } else if (response.data.error) {
@@ -482,9 +483,9 @@ export const getGames = async () => {
 };
 
 
-export const getGameTypes = async (game_id: string) => {
+export const getGameTypes = async (game_id: string, user_type: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getGameTypes`, { game_id },{
+    const response = await axios.post(`${API_URL}/main/getGameTypes`, { game_id, user_type },{
         headers: {
           Authorization: `Bearer ${API_KEY}`,
         }
@@ -559,14 +560,14 @@ export const getDrawsByID = async (game_id: string) => {
   }
 };
 
-export const getGameTypeByID = async (game_id: string) => {
+export const getGameTypeByID = async (game_id: string, user_type: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getGameTypeByID`, { game_id },{
+    const response = await axios.post(`${API_URL}/main/getGameTypeByID`, { game_id, user_type },{
         headers: {
           Authorization: `Bearer ${API_KEY}`,
         }
       });
-
+      console.log(response);
     if (Array.isArray(response.data)) {
       return response.data;
     } else if (response.data.error) {
@@ -578,9 +579,9 @@ export const getGameTypeByID = async (game_id: string) => {
   }
 };
 
-export const getGameTypesByID = async (game_id: string) => {
+export const getGameTypesByID = async (game_id: string, user_type: string) => {
   try {
-    const response = await axios.post(`${API_URL}/main/getGameTypesByID`, { game_id },{
+    const response = await axios.post(`${API_URL}/main/getGameTypesByID`, { game_id, user_type },{
         headers: {
           Authorization: `Bearer ${API_KEY}`,
         }

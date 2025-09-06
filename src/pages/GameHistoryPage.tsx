@@ -38,7 +38,7 @@ type GameDraw = {
 
 export function GameHistoryPage() {
   const { gameId } = useParams();
-  const { setUserID,userID,deviceID } = useUser();
+  const { setUserID,userID,deviceID,userType } = useUser();
   console.log(userID);
   const navigate = useNavigate();
   const [gameData, setGameData] = useState<any>(null);
@@ -111,14 +111,13 @@ useEffect(() => {
   // Simulate fetching game data
   useEffect(() => {
     const handleUpdate = async () => {
-      console.log('called');
+      
       const gamesData = await getGameByID(gameId);
       setGameData(gamesData);
       const drawsData = await getDrawsByID(gameId);
       setDraws(drawsData);
-      const gameTypeData = await getGameTypesByID(gameId);
+      const gameTypeData = await getGameTypesByID(gameId, userType);
       setGameTypes(gameTypeData);
-      console.log(gameTypeData);
 
       const gameBetData = await getBetsByUserAndDraw(gameId,userID);
       setBetsData(gameBetData);

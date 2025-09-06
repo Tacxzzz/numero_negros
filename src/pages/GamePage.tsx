@@ -18,7 +18,7 @@ import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 
 export function GamePage() {
   const navigate = useNavigate();
-  const { setUserID,userID,deviceID } = useUser();
+  const { setUserID,userID,deviceID,userType } = useUser();
   const { clientId, setClientId } = useClient();
   const [clientFullName, setClientFullName] = useState("");
   console.log(userID);
@@ -96,7 +96,7 @@ export function GamePage() {
     if (gameId && selectedDraw && selectedGameType) {
       const handleUpdate = async () => {
         
-        const dataType = await getGameTypeByID(selectedGameType);
+        const dataType = await getGameTypeByID(selectedGameType, userType);
         setGameTypeData(dataType);
         const dataDraw = await getDrawByID(selectedDraw);
         setGameDrawData(dataDraw);
@@ -127,11 +127,7 @@ export function GamePage() {
           setFreeCredits(userData.free_credits);
           setAgent(userData.agent)
 
-          if (freeCredits > balance) {
-            setSelectedSource("freeCredits");
-          } else {
-            setSelectedSource("balance");
-          } 
+          setSelectedSource("balance");
 
           const dataFave = await readMyFavorite(userID,gameId);
           if(dataFave.authenticated)
@@ -155,11 +151,11 @@ export function GamePage() {
           setLengthChoice(data[0].range_end);
           setDigits(data[0].num_digits);
           setScores(Array.from({ length: data[0].num_digits }, () => ""));
-          const dataTypes = await getGameTypes(gameId);
+          const dataTypes = await getGameTypes(gameId, userType);
           setGameTypesData(dataTypes);
           const dataDraws = await getDrawsByID(gameId);
           setGameDrawsData(dataDraws);
-          const dataType = await getGameTypeByID(gameType);
+          const dataType = await getGameTypeByID(gameType, userType);
           setGameTypeData(dataType);
           const dataDraw = await getDrawByID(drawId);
           setGameDrawData(dataDraw);
@@ -662,37 +658,6 @@ const hasAllDistinctScores = (scores: string[]) => {
                           <Label htmlFor="bet" className="text-[#002a6e] font-medium block mb-2">
                             Your Current Balance : {formatPeso(balance)}
                           </Label>
-                          <Label htmlFor="bet" className="text-[#002a6e] font-medium block mb-2">
-                            Your Free Credit : {formatPeso(freeCredits)}
-                          </Label>
-
-                          <div className="mt-2 flex">
-                            {freeCredits > 0 && (
-                              <label className="flex items-center space-x-2 mr-2">
-                                <input
-                                  type="radio"
-                                  name="paymentSource"
-                                  value="freeCredits"
-                                  checked={selectedSource === "freeCredits"}
-                                  onChange={() => setSelectedSource("freeCredits")}
-                                />
-                                <span className="text-[#002a6e] text-xs font-medium">Use Free Credits</span>
-                              </label>
-                            )}
-
-                            {balance > 0 && (
-                              <label className="flex items-center space-x-2">
-                                <input
-                                  type="radio"
-                                  name="paymentSource"
-                                  value="balance"
-                                  checked={selectedSource === "balance"}
-                                  onChange={() => setSelectedSource("balance")}
-                                />
-                                <span className="text-[#002a6e] text-xs font-medium">Use Balance</span>
-                              </label>
-                            )}
-                          </div>
                         </div>
 
                         {clientId && (
@@ -728,7 +693,7 @@ const hasAllDistinctScores = (scores: string[]) => {
                   <>
                   <Button 
                     className="w-full bg-gradient-to-r from-green-500 to-emerald-700 hover:from-green-600 hover:to-green-800 text-white rounded-full py-4 text-sm font-bold"
-                    disabled={balance < gameTypeData[0]?.bet || betAllow === false}
+                    disabled={betAllow === false}
                     onClick={handleBetSave}
                   >
                     SAVE BET
