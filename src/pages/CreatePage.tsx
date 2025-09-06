@@ -239,7 +239,8 @@ export function CreatePage() {
                     />
                   </div>
                 </div>
-
+                
+                <p className="text-black-500 text-sm text-center mt-2">Please make sure your Password is at least 8 characters long and include 1 uppercase letter, 1 number, and 1 special character.</p>
 
                 <div className="flex items-center space-x-2">
                 <input 
