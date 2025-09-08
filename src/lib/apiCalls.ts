@@ -900,6 +900,8 @@ export const getMyBetClients = async (userID: string) => {
         }
       });
 
+      console.log(response);
+
     if (Array.isArray(response.data)) {
       return response.data;
     } else if (response.data.error) {

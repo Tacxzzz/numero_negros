@@ -352,7 +352,7 @@ export function SupportPage() {
             <h1 className="text-2xl font-bold mb-2">How Can We Help You?</h1>
             <p className="mb-4 max-w-lg">Our support team is here to assist you with any questions or issues you may have.</p>
             <div className="flex gap-3">
-              <Button className="bg-white text-blue-600 hover:bg-gray-100 mb-6" onClick={() => window.open('https://tawk.to/chat/67f4c61c846b7b190fd1ea14/1ioa2bnq9', '_blank', 'noopener,noreferrer')}>
+              <Button className="bg-white text-blue-600 hover:bg-gray-100 mb-6" onClick={() => window.open('https://tawk.to/chat/68bf392d5085a11923cdfa94/1j4lfen9h', '_blank', 'noopener,noreferrer')}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                 </svg>

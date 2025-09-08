@@ -52,7 +52,7 @@ import PisoGameViewCard from '@/components/PisoGameViewCard';
 import QRCodeComponent from '@/components/QRCodeComponent';
 
 // Tawk.to configuration
-const TAWK_SRC = "https://embed.tawk.to/67f4c61c846b7b190fd1ea14/1ioa2bnq9";
+const TAWK_SRC = "https://embed.tawk.to/68bf392d5085a11923cdfa94/1j4lfen9h";
 
 function setTawkWidgetLeftMarginAndZIndex(pixels: number, zIndex: number) {
   const applyStyles = () => {
@@ -440,6 +440,7 @@ const handleLogoClick = () => {
 
 const handleClientsClick = async () => {
   const data = await getMyBetClients(userID);
+  console.log(data);
   setClientsData(data);
   setShowClientsDialog(true);
 }

@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { createAccount, verifyOTP } from '@/lib/apiCalls';
 import { useUser } from "./UserContext";
 import PisoPlayLogo from "@/files/LogoWithName.svg"; 
-import { PhoneIcon, LockIcon } from "lucide-react";
+import { PhoneIcon, LockIcon, LockKeyholeIcon } from "lucide-react";
 import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 
@@ -169,8 +169,8 @@ export function CreatePage() {
                 </div> */}
 
           <div className="flex">
-            <div className="bg-gray-400 w-16 h-14 flex items-center justify-center">
-              <PhoneIcon className="h-6 w-6 text-white" />
+            <div className="bg-blue-800 w-14 h-14 flex items-center justify-center">
+              <PhoneIcon className="h-5 w-5 text-white" />
             </div>
             <Input
               type="tel"
@@ -197,8 +197,8 @@ export function CreatePage() {
 
                 <div className="mb-6">
                   <div className="flex">
-                    <div className="bg-gray-400 w-16 h-14 flex items-center justify-center">
-                      <LockIcon className="h-6 w-6 text-white" />
+                    <div className="bg-blue-800 w-14 h-14 flex items-center justify-center">
+                      <LockKeyholeIcon className="h-5 w-5 text-white" />
                     </div>
                     <Input
                       type="password"
@@ -226,8 +226,8 @@ export function CreatePage() {
 
                 <div className="mb-6">
                   <div className="flex">
-                    <div className="bg-gray-400 w-16 h-14 flex items-center justify-center">
-                      <LockIcon className="h-6 w-6 text-white" />
+                    <div className="bg-blue-800 w-14 h-14 flex items-center justify-center">
+                      <LockKeyholeIcon className="h-5 w-5 text-white" />
                     </div>
                     <Input
                       type="password"
@@ -287,7 +287,7 @@ export function CreatePage() {
             
             <div className="mt-2 text-center">
             Already have an account?{" "}
-            <a href="/" className="text-blue-500 hover:underline">Sign In</a>
+            <a href="/" className="text-blue-800 hover:underline">Sign In</a>
             </div>
             
           {/* </div> */}
