@@ -10,7 +10,7 @@ export function ScoreDisplay({ scores }: { scores: string[] }) {
         <div key={index} className="relative flex items-center justify-center">
           <div className={`rounded-full bg-gray-100 flex items-center justify-center shadow-lg border-4 border-[#0a1765] ${circleSize}`}>
             <div className={`rounded-full bg-gray-100 flex items-center justify-center border-2  ${innerCircleSize}`}>
-              <span className={`text-[#0a1765] font-bold ${fontSize}`}>{score}</span>
+              <span className={`text-[#000080] font-bold ${fontSize}`}>{score}</span>
             </div>
           </div>
         </div>

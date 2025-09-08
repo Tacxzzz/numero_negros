@@ -183,7 +183,9 @@ export function LoginPage() {
 
 
 <div className="flex justify-center">
+
         <img src={PisoPlayLogo} alt="PisoPlay Logo" width="100" height="100" />
+        
           {/* <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg">
             <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg"> */}
               {/* <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-500">
@@ -203,7 +205,7 @@ export function LoginPage() {
 
             {!showOtpInput && !forgotPass && !openOTPforgot ? (
             <>
-            <h2 className="text-2xl font-bold text-center mb-4 text-blue-600 uppercase">Welcome Back!</h2>
+            <h2 className="text-2xl font-bold text-center mb-4 text-[#000080] uppercase">Welcome Back!</h2>
             <form onSubmit={handleLogin} className="space-y-4">
             {/* <div className="space-y-2">
                 <Label htmlFor="mobile" className="text-gray-700">Mobile Number</Label>

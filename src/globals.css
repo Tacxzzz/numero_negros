@@ -69,7 +69,7 @@
 }
 
 .custom-signup-button {
-  background: linear-gradient(to right, #002a6e, #485ebd, #348df3cf); /* blue gradient */
+  background: linear-gradient(to right, #000080, #FF0000, #FFD701); /* blue gradient */
   color: white;
   padding: 12px 32px;
   font-size: 16px;
@@ -81,5 +81,5 @@
 }
 
 .custom-signup-button:hover {
-  background: linear-gradient(to right, #0041c4, #3454e0, #5fa6f0);
+  background: linear-gradient(to right, #000080, #FF0000, #FFD701);
 }

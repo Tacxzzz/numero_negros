@@ -393,7 +393,7 @@ const hasAllDistinctScores = (scores: string[]) => {
       }
   
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#348df3cf] to-[#002a6e] flex flex-col items-center justify-center p-4 overflow-hidden relative">
+    <div className="min-h-screen bg-gradient-to-r from-[#000080] to-[#FF0000] flex flex-col items-center justify-center p-4 overflow-hidden relative">
       {/* Back button */}
       <button 
         onClick={() => navigate(`/game-history/${gameId}`)}
@@ -405,7 +405,7 @@ const hasAllDistinctScores = (scores: string[]) => {
       </button>
 
       <div className="relative top-0 left-0 w-full h-full flex flex-col items-center gap-4">
-          <h4 className="text-lg sm:text-xl font-bold text-gray-800">
+          <h4 className="text-lg sm:text-xl font-bold text-[#FFD701]">
             {gameData[0]?.name} 
           </h4>
           <br/>
@@ -422,7 +422,7 @@ const hasAllDistinctScores = (scores: string[]) => {
           <div className="relative z-10 p-4 pt-14">
             <label
               htmlFor="gameTypeDropdown"
-              className="block text-sm font-medium text-gray-100 mb-2"
+              className="block text-sm font-medium text-[#FFD701] mb-2"
             >
               Select Draw:
             </label>
@@ -451,7 +451,7 @@ const hasAllDistinctScores = (scores: string[]) => {
                 <>
                 <label
                   htmlFor="gameTypeDropdown"
-                  className="block text-sm font-medium text-gray-100 mb-2"
+                  className="block text-sm font-medium text-[#FFD701] mb-2"
                 >
                   Select Type:
                 </label>
@@ -482,7 +482,7 @@ const hasAllDistinctScores = (scores: string[]) => {
         
         {/* Game board */}
         <div className="relative z-10 p-4 pt-16">
-          <div className="bg-gradient-to-br from-gray-50 to-[#002a6e] backdrop-blur-sm rounded-3xl p-4 shadow-inner">
+          <div className="bg-gradient-to-br from-[#FFFFFF] to-[#FFD701] backdrop-blur-sm rounded-3xl p-4 shadow-inner">
             {gameData &&
             (
               <GameBoard onTileClick={handleTileClick} lengthChoice={lengthChoice} lengthStart={lengthStart} scores={scores} gameId={gameId} gameType={gameType} />
@@ -627,7 +627,7 @@ const hasAllDistinctScores = (scores: string[]) => {
                           ? hasTwoMatchingScores(scores)
                           : true
                       )
-                        ? "bg-blue-700 hover:bg-yellow-500"
+                        ? "bg-[#000080] border-2 border-yellow-500 shadow-md hover:bg-yellow-500"
                         : "bg-gray-300 cursor-not-allowed"
                     } text-white font-bold w-full py-2 px-28 rounded-full shadow-md transition-transform hover:scale-105 active:scale-95 uppercase text-sm tracking-wider `}
                   >

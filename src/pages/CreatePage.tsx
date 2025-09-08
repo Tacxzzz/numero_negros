@@ -143,7 +143,7 @@ export function CreatePage() {
         {/* Login Form */}
         {/* <div className="bg-white rounded-3xl shadow-xl overflow-hidden"> */}
           <div className="p-8">
-            <h2 className="text-2xl font-bold text-center mb-4 text-blue-600 uppercase">Create an Account</h2>
+            <h2 className="text-2xl font-bold text-center mb-4 text-[#000080] uppercase">Create an Account</h2>
             {decodedMobile !== '' && <p className="text-red-500 text-sm text-center mt-2">This link is from Coordinator : {decodedMobile}, 
               Note that this coordinator can view all your data since your signing up as his/her usher</p>}
             {error && <p className="text-red-500 text-sm text-center mt-2">{error}</p>}

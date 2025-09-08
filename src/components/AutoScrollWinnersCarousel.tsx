@@ -48,7 +48,7 @@ const AutoScrollWinnersCarousel = () => {
             fade ? 'opacity-100' : 'opacity-0'
         }`}
         style={{
-            backgroundImage: 'linear-gradient(to right, #348df3cf, #485ebd)'
+            backgroundImage: 'linear-gradient(to right, #000080, #FF0000)'
         }}
         ><span className="text-white">Loading Winners...</span></div>
       </div>

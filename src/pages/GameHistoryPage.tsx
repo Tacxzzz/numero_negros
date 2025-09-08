@@ -158,14 +158,14 @@ useEffect(() => {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-10">
+      <header className="bg-gradient-to-r from-[#000080] to-[#FF0000] shadow-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <button 
                         onClick={e => {
             e.preventDefault();
             window.location.href = "/dashboard";
             }}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+            className="flex items-center gap-2 text-[#FFFFFF] hover:text-[#FFD701]"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M19 12H5M12 19l-7-7 7-7"/>
@@ -173,7 +173,7 @@ useEffect(() => {
             Back
           </button>
           
-          <h1 className="text-xl font-bold text-center flex-1">{gameData[0].name}</h1>
+          <h1 className="text-xl font-bold text-[#FFD701] text-center flex-1">{gameData[0].name}</h1>
           
           <div className="w-[60px]"></div> {/* Spacer for balance */}
         </div>
