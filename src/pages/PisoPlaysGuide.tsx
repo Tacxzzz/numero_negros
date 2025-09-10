@@ -87,7 +87,7 @@ const PisoPlayGuide = () => {
           </button>
 
           <h1 className="text-xl font-bold text-center flex-1">
-            PisoPlay Help Guide Manual
+            BetMoto Help Guide Manual
           </h1>
 
           <div className="w-[60px]"></div> {/* Spacer */}
@@ -168,7 +168,7 @@ const PisoPlayGuide = () => {
                   className="text-blue-600 underline"
                   target="_blank"
                 >
-                  www.pisoplays.com
+                  www.BetMotos.com
                 </a>{" "}
                 or use the <b>referral link</b> shared with you.
               </li>

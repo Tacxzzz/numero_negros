@@ -158,7 +158,7 @@ useEffect(() => {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <header className="bg-gradient-to-r from-[#000080] to-[#FF0000] shadow-sm sticky top-0 z-10">
+      <header className="bg-gradient-to-r from-[#C0382C] to-[#C0382C] shadow-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <button 
                         onClick={e => {

@@ -167,7 +167,7 @@ export function BetClientsPage() {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <header className="bg-gradient-to-r from-[#000080] to-[#FF0000] shadow-sm sticky top-0 z-10">
+      <header className="bg-[#C0382C] shadow-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <button 
             onClick={e => {
@@ -324,7 +324,7 @@ export function BetClientsPage() {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-lg font-bold mb-4">Add New Client</h2>
-            <p style={{color: 'red'}}>Please enter client payout details carefully. PisoPlay is not responsible for misdirected funds due to incorrect information.</p>
+            <p style={{color: 'red'}}>Please enter client payout details carefully. BetMoto is not responsible for misdirected funds due to incorrect information.</p>
             <br/>
             <form onSubmit={handleSubmit} className="space-y-3">
               <input

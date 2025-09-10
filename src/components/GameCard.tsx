@@ -63,7 +63,7 @@ export function GameCard({ game }: GameCardProps) {
           <Link to={`/game-history/${game.id}`} className="flex-1">
             <Button 
               size="sm" 
-              className="w-full text-[#FFD701] bg-gradient-to-r from-[#000080] to-[#FF0000] hover:from-blue-600 hover:to-purple-600"
+              className="w-full text-white bg-gradient-to-r from-[#E1BA5C] to-[#E1BA5C] hover:from-[#C0382C] hover:to-[#C0382C] hover:text-white"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
                 <path d="M5 12h14"></path>

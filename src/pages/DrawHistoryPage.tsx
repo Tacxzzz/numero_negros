@@ -123,7 +123,7 @@ export function DrawHistoryPage() {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <header className="bg-gradient-to-r from-[#000080] to-[#FF0000] shadow-sm sticky top-0 z-10">
+      <header className="bg-gradient-to-r from-[#C0382C] to-[#C0382C] shadow-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <button 
             onClick={e => {
@@ -209,52 +209,52 @@ export function DrawHistoryPage() {
           </div> */}
 
           {/* Mobile Navigation */}
-          <div className="md:hidden fixed bottom-0 left-0 right-0 bg-gradient-to-r from-[#000080] to-[#FF0000] border-t border-gray-200 z-10">
-            <div className="flex justify-around items-center py-2">
-              <Link 
-                to="/dashboard" 
-                className="flex flex-col items-center p-2 text-[#FFD701] opacity-60"
-                onClick={e => {
-                  e.preventDefault();
-                  window.location.href = "/dashboard";
-                }}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                </svg>
-                <span className="text-xs mt-1">Home</span>
-              </Link>
-              <Link to="/my-bets" className="flex flex-col items-center p-2 text-[#FFD701] opacity-60">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <ellipse cx="12" cy="5" rx="8" ry="3"></ellipse>
-                  <path d="M4 5v6a8 3 0 0 0 16 0V5"></path>
-                  <path d="M4 11v6a8 3 0 0 0 16 0v-6"></path>
-                </svg>
-                <span className="text-xs mt-1">My Bets</span>
-              </Link>
-              <Link to="/drawhistory" className="flex flex-col items-center p-2 text-[#FFD701] opacity-100">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
-                  <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
-                  <path d="M4 22h16"></path>
-                  <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
-                  <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
-                  <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
-                </svg>
-                <span className="text-xs mt-1">Draws</span>
-              </Link>
-              {/* <Link to="#" className="flex flex-col items-center p-2 text-gray-500" onClick={() => window.open('https://tawk.to/chat/67ec009ce808511907a28002/1inou4plh', '_blank', 'noopener,noreferrer')}> */}
-              <Link to="/support" className="flex flex-col items-center p-2 text-[#FFD701] opacity-70" onClick={() => navigate('/support')}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M12 17h.01"></path>
-                <path d="M12 13a3 3 0 1 0-3-3"></path>
-                </svg>
-                <span className="text-xs mt-1">Support</span>
-              </Link>
-            </div>
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-[#214269] border-t border-gray-200 z-10">
+          <div className="flex justify-around items-center py-2">
+            <Link 
+              to="/dashboard" 
+              className="flex flex-col items-center p-2 text-[#C0382C] opacity-70"
+              onClick={e => {
+                e.preventDefault();
+                window.location.href = "/dashboard";
+              }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+              <span className="text-xs mt-1">Home</span>
+            </Link>
+            <Link to="/my-bets" className="flex flex-col items-center p-2 text-[#C0382C] opacity-70">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <ellipse cx="12" cy="5" rx="8" ry="3"></ellipse>
+                <path d="M4 5v6a8 3 0 0 0 16 0V5"></path>
+                <path d="M4 11v6a8 3 0 0 0 16 0v-6"></path>
+              </svg>
+              <span className="text-xs mt-1">My Bets</span>
+            </Link>
+            <Link to="/drawhistory" className="flex flex-col items-center p-2 text-[#DBB941] opacity-100">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                <path d="M4 22h16"></path>
+                <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+              </svg>
+              <span className="text-xs mt-1">Draws</span>
+            </Link>
+            {/* <Link to="#" className="flex flex-col items-center p-2 text-gray-500" onClick={() => window.open('https://tawk.to/chat/67ec009ce808511907a28002/1inou4plh', '_blank', 'noopener,noreferrer')}> */}
+            <Link to="/support" className="flex flex-col items-center p-2 text-[#C0382C] opacity-70" onClick={() => navigate('/support')}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 17h.01"></path>
+              <path d="M12 13a3 3 0 1 0-3-3"></path>
+              </svg>
+              <span className="text-xs mt-1">Support</span>
+            </Link>
           </div>
+        </div>
           
           <TabsContent value="all" className="p-0">
             <BetsTable bets={filteredBets} navigate={navigate} />

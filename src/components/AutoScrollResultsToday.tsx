@@ -94,7 +94,7 @@ const AutoScrollResultsToday = () => {
             fade ? 'opacity-100' : 'opacity-0'
         }`}
         style={{
-            backgroundImage: 'linear-gradient(to right, #000080, #FF0000)'
+            backgroundImage: 'linear-gradient(to right, #C0382C, #C0382C)'
         }}
         ><span className="text-white">Loading Today Draws...</span></div>
       </div>
@@ -110,7 +110,7 @@ const AutoScrollResultsToday = () => {
             fade ? 'opacity-100' : 'opacity-0'
         }`}
         style={{
-            backgroundImage: 'linear-gradient(to right, #000080, #FF0000  )',
+            backgroundImage: 'linear-gradient(to right, #C0382C, #C0382C  )',
             transitionProperty: 'opacity',
             transitionDuration: `${FADE_DURATION}ms`,
         }}

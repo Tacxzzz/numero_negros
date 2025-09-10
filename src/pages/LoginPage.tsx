@@ -9,7 +9,7 @@ import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 import { useUser } from "./UserContext";
 import { loginAccount, sendOTPForReset, verifyOTPForgot, verifyOTPLogin } from '@/lib/apiCalls';
 import { useClient } from "./ClientContext";
-import PisoPlayLogo from "@/files/LogoWithName.svg";
+import BetMotoLogo from "@/files/BetMotoLogoWithName.svg";
 import { PhoneIcon, LockIcon, PhoneCallIcon, LucidePhone, Phone, LockKeyholeIcon } from "lucide-react"; 
 import { FiLock, FiPhone } from 'react-icons/fi';
 
@@ -185,7 +185,7 @@ export function LoginPage() {
 
 <div className="flex justify-center">
 
-        <img src={PisoPlayLogo} alt="PisoPlay Logo" width="100" height="100" />
+        <img src={BetMotoLogo} alt="BetMoto Logo" width="200" height="100" />
         
           {/* <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg">
             <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg"> */}

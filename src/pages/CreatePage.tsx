@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { createAccount, verifyOTP } from '@/lib/apiCalls';
 import { useUser } from "./UserContext";
-import PisoPlayLogo from "@/files/LogoWithName.svg"; 
+import BetMotoLogo from "@/files/BetMotoLogoWithName.svg"; 
 import { PhoneIcon, LockIcon, LockKeyholeIcon } from "lucide-react";
 import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
@@ -129,7 +129,7 @@ export function CreatePage() {
         </div> */}
         {/* Logo */}
         <div className="flex justify-center">
-        <img src={PisoPlayLogo} alt="PisoPlay Logo" width="100" height="100" />
+        <img src={BetMotoLogo} alt="BetMoto Logo" width="200" height="100" />
           {/* <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg">
             <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg"> */}
               {/* <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-500">

@@ -393,7 +393,7 @@ const hasAllDistinctScores = (scores: string[]) => {
       }
   
   return (
-    <div className="min-h-screen bg-gradient-to-r from-[#000080] to-[#FF0000] flex flex-col items-center justify-center p-4 overflow-hidden relative">
+    <div className="min-h-screen bg-gradient-to-r from-[#C0382C] to-[#C0382C] flex flex-col items-center justify-center p-4 overflow-hidden relative">
       {/* Back button */}
       <button 
         onClick={() => navigate(`/game-history/${gameId}`)}
@@ -482,7 +482,7 @@ const hasAllDistinctScores = (scores: string[]) => {
         
         {/* Game board */}
         <div className="relative z-10 p-4 pt-16">
-          <div className="bg-gradient-to-br from-[#FFFFFF] to-[#FFD701] backdrop-blur-sm rounded-3xl p-4 shadow-inner">
+          <div className="bg-gradient-to-br from-[#E1BA5C] to-[#E1BA5C] backdrop-blur-sm rounded-3xl p-4 shadow-inner">
             {gameData &&
             (
               <GameBoard onTileClick={handleTileClick} lengthChoice={lengthChoice} lengthStart={lengthStart} scores={scores} gameId={gameId} gameType={gameType} />
@@ -498,7 +498,7 @@ const hasAllDistinctScores = (scores: string[]) => {
                             onClick={handleLuckyPick} 
                             disabled={!gameId || !gameType} 
                             //disabled
-                            className={`px-4 py-2 rounded-lg shadow-md text-white 
+                            className={`px-4 py-2 rounded-lg shadow-md text-white border-2 border-yellow-500
                               ${!gameId || !gameType ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-600"}`}>
                             🎲
                           </button>
@@ -574,7 +574,7 @@ const hasAllDistinctScores = (scores: string[]) => {
                                 ? "px-4 py-2 bg-blue-500 hover:bg-blue-600"
                                 : "px-4 py-2 bg-gray-300 cursor-not-allowed"
                             }
-                            text-white rounded-lg shadow-md `}>
+                            text-white rounded-lg shadow-md border-2 border-yellow-500`}>
                             💾
                           </button>
                         </div>

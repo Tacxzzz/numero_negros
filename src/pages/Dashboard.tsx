@@ -33,7 +33,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 import { useClient } from "./ClientContext";
-import PisoPlayLogo from "@/files/LogoIconOnly.svg";
+import BetMotoLogo from "@/files/BetMotoLogoOnly.svg";
 import AdvertisementModal from '@/components/AdvertisementModal';
 import AdvertisementImage from "@/files/advertisement.svg";
 
@@ -771,7 +771,7 @@ const handleSubmit = async (e) => {
       adContent: (
         <YouTubeEmbedCard
           videoId="4ai4e66qF24"
-          title="Piso Play Game Play"
+          title="Bet Moto Game Play"
         />
       )
     },
@@ -828,9 +828,9 @@ const handleSubmit = async (e) => {
       /> */}
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <header className="bg-gradient-to-r from-[#000080] to-[#FF0000] shadow-sm sticky top-0 z-10">
+      <header className="bg-[#E9B847] shadow-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-          <div className="mx-auto flex items-center space-x-2 w-max ml-28 md:ml-18">
+          <div className="flex-1 items-center flex justify-center ml-14 lg:justify-start">
             {/* <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="md:hidden">
@@ -931,28 +931,28 @@ const handleSubmit = async (e) => {
               </div>
               <span className="ml-2 font-bold text-gray-800 hidden sm:inline">PisoPlay</span>
             </div> */}
-        <div className="flex flex-col items-center justify-center mb-auto sm:flex-row">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg">
-          <div onClick={handleLogoClick}  className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg">
-            <img src={PisoPlayLogo} alt="PisoPlay Logo" width="44" height="44" />
-          </div>
-          </div>
-        </div>
+              <div className="flex flex-col items-center justify-center mb-auto sm:flex-row">
+                <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg">
+                <div onClick={handleLogoClick}  className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg">
+                  <img src={BetMotoLogo} alt="BetMoto Logo" width="100" height="100" />
+                </div>
+                </div>
+              </div>
           </div>
           
           <nav className="hidden md:flex items-center space-x-6">
             <Link 
               to="/dashboard" 
-              className="text-[#FFD701] font-medium"
+              className="text-[#294166] font-medium"
               onClick={e => {
                 e.preventDefault();
                 window.location.href = "/dashboard";
               }}
             >Home</Link>
-            <Link to="/transactions" className="text-[#FFD701] opacity-70 hover:text-[#FFFFFF] opacity-100">My Transactions</Link>
-            <Link to="/my-bets" className="text-[#FFD701] opacity-70 hover:text-[#FFFFFF] opacity-100">My Bets</Link>
-            <Link to="/drawhistory" className="text-[#FFD701] opacity-70 hover:text-[#FFFFFF] opacity-100">Draws</Link>
-            <Link to="/support" className="text-[#FFD701] opacity-70 hover:text-[#FFFFFF] opacity-100">Support</Link>
+            <Link to="/transactions" className="text-[#294166] opacity-70 hover:text-[#C0382C] opacity-100">My Transactions</Link>
+            <Link to="/my-bets" className="text-[#294166] opacity-70 hover:text-[#C0382C] opacity-100">My Bets</Link>
+            <Link to="/drawhistory" className="text-[#294166] opacity-70 hover:text-[#C0382C] opacity-100">Draws</Link>
+            <Link to="/support" className="text-[#294166] opacity-70 hover:text-[#C0382C] opacity-100">Support</Link>
                       {/* <a
             href="https://tawk.to/chat/67ec009ce808511907a28002/1inou4plh"
             className="text-gray-600 hover:text-gray-900"
@@ -961,7 +961,7 @@ const handleSubmit = async (e) => {
           >
             Support
           </a> */}
-            <Link onClick={onLogout} className="text-[#FFD701] opacity-70 hover:text-[#FFFFFF] opacity-100" to={''}>Logout</Link>
+            <Link onClick={onLogout} className="text-[#294166] opacity-70 hover:text-[#C0382C] opacity-100" to={''}>Logout</Link>
           </nav>
           
           <div className="flex items-center space-x-4">
@@ -1065,13 +1065,13 @@ const handleSubmit = async (e) => {
             <TabsList>
               <TabsTrigger
                 value="todayDraws"
-                className="p-2 mr-2 bg-gradient-to-r from-[#000080] to-[#FF0000] text-gray-400 hover:bg-gray-300 md:max-w-full md:mr-2"
+                className="p-2 mr-2 bg-gradient-to-r from-[#E1BA5C] to-[#E1BA5C] text-[#294166] hover:bg-gray-300 md:max-w-full md:mr-2"
               >
                 Today Draws
               </TabsTrigger>
               <TabsTrigger
                 value="winners"
-                className="p-2 mr-2 bg-gradient-to-r from-[#000080] to-[#FF0000] text-gray-400 hover:bg-gray-300 md:max-w-full"
+                className="p-2 mr-2 bg-gradient-to-r from-[#E1BA5C] to-[#E1BA5C] text-[#294166] hover:bg-gray-300 md:max-w-full"
               >
                 Winners
               </TabsTrigger>
@@ -1091,7 +1091,7 @@ const handleSubmit = async (e) => {
               <p className="text-gray-500 text-sm">Your Balance</p>
               <p className="text-2xl font-bold text-gray-800">{formatPeso(balance)}</p>
             </div>
-            <Button className="bg-green-500 hover:bg-green-600" onClick={() => setShowCashInDialog(true)}>Cash In</Button>
+            <Button className="bg-[#294166] hover:bg-[#E1BA5C]" onClick={() => setShowCashInDialog(true)}>Cash In</Button>
           </div>
 
           <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
@@ -1100,14 +1100,14 @@ const handleSubmit = async (e) => {
               <p className="text-2xl font-bold text-gray-800">{formatPeso(winnings)}</p>
             </div>
             <div className="flex flex-col gap-2">
-              <Button className="bg-green-500 hover:bg-green-600" 
+              <Button className="bg-[#294166] hover:bg-[#E1BA5C]" 
               disabled={!winnings || winnings < 50} 
               onClick={(e) => {
                 handleMaintaingBalanceConvert(e, "winnings");
                 setWinningsConvert(winnings); // Add your second function here
               }}
               >Convert</Button>
-              <Button className="bg-green-500 hover:bg-green-600" 
+              <Button className="bg-[#294166] hover:bg-[#E1BA5C]" 
               disabled={!winnings || winnings < 108} 
               onClick={(e) => handleMaintaingBalance(e, "winnings")}>Cash Out</Button>
             </div>
@@ -1145,14 +1145,14 @@ const handleSubmit = async (e) => {
                 <p className="text-2xl font-bold text-gray-800">{formatPeso(commissions)}</p>
               </div>
               <div className="flex flex-col gap-2">
-                <Button className="bg-green-500 hover:bg-green-600" 
+                <Button className="bg-[#294166] hover:bg-[#E1BA5C]" 
                 disabled={!commissions || commissions < 50} 
                 onClick={(e) => {
                   handleMaintaingBalanceConvert(e, "commission");
                   setCommissionsConvert(commissions); // Add your second function here
                 }}
                 >Convert</Button>
-                <Button className="bg-green-500 hover:bg-green-600" 
+                <Button className="bg-[#294166] hover:bg-[#E1BA5C]" 
                 disabled={!commissions || commissions < 108} 
                   onClick={(e) => {
                     handleMaintaingBalance(e, "commission");
@@ -1185,7 +1185,7 @@ const handleSubmit = async (e) => {
                       onClick={() => {
                         navigate('/manageTeam', { state: { userID: userID } });
                       }} 
-                      className="bg-blue-500 hover:bg-blue-600"
+                      className="bg-[#294166] hover:bg-[#E1BA5C]"
                     >
                       Dashboard
                     </Button>
@@ -1209,7 +1209,7 @@ const handleSubmit = async (e) => {
                   <div className="flex flex-col gap-2">
                     <Button
                       onClick={() => handleClientsClick()}
-                      className="bg-green-500 hover:bg-green-600"
+                      className="bg-[#294166] hover:bg-[#E1BA5C]"
                     >
                       Clients
                     </Button>
@@ -1218,7 +1218,7 @@ const handleSubmit = async (e) => {
                       onClick={() => {
                         navigate("/betclients");
                       }}
-                      className="bg-green-500 hover:bg-green-600"
+                      className="bg-[#294166] hover:bg-[#E1BA5C]"
                     >
                       Manage
                     </Button>
@@ -1443,7 +1443,7 @@ const handleSubmit = async (e) => {
                     <DialogHeader>
                       <DialogTitle className="text-xl text-blue-600">Cash Out</DialogTitle>
                       <DialogDescription className="text-red-600">
-                      Please enter payout details carefully. PisoPlay is not responsible for misdirected funds due to incorrect information.
+                      Please enter payout details carefully. BetMoto is not responsible for misdirected funds due to incorrect information.
             
                       </DialogDescription>
                     </DialogHeader>
@@ -1658,7 +1658,7 @@ const handleSubmit = async (e) => {
                     <DialogHeader>
                       <DialogTitle className="text-xl text-blue-600">Cash Out Commission</DialogTitle>
                       <DialogDescription className="text-red-600">
-                      Please enter payout details carefully. PisoPlay is not responsible for misdirected funds due to incorrect information.
+                      Please enter payout details carefully. BetMoto is not responsible for misdirected funds due to incorrect information.
             
                       </DialogDescription>
                     </DialogHeader>
@@ -1956,11 +1956,11 @@ const handleSubmit = async (e) => {
       </main>
       
       {/* Mobile Navigation */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-gradient-to-r from-[#000080] to-[#FF0000] border-t border-gray-200 z-10">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-[#214269] border-t border-gray-200 z-10">
           <div className="flex justify-around items-center py-2">
             <Link 
               to="/dashboard" 
-              className="flex flex-col items-center p-2 text-[#FFD701] opacity-100"
+              className="flex flex-col items-center p-2 text-[#DBB941] opacity-100"
               onClick={e => {
                 e.preventDefault();
                 window.location.href = "/dashboard";
@@ -1972,7 +1972,7 @@ const handleSubmit = async (e) => {
               </svg>
               <span className="text-xs mt-1">Home</span>
             </Link>
-            <Link to="/my-bets" className="flex flex-col items-center p-2 text-[#FFD701] opacity-60">
+            <Link to="/my-bets" className="flex flex-col items-center p-2 text-[#C0382C] opacity-70">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <ellipse cx="12" cy="5" rx="8" ry="3"></ellipse>
                 <path d="M4 5v6a8 3 0 0 0 16 0V5"></path>
@@ -1980,7 +1980,7 @@ const handleSubmit = async (e) => {
               </svg>
               <span className="text-xs mt-1">My Bets</span>
             </Link>
-            <Link to="/drawhistory" className="flex flex-col items-center p-2 text-[#FFD701] opacity-60">
+            <Link to="/drawhistory" className="flex flex-col items-center p-2 text-[#C0382C] opacity-70">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
                 <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
@@ -1992,7 +1992,7 @@ const handleSubmit = async (e) => {
               <span className="text-xs mt-1">Draws</span>
             </Link>
             {/* <Link to="#" className="flex flex-col items-center p-2 text-gray-500" onClick={() => window.open('https://tawk.to/chat/67ec009ce808511907a28002/1inou4plh', '_blank', 'noopener,noreferrer')}> */}
-            <Link to="/support" className="flex flex-col items-center p-2 text-[#FFD701] opacity-70" onClick={() => navigate('/support')}>
+            <Link to="/support" className="flex flex-col items-center p-2 text-[#C0382C] opacity-70" onClick={() => navigate('/support')}>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="10"></circle>
               <path d="M12 17h.01"></path>

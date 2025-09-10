@@ -48,7 +48,7 @@ const AutoScrollWinnersCarousel = () => {
             fade ? 'opacity-100' : 'opacity-0'
         }`}
         style={{
-            backgroundImage: 'linear-gradient(to right, #000080, #FF0000)'
+            backgroundImage: 'linear-gradient(to right, #C0382C, #C0382C)'
         }}
         ><span className="text-white">Loading Winners...</span></div>
       </div>
@@ -108,7 +108,7 @@ const AutoScrollWinnersCarousel = () => {
           fade ? 'opacity-100' : 'opacity-0'
         }`}
         style={{
-          backgroundImage: 'linear-gradient(to right, #348df3cf, #485ebd)', // Gradient background
+          backgroundImage: 'linear-gradient(to right, #C0382C, #C0382C)', // Gradient background
           transitionProperty: 'opacity',
           transitionDuration: `${FADE_DURATION}ms`,
         }}
