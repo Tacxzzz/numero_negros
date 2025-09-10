@@ -332,7 +332,7 @@ export const fetchUserData = async (userID: string, deviceID: string) => {
           Authorization: `Bearer ${API_KEY}`,
         }
       });
-
+      
     const data = response.data;
 
     if (data?.error === "ERROR") {

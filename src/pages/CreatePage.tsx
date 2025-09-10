@@ -9,6 +9,7 @@ import BetMotoLogo from "@/files/BetMotoLogoWithName.svg";
 import { PhoneIcon, LockIcon, LockKeyholeIcon } from "lucide-react";
 import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
+import termsPDF from "../files/terms.pdf"
 
 export function CreatePage() {
   const navigate = useNavigate();
@@ -253,7 +254,7 @@ export function CreatePage() {
                 />
                 <Label htmlFor="terms" className="text-sm text-gray-700">
                   I agree to the 
-                  <a href={API_URL +"/img/terms.pdf"} target='_blank' className="text-pink-500"> Terms and Conditions</a>
+                  <a href={termsPDF} target='_blank' className="text-pink-500"> Terms and Conditions</a>
                 </Label>
               </div>
               <br/>
