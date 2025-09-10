@@ -50,6 +50,7 @@ import ScatterViewCard from "@/components/ScatterViewCard";
 import ScatterCover from '../files/bet88_cover.jpg';
 import PisoGameViewCard from '@/components/PisoGameViewCard';
 import QRCodeComponent from '@/components/QRCodeComponent';
+import termsPDF from "../files/terms.pdf"
 
 // Tawk.to configuration
 const TAWK_SRC = "https://embed.tawk.to/68bf392d5085a11923cdfa94/1j4lfen9h";
@@ -1420,7 +1421,7 @@ const handleSubmit = async (e) => {
                       />
                       <span className="text-sm text-gray-700">
                         I agree to the 
-                        <a href={API_URL +"/img/terms.pdf"} target='_blank' className="text-pink-500"> Terms and Conditions</a>
+                        <a href={termsPDF} target='_blank' className="text-pink-500"> Terms and Conditions</a>
                       </span>
                     </div>
                     
@@ -1551,7 +1552,7 @@ const handleSubmit = async (e) => {
                       />
                       <span className="text-sm text-gray-700">
                         I agree to the 
-                        <a href={API_URL +"/img/terms.pdf"} target='_blank' className="text-pink-500"> Terms and Conditions</a>
+                        <a href={termsPDF} target='_blank' className="text-pink-500"> Terms and Conditions</a>
                       </span>
                     </div>
                     
@@ -1634,7 +1635,7 @@ const handleSubmit = async (e) => {
                       />
                       <span className="text-sm text-gray-700">
                         I agree to the 
-                        <a href={API_URL +"/img/terms.pdf"} target='_blank' className="text-pink-500"> Terms and Conditions</a>
+                        <a href={termsPDF} target='_blank' className="text-pink-500"> Terms and Conditions</a>
                       </span>
                     </div>
                     
@@ -1766,7 +1767,7 @@ const handleSubmit = async (e) => {
                       />
                       <span className="text-sm text-gray-700">
                         I agree to the 
-                        <a href={API_URL +"/img/terms.pdf"} target='_blank' className="text-pink-500"> Terms and Conditions</a>
+                        <a href={termsPDF} target='_blank' className="text-pink-500"> Terms and Conditions</a>
                       </span>
                     </div>
                     
@@ -1848,7 +1849,7 @@ const handleSubmit = async (e) => {
                       />
                       <span className="text-sm text-gray-700">
                         I agree to the 
-                        <a href={API_URL +"/img/terms.pdf"} target='_blank' className="text-pink-500"> Terms and Conditions</a>
+                        <a href={termsPDF} target='_blank' className="text-pink-500"> Terms and Conditions</a>
                       </span>
                     </div>
                     
