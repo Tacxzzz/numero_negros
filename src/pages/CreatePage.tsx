@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { createAccount, verifyOTP } from '@/lib/apiCalls';
 import { useUser } from "./UserContext";
 import BetMotoLogo from "@/files/BetMotoLogoWithName.svg"; 
-import { PhoneIcon, LockIcon, LockKeyholeIcon } from "lucide-react";
+import { PhoneIcon, LockIcon, LockKeyholeIcon, EyeOffIcon, EyeIcon } from "lucide-react";
 import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 import termsPDF from "../files/terms.pdf"
@@ -23,6 +23,8 @@ export function CreatePage() {
   const [showOtp, setShowOtp] = useState(false);  
   const [isLoading, setIsLoading] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const API_URL = import.meta.env.VITE_DATABASE_URL;
 
@@ -33,6 +35,7 @@ export function CreatePage() {
   let decodedRef = "";
   let decodedFromEmployer = "";
   let decodedMobile = "";
+  let decodedUserType = "";
 
   if (encodedData) {
     try {
@@ -41,14 +44,13 @@ export function CreatePage() {
 
       const ref = searchParams.get("ref"); // Extract referral ID
       const key = searchParams.get("key"); // Extract key
-      const fromEmployer = searchParams.get("fromEmployer") ?? ''; // Extract fromEmployer
-      const employerMobile = searchParams.get("mobile") ?? ''; // Extract fromEmployer
+      const fromEmployer = searchParams.get("fromEmployer") ?? '';
+      const employerMobile = searchParams.get("mobile") ?? '';
+      const userType = searchParams.get("userType") ?? '';
       decodedRef = ref;
       decodedFromEmployer = fromEmployer;
       decodedMobile = employerMobile;
-      console.log("Decoded Ref:", ref);
-      console.log("Decoded fromEmployer:", fromEmployer);
-      console.log("Decoded Key:", key);
+      decodedUserType = userType;
     } catch (err) {
       console.error("Invalid referral code:", err.message);
     }
@@ -78,7 +80,8 @@ export function CreatePage() {
     formData.append("mobile", mobile);
     formData.append('password', password);
     formData.append('referral', decodedRef);
-    formData.append('fromEmployer', decodedFromEmployer)
+    formData.append('fromEmployer', decodedFromEmployer);
+    formData.append('userType', decodedUserType);
     const data = await createAccount(formData);
     if(!data.authenticated){
       setError("An error occurred. Please try again.");
@@ -196,48 +199,62 @@ export function CreatePage() {
                   />
                 </div> */}
 
+                {/* Password */}
                 <div className="mb-6">
-                  <div className="flex">
+                  <div className="flex items-center">
                     <div className="bg-blue-800 w-14 h-14 flex items-center justify-center">
                       <LockKeyholeIcon className="h-5 w-5 text-white" />
                     </div>
-                    <Input
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Password"
-                      className="flex-1 h-14 bg-gray-200 border-0 rounded-none text-lg"
-                    />
+                    <div className="relative flex-1">
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Password"
+                        className="w-full h-14 bg-gray-200 border-0 rounded-none text-lg pr-12" // 👈 padding for icon
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute inset-y-0 right-3 flex items-center text-gray-600"
+                      >
+                        {showPassword ? (
+                          <EyeOffIcon className="h-5 w-5" />
+                        ) : (
+                          <EyeIcon className="h-5 w-5" />
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
 
-                {/* <div className="space-y-2">
-                  <Label htmlFor="confirm-password" className="text-gray-700">Confirm Password</Label>
-                  <Input 
-                    id="confirm-password" 
-                    type="password" 
-                    name="con_password"
-                    placeholder="••••••••" 
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="rounded-xl"
-                    required
-                  />
-                </div> */}
-
+                {/* Confirm Password */}
                 <div className="mb-6">
-                  <div className="flex">
+                  <div className="flex items-center">
                     <div className="bg-blue-800 w-14 h-14 flex items-center justify-center">
                       <LockKeyholeIcon className="h-5 w-5 text-white" />
                     </div>
-                    <Input
-                      type="password"
-                      name="con_password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="Confirm Password"
-                      className="flex-1 h-14 bg-gray-200 border-0 rounded-none text-lg"
-                    />
+                    <div className="relative flex-1">
+                      <Input
+                        type={showConfirmPassword ? "text" : "password"}
+                        name="con_password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="Confirm Password"
+                        className="w-full h-14 bg-gray-200 border-0 rounded-none text-lg pr-12" // 👈 padding for icon
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute inset-y-0 right-3 flex items-center text-gray-600"
+                      >
+                        {showConfirmPassword ? (
+                          <EyeOffIcon className="h-5 w-5" />
+                        ) : (
+                          <EyeIcon className="h-5 w-5" />
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
                 

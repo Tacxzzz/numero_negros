@@ -27,7 +27,7 @@ import { FiCopy } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from "./UserContext";
-import { addBetClients, cashIn, cashInCashko, cashOutCashko, cashOutCashkoCommission, convertCommissionsToBalance, convertWinsToBalance, fetchUserData, getBetClientData, getCommissions, getGames, getGamesToday, getMyBetClientsCount, getReferrals, updatePassword, checkMaintainingBalance, addLog, getMySavedBetsCount, getMyBetClients } from '@/lib/apiCalls';
+import { addBetClients, cashIn, cashInCashko, cashOutCashko, cashOutCashkoCommission, convertCommissionsToBalance, convertWinsToBalance, fetchUserData, getBetClientData, getCommissions, getGames, getGamesToday, getMyBetClientsCount, getReferrals, updatePassword, checkMaintainingBalance, addLog, getMySavedBetsCount, getMyBetClients, getUserType } from '@/lib/apiCalls';
 import { formatPeso } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -2061,18 +2061,22 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
   const [refLevel, setRefLevel] = useState("");
   const [employer, setEmployer] = useState("");
   const [level1Percent, setLevel1Percent] = useState(0);
+  const [userType, setUserType] = useState("");
+  const [userTypes, setUserTypes] = useState([]);
   const [level2Percent, setLevel2Percent] = useState(0);
   const [noLimitPercent, setNoLimitPercent] = useState(0);
   const [transLimit, setTransLimit] = useState(5000);
   const [cashInAmount, setCashInAmount] = useState(0);
+  const [bettor, setBettor] = useState(null);
+  const [usher, setUsher] = useState(null);
+  const [coordinator, setCoordinator] = useState(null);
+  const [referralLink, setReferralLink] = useState("");
+  const [employerReferralLink, setEmployerReferralLink] = useState("");
 
   const currentURL = window.location.origin; // Gets the base URL
   const randomKey = Math.random().toString(36).substring(2, 23); // 21-character random key
-  const encodedParams = btoa(`ref=${userID}&key=${randomKey}`); // Encode full params
-  const employerEncodedParams = btoa(`ref=${userID}&fromEmployer=yes&mobile=${mobile}&key=${randomKey}`);
 
-  const referralLink = `${currentURL}/create-account?data=${encodedParams}`;
-  const employerReferralLink = `${currentURL}/create-account?data=${employerEncodedParams}`;
+  
 
   const [isNestedModalOpen, setIsNestedModalOpen] = useState(false);
   const [isEmployer, setIsEmployer] = useState(false);
@@ -2150,16 +2154,32 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
         setRefLevel(data.level);
         setLevel1Percent(data.level_one_percent);
         setLevel2Percent(data.level_two_percent);
+        setUserType(data.user_type);
         setNoLimitPercent(data.nolimit_percent);
         setEmployer(data.employer);
+        setUserType(data.type);
 
         const dataRef = await getReferrals(userID);
         setLevel1(dataRef.level1);
         setLevel2(dataRef.level2);
         setNoLimit(dataRef.nolimit);
 
+        const userTypeData = await getUserType();
+        const bettor = userTypeData.find((u) => u.type === "bettor");
+        const usher = userTypeData.find((u) => u.type === "usher");
+        const coordinator = userTypeData.find((u) => u.type === "coordinator");
+
+        const encodedParams = btoa(`ref=${userID}&userType=${data.type}&key=${randomKey}`); // Encode full params
+        const employerEncodedParams = btoa(`ref=${userID}&userType=${data.type}&fromEmployer=yes&mobile=${mobile}&key=${randomKey}`);
+
+        setReferralLink(`${currentURL}/create-account?data=${encodedParams}`);
+        setEmployerReferralLink(`${currentURL}/create-account?data=${employerEncodedParams}`);
+
+        setBettor(bettor);
+        setUsher(usher);
+        setCoordinator(coordinator);
+
         const addViewLog = await addLog(userID, "visited Account Management");
-        console.log(addViewLog.authenticated);
       };
       handleUpdate();
     }
@@ -2271,7 +2291,16 @@ const handleShare = () => {
               
               <div className="space-y-3">
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Referral Link</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Referral Link (
+                        {coordinator === null || usher === null || bettor === null
+                          ? ""
+                          : userType === "coordinator"
+                          ? Number(coordinator.bet_commission_percent) - Number(bettor.bet_commission_percent)
+                          : userType === "usher"
+                          ? Number(usher.bet_commission_percent) - Number(usher.employer_commission_share) - Number(bettor.bet_commission_percent)
+                          : level1Percent} %)
+                    </label>
                     <div className="flex items-center">
                       <Input defaultValue={referralLink} disabled className="mr-2" />
                       <button 
@@ -2290,7 +2319,7 @@ const handleShare = () => {
                 </Button>
                 {employer === 'yes' && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Coordinator Referral Link</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Referral Link for Usher ({coordinator === null ||  usher === null || bettor === null ? "" : usher.employer_commission_share} %)</label>
                     <div className="flex items-center">
                       <Input defaultValue={employerReferralLink} disabled className="mr-2" />
                       <button 
@@ -2312,7 +2341,7 @@ const handleShare = () => {
                 {refLevel === 'level2' ? (
                   <>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred Lvl 1 ({level1Percent}% Rewards)</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred Lvl 1</label>
                       <div className="flex items-center">
                         <Input readOnly value={level1} disabled className="mr-2" />
                         

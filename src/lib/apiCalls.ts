@@ -1951,3 +1951,27 @@ export const getMySavedBetsCount = async (userID:string) => {
     return { count: '-' };
   }
 };
+
+export const getUserType = async () => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getUserType`, { },{
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        }
+      });
+      console.log(response);
+    if (response.data) 
+      {
+      const userData = response.data;
+      return userData;
+    } 
+    else 
+    {
+      console.warn("User data is empty or invalid.");
+      return [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch games:", error);
+    return [];
+  }
+};

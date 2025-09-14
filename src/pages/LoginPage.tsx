@@ -10,7 +10,7 @@ import { useUser } from "./UserContext";
 import { loginAccount, sendOTPForReset, verifyOTPForgot, verifyOTPLogin } from '@/lib/apiCalls';
 import { useClient } from "./ClientContext";
 import BetMotoLogo from "@/files/BetMotoLogoWithName.svg";
-import { PhoneIcon, LockIcon, PhoneCallIcon, LucidePhone, Phone, LockKeyholeIcon } from "lucide-react"; 
+import { PhoneIcon, LockIcon, PhoneCallIcon, LucidePhone, Phone, LockKeyholeIcon, EyeOffIcon, EyeIcon } from "lucide-react"; 
 import { FiLock, FiPhone } from 'react-icons/fi';
 
 export function LoginPage() {
@@ -28,6 +28,8 @@ export function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [forgotPass, setForgotPass] = useState(false);
   const [openOTPforgot, setOpenOTPforgot] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
 
   const { deviceID, userID } = useUser();
 
@@ -277,20 +279,32 @@ export function LoginPage() {
                   </a>
                 </div>
                 <div className="flex">
-                  
                   <div className="bg-blue-800 w-14 h-14 flex items-center justify-center">
                     <LockKeyholeIcon className="h-5 w-5 text-white" />
-                    
                   </div>
-                  
-                  <Input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Password"
-                    className="flex-1 h-14 bg-gray-200 border-0 rounded-none text-lg"
-                  />
+
+                  <div className="relative flex-1">
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Password"
+                      className="w-full h-14 bg-gray-200 border-0 rounded-none text-lg pr-12" // add padding for icon
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 right-3 flex items-center text-gray-600"
+                    >
+                      {showPassword ? (
+                        <EyeOffIcon className="h-5 w-5" />
+                      ) : (
+                        <EyeIcon className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
                 </div>
+              
               </div>
               
               <div className="flex items-center space-x-2 mb-4">
