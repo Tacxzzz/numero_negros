@@ -2289,92 +2289,85 @@ const handleShare = () => {
                 <h3 className="font-bold mt-2">{mobile}</h3>
               </div>
               
-              <div className="space-y-3">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Referral Link (
-                        {coordinator === null || usher === null || bettor === null
-                          ? ""
-                          : userType === "coordinator"
-                          ? Number(coordinator.bet_commission_percent) - Number(bettor.bet_commission_percent)
-                          : userType === "usher"
-                          ? Number(usher.bet_commission_percent) - Number(usher.employer_commission_share) - Number(bettor.bet_commission_percent)
-                          : level1Percent} %)
-                    </label>
-                    <div className="flex items-center">
-                      <Input defaultValue={referralLink} disabled className="mr-2" />
-                      <button 
-                        onClick={handleCopy} 
-                        className="p-2 hover:bg-gray-200"
-                      >
-                        <FiCopy />
-                      </button>
-                    </div>
-                </div>
-                <Button onClick={() => {
-                  openNestedModal();
-                  setIsEmployer(false);
-                }} className="w-full bg-blue-600 text-white">
-                  Share QR
-                </Button>
-                {employer === 'yes' && (
+              {userType !== 'bettor' && (
+                <div className="space-y-3">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Referral Link for Usher ({coordinator === null ||  usher === null || bettor === null ? "" : usher.employer_commission_share} %)</label>
-                    <div className="flex items-center">
-                      <Input defaultValue={employerReferralLink} disabled className="mr-2" />
-                      <button 
-                        onClick={handleEmployeeCopy} 
-                        className="p-2 hover:bg-gray-200"
-                      >
-                        <FiCopy />
-                      </button>
-                    </div>
-                    <Button onClick={() => {
-                      openNestedModal();
-                      setIsEmployer(true);
-                    }} className="w-full bg-blue-600 text-white mt-2">
-                      Share QR
-                    </Button>
-                  </div>
-                )}
-
-                {refLevel === 'level2' ? (
-                  <>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred Lvl 1</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Referral Link (
+                          {coordinator === null || usher === null || bettor === null
+                            ? ""
+                            : userType === "coordinator"
+                            ? Number(coordinator.bet_commission_percent) - Number(bettor.bet_commission_percent)
+                            : userType === "usher"
+                            ? Number(usher.bet_commission_percent) - Number(usher.employer_commission_share) - Number(bettor.bet_commission_percent)
+                            : level1Percent} %)
+                      </label>
                       <div className="flex items-center">
-                        <Input readOnly value={level1} disabled className="mr-2" />
-                        
+                        <Input defaultValue={referralLink} disabled className="mr-2" />
+                        <button 
+                          onClick={handleCopy} 
+                          className="p-2 hover:bg-gray-200"
+                        >
+                          <FiCopy />
+                        </button>
                       </div>
+                  </div>
+                  <Button onClick={() => {
+                    openNestedModal();
+                    setIsEmployer(false);
+                  }} className="w-full bg-blue-600 text-white">
+                    Share QR
+                  </Button>
+                  {employer === 'yes' && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Referral Link for Usher ({coordinator === null ||  usher === null || bettor === null ? "" : usher.employer_commission_share} %)</label>
+                      <div className="flex items-center">
+                        <Input defaultValue={employerReferralLink} disabled className="mr-2" />
+                        <button 
+                          onClick={handleEmployeeCopy} 
+                          className="p-2 hover:bg-gray-200"
+                        >
+                          <FiCopy />
+                        </button>
+                      </div>
+                      <Button onClick={() => {
+                        openNestedModal();
+                        setIsEmployer(true);
+                      }} className="w-full bg-blue-600 text-white mt-2">
+                        Share QR
+                      </Button>
                     </div>
-                    {/* <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred Lvl 2 ({level2Percent}% Rewards)</label>
+                  )}
+
+                  {refLevel === 'level2' && userType !== 'bettor' && (
+                    <>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred</label>
                         <div className="flex items-center">
-                          <Input readOnly value={level2} disabled className="mr-2" />
+                          <Input readOnly value={level1} disabled className="mr-2" />
                           
                         </div>
-                    </div> */}
-                  </>
-                ) : (
-                  <>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred (No Limit) ({noLimitPercent}% Rewards)</label>
+                      </div>
+                      {/* <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred Lvl 2 ({level2Percent}% Rewards)</label>
+                          <div className="flex items-center">
+                            <Input readOnly value={level2} disabled className="mr-2" />
+                            
+                          </div>
+                      </div> */}
+                    </>
+                  )}
+                  
+                  {/* <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred Lvl 3 (2% Rewards)</label>
                       <div className="flex items-center">
-                        <Input readOnly value={nolimit} disabled className="mr-2" />
+                        <Input readOnly value={level3} disabled className="mr-2" />
                         
                       </div>
-                    </div>
-                  </>
-                )}
-                
-                {/* <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred Lvl 3 (2% Rewards)</label>
-                    <div className="flex items-center">
-                      <Input readOnly value={level3} disabled className="mr-2" />
-                      
-                    </div>
-                </div> */}
-              </div>
+                  </div> */}
+                </div>
+              )}
+              
               <ToastContainer />
               {/* <Button className="w-full">Save Changes</Button> */}
             </div>
