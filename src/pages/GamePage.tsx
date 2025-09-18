@@ -15,8 +15,13 @@ import { checkBettingTime, formatPeso } from '@/lib/utils';
 import { useClient } from "./ClientContext";
 import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
+import { LogOut } from 'lucide-react';
 
-export function GamePage() {
+interface SidebarProps {
+  onLogout?: () => void;
+}
+
+export function GamePage({onLogout}:SidebarProps) {
   const navigate = useNavigate();
   const { setUserID,userID,deviceID,userType } = useUser();
   const { clientId, setClientId } = useClient();
@@ -97,6 +102,11 @@ export function GamePage() {
       const handleUpdate = async () => {
         
         const dataType = await getGameTypeByID(selectedGameType, userType);
+        if (dataType===null){
+          alert("Unauthorized, Please Login again");
+          onLogout();
+          return;
+        }
         setGameTypeData(dataType);
         const dataDraw = await getDrawByID(selectedDraw);
         setGameDrawData(dataDraw);
@@ -123,6 +133,11 @@ export function GamePage() {
       if (userID) {
         const handleUpdate = async () => {
           const userData = await fetchUserData(userID,deviceID);
+          if (userData===null) {
+            alert("Unauthorized, Please Login again");
+            onLogout();
+            return;
+          }
           setBalance(userData.balance);
           setFreeCredits(userData.free_credits);
           setAgent(userData.agent)

@@ -32,8 +32,11 @@ import { useClient } from "./ClientContext";
 import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 
+interface SidebarProps {
+  onLogout?: () => void;
+}
 
-export function BetClientsPage() {
+export function BetClientsPage({onLogout}:SidebarProps) {
   const navigate = useNavigate();
   const { setUserID,userID,deviceID } = useUser();
   
@@ -46,10 +49,14 @@ export function BetClientsPage() {
     const handleUpdate = async () => {
 
       const gameBetData = await getMyBetClients(userID);
+      if (gameBetData===null) {
+        alert("Unauthorized, Please Login again");
+        onLogout();
+        return;
+      }
       setClients(gameBetData);
 
       const addViewLog = await addLog(userID, "visited Bet Clients");
-      console.log(addViewLog.authenticated);
       };
       handleUpdate();
   }, [userID]);

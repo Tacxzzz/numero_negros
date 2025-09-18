@@ -31,7 +31,10 @@ import { formatPeso } from '@/lib/utils';
 import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 
-export function PlayerBalances() {
+interface SidebarProps {
+  onLogout?: () => void;
+}
+export function PlayerBalances({onLogout}:SidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const userID = location.state?.userID;
@@ -46,6 +49,11 @@ export function PlayerBalances() {
       if (userID) {
         const handleUpdate = async () => {
           const data = await getDownlinesTable(userID,'balance');
+          if (data === null) {
+            alert("Unauthorized, Please Login again");
+            onLogout();
+            return;
+          }
           setTransactionsHistory(data);
 
           const addViewLog = await addLog(userID, "visited Referral Balances");

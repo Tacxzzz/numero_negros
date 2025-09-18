@@ -31,7 +31,11 @@ import { formatPeso } from '@/lib/utils';
 import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 
-export function PlayerWins() {
+interface SidebarProps {
+  onLogout?: () => void;
+}
+
+export function PlayerWins({onLogout}:SidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const userID = location.state?.userID;
@@ -46,6 +50,11 @@ export function PlayerWins() {
       if (userID) {
         const handleUpdate = async () => {
           const data = await getWinsTeamTable(userID);
+          if (data===null) {
+            alert("Unauthorized, Please Login again");
+            onLogout();
+            return;
+          }
           setTransactionsHistory(data);
 
           const addViewLog = await addLog(userID, "visited Referral Wins");

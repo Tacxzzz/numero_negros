@@ -31,8 +31,11 @@ import { formatPeso, getTransCode } from '@/lib/utils';
 import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 
+interface SidebarProps {
+  onLogout?: () => void;
+}
 
-export function AllowReferrer() {
+export function AllowReferrer({onLogout}:SidebarProps) {
   const navigate = useNavigate();
   const { setUserID,userID,deviceID } = useUser();
   console.log(userID);
@@ -49,6 +52,11 @@ export function AllowReferrer() {
       const handleUpdate = async () => {
   
               const data = await fetchUserData(userID,deviceID);
+              if (data===null) {
+                alert("Unauthorize, Please Login again");
+                onLogout();
+                return;
+              }
               setAllowCashin(data.allow_cashin);
               setAllowCashout(data.allow_cashout);
               setAllowWins(data.allow_wins);

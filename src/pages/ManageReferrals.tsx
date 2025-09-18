@@ -37,9 +37,11 @@ import { HandIcon , HandMetalIcon, ShoppingCart, Users, Boxes, Wallet, CoinsIcon
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { useLocation } from 'react-router-dom';
 
+interface SidebarProps {
+  onLogout?: () => void;
+}
 
-
-export function ManageReferrals() {
+export function ManageReferrals({onLogout}:SidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const userID = location.state?.userID;
@@ -103,6 +105,11 @@ export function ManageReferrals() {
         const handleUpdate = async () => {
           
             const dataUSer = await fetchUserDataDyna(userID);
+            if (dataUSer===null) {
+              alert("Unauthorized, Please Login again");
+              onLogout();
+              return;
+            }
             setMobile(dataUSer[0].mobile);
 
             const initialStartDate = new Date();
@@ -124,9 +131,6 @@ export function ManageReferrals() {
   
             setStartDate(startDate);
             setEndDate(endDate);
-  
-            console.log('Start:', startDate);
-            console.log('End:', endDate);
   
             const data = await getRateChartDataTeam(userID,startDate,endDate);
             setRateChartData(data);
