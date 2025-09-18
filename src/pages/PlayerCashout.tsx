@@ -31,7 +31,11 @@ import { formatPeso, getTransCode } from '@/lib/utils';
 import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 
-export function PlayerCashout() {
+interface SidebarProps {
+  onLogout?: () => void;
+}
+
+export function PlayerCashout({onLogout}:SidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const userID = location.state?.userID;
@@ -46,6 +50,11 @@ export function PlayerCashout() {
       if (userID) {
         const handleUpdate = async () => {
           const data = await getCashoutsTableByUser(userID);
+          if (data===null) {
+            alert("Unauthorized, Please Login again");
+            onLogout();
+            return;
+          }
           setTransactionsHistory(data);
 
           const addViewLog = await addLog(userID, "visited Referral Cashouts");

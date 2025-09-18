@@ -23,7 +23,11 @@ import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 import { Button } from '@/components/ui/button';
 
-export function SavedBets() {
+interface SidebarProps {
+  onLogout?: () => void;
+}
+
+export function SavedBets({onLogout}:SidebarProps) {
   const navigate = useNavigate();
   const { setUserID,userID,deviceID } = useUser();
   
@@ -71,6 +75,11 @@ export function SavedBets() {
     const handleUpdate = async () => {
 
       const gameSaveBetData = await getMySavedBets(userID);
+      if (gameSaveBetData===null) {
+            alert("Unauthorized, Please Login again");
+            onLogout();
+            return;
+          }
       setSavedBets(gameSaveBetData);
 
       const addViewLog = await addLog(userID, "visited Saved Bets");

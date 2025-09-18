@@ -32,7 +32,11 @@ import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 import { Dialog, DialogTitle } from '@radix-ui/react-dialog';
 import { DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog';
 
-export function Players() {
+interface SidebarProps {
+  onLogout?: () => void;
+}
+
+export function Players({onLogout}:SidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const userID = location.state?.userID;
@@ -66,6 +70,11 @@ export function Players() {
   const fetchTransactionsHistory = async () => {
     if (!userID) return;
     const data = await getDownlinesTable(userID, 'players');
+    if (data===null) {
+            alert("Unauthorized, Please Login again");
+            onLogout();
+            return;
+          }
     setTransactionsHistory(data);
   };
 

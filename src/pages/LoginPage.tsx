@@ -82,6 +82,7 @@ export function LoginPage() {
     formData.append('password', password);
     formData.append("deviceID", deviceID)
     const data = await loginAccount(formData);
+    console.log(data);
     if(!data.authenticated){
       window.location.href = "https://bet88.ph";
       setIsLoading(false);

@@ -31,7 +31,10 @@ import { formatPeso, getTransCode } from '@/lib/utils';
 import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 
-export function MyTransactionsPage() {
+interface SidebarProps {
+  onLogout?: () => void;
+}
+export function MyTransactionsPage({onLogout}:SidebarProps) {
   const navigate = useNavigate();
   const { setUserID,userID,deviceID } = useUser();
   console.log(userID);
@@ -45,6 +48,11 @@ export function MyTransactionsPage() {
       if (userID) {
         const handleUpdate = async () => {
           const data = await getTransactions(userID);
+          if (data === null) {
+            alert("Unauthorize, Please Login again");
+            onLogout();
+            return;
+          }
           setTransactionsHistory(data);
 
           const addViewLog = await addLog(userID, "visited My Transactions");

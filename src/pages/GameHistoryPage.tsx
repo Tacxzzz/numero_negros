@@ -36,7 +36,11 @@ type GameDraw = {
   status: 'win' | 'loss' | 'pending';
 };
 
-export function GameHistoryPage() {
+interface SidebarProps {
+  onLogout?: () => void;
+}
+
+export function GameHistoryPage({onLogout}: SidebarProps) {
   const { gameId } = useParams();
   const { setUserID,userID,deviceID,userType } = useUser();
   console.log(userID);
@@ -92,7 +96,11 @@ useEffect(() => {
       if (filteredDateDraws && filteredDateDraws.length > 0) {
         filteredDateDraws.forEach(async (draw) => {
           const gameBetData = await checkCurrentBetsTotal(draw.id);
-          console.log(draw.id);
+          if (gameBetData===null) {
+            alert("Unauthorized, Please Login again");
+            onLogout();
+            return;
+          }
           if(gameBetData.authenticated)
           {
             setTotalBets((prev) => ({
@@ -113,6 +121,11 @@ useEffect(() => {
     const handleUpdate = async () => {
       
       const gamesData = await getGameByID(gameId);
+      if (gamesData===null) {
+        alert("Unauthorized, Please Login again");
+            onLogout();
+            return;
+      }
       setGameData(gamesData);
       const drawsData = await getDrawsByID(gameId);
       setDraws(drawsData);

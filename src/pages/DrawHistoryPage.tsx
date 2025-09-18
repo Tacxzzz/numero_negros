@@ -31,8 +31,11 @@ import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 import { useUser } from './UserContext';
 
+interface SidebarProps {
+  onLogout?: () => void;
+}
 
-export function DrawHistoryPage() {
+export function DrawHistoryPage({onLogout}:SidebarProps) {
   const navigate = useNavigate();
   const [filter, setFilter] = useState('all');
   const { setUserID,userID,deviceID } = useUser();
@@ -44,6 +47,11 @@ export function DrawHistoryPage() {
     const handleUpdate = async () => {
 
       const gameBetData = await getDrawsResults();
+      if (gameBetData===null){
+        alert("Anauthorized, Please Login again");
+        onLogout();
+        return;
+      }
       setTransactionsHistory(gameBetData);
 
       const addViewLog = await addLog(userID, "visited Draws History");

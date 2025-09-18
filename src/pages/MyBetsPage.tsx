@@ -31,9 +31,13 @@ import { addLog, getGameByID, getMyBets } from '@/lib/apiCalls';
 import { formatPeso, getTransCode } from '@/lib/utils';
 import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
+import { LogOut } from 'lucide-react';
 
+interface SidebarProps {
+  onLogout?: () => void;
+}
 
-export function MyBetsPage() {
+export function MyBetsPage({onLogout}:SidebarProps) {
   const navigate = useNavigate();
   const { setUserID,userID,deviceID } = useUser();
   const [filter, setFilter] = useState('all');
@@ -46,6 +50,15 @@ export function MyBetsPage() {
       const handleUpdate = async () => {
   
         const gameBetData = await getMyBets(userID);
+        if (gameBetData===null) {
+          alert("Unauthorized, Please Login again");
+          if (onLogout) {
+            onLogout();
+          } else {
+            navigate('/');
+          }
+          return;
+        }
         setBetsHistory(gameBetData);
 
         const addViewLog = await addLog(userID, "visited My Bets");

@@ -64,30 +64,30 @@ function App() {
               <Route path="/" element={<RedirectIfAuthenticated><LoginPage /></RedirectIfAuthenticated>} />
               <Route path="/create-account" element={<RedirectIfAuthenticated><CreatePage /></RedirectIfAuthenticated>} />
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard onLogout={handleLogout} /></ProtectedRoute>} />
-              <Route path="/game/:gameId/:gameType/:drawId" element={<ProtectedRoute><GamePage /></ProtectedRoute>} />
+              <Route path="/game/:gameId/:gameType/:drawId" element={<ProtectedRoute><GamePage onLogout={handleLogout}/></ProtectedRoute>} />
               <Route path="/payment-success" element={<ProtectedRoute><PaymentSuccess /></ProtectedRoute>} />
-              <Route path="/game-history/:gameId" element={<GameHistoryPage />} />
-              <Route path="/my-bets" element={<MyBetsPage />} />
+              <Route path="/game-history/:gameId" element={<ProtectedRoute><GameHistoryPage onLogout={handleLogout}/></ProtectedRoute>} />
+              <Route path="/my-bets" element={<ProtectedRoute><MyBetsPage onLogout={handleLogout}/></ProtectedRoute>} />
               <Route path="/tournaments" element={<TournamentsPage />} />
               <Route path="/support" element={<SupportPage />} />
-              <Route path="/transactions" element={<MyTransactionsPage />} />
-              <Route path="/drawhistory" element={<DrawHistoryPage />} />
-              <Route path="/betclients" element={<BetClientsPage />} />
-              <Route path="/savedbets" element={<SavedBets />} />
+              <Route path="/transactions" element={<ProtectedRoute><MyTransactionsPage onLogout={handleLogout} /></ProtectedRoute>} />
+              <Route path="/drawhistory" element={<ProtectedRoute><DrawHistoryPage onLogout={handleLogout} /></ProtectedRoute>} />
+              <Route path="/betclients" element={<ProtectedRoute><BetClientsPage onLogout={handleLogout} /></ProtectedRoute>} />
+              <Route path="/savedbets" element={<ProtectedRoute><SavedBets onLogout={handleLogout} /></ProtectedRoute>} />
               <Route path="/pisoplaysguide" element={<PisoPlaysGuide />} />
-              <Route path="/manageTeam" element={<ManageReferrals />} />
-              <Route path="/allowReferrer" element={<AllowReferrer />} />
-              <Route path="/team" element={<Players />} />
-              <Route path="/teambets" element={<PlayerTotalBets />} />
-              <Route path="/playerbets" element={<PlayerBets />} />
+              <Route path="/manageTeam" element={<ProtectedRoute><ManageReferrals onLogout={handleLogout} /></ProtectedRoute>} />
+              <Route path="/allowReferrer" element={<ProtectedRoute><AllowReferrer onLogout={handleLogout} /></ProtectedRoute>} />
+              <Route path="/team" element={<ProtectedRoute><Players onLogout={handleLogout} /></ProtectedRoute>} />
+              <Route path="/teambets" element={<ProtectedRoute><PlayerTotalBets onLogout={handleLogout} /></ProtectedRoute>} />
+              <Route path="/playerbets" element={<ProtectedRoute><PlayerBets onLogout={handleLogout} /></ProtectedRoute>} />
               <Route path="/ticketreceipt" element={<TicketReceipt />} />
-              <Route path="/teamwins" element={<PlayerWins />} />
-              <Route path="/teambalances" element={<PlayerBalances />} />
-              <Route path="/teamcommissions" element={<PlayerCommissions />} />
-              <Route path="/teamcashins" element={<PlayerCashinTotal />} />
-              <Route path="/playercashins" element={<PlayerCashin />} />
-              <Route path="/teamcashouts" element={<PlayerCashoutTotal />} />
-              <Route path="/playercashouts" element={<PlayerCashout />} />
+              <Route path="/teamwins" element={<ProtectedRoute><PlayerWins onLogout={handleLogout} /></ProtectedRoute>} />
+              <Route path="/teambalances" element={<ProtectedRoute><PlayerBalances onLogout={handleLogout} /></ProtectedRoute>} />
+              <Route path="/teamcommissions" element={<ProtectedRoute><PlayerCommissions onLogout={handleLogout} /></ProtectedRoute>} />
+              <Route path="/teamcashins" element={<ProtectedRoute><PlayerCashinTotal onLogout={handleLogout} /></ProtectedRoute>} />
+              <Route path="/playercashins" element={<ProtectedRoute><PlayerCashin onLogout={handleLogout} /></ProtectedRoute>} />
+              <Route path="/teamcashouts" element={<ProtectedRoute><PlayerCashoutTotal onLogout={handleLogout} /></ProtectedRoute>} />
+              <Route path="/playercashouts" element={<ProtectedRoute><PlayerCashout onLogout={handleLogout} /></ProtectedRoute>} />
               <Route path="/test" element={<div>Test Page Works!</div>} />
               <Route path="*" element={<Navigate to="/" replace />} />
               

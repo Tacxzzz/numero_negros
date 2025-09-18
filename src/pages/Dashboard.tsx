@@ -215,7 +215,11 @@ export function Dashboard({ onLogout }: SidebarProps) {
         setNoLimit(dataRef.nolimit);
 
         const data = await fetchUserData(userID,deviceID);
-        console.log(data);
+        if (data === null) {
+          alert("Unauthorize, Please Login again");
+          onLogout();
+          return;
+        }
         setBalance(data.balance);
         setFreeCredits(data.free_credits);
         setWinnings(data.wins);
@@ -307,6 +311,11 @@ export function Dashboard({ onLogout }: SidebarProps) {
     setLevel2(dataRef.level2);
 
     const data = await fetchUserData(userID,deviceID);
+    if (data === null) {
+          alert("Unauthorize, Please Login again");
+          onLogout();
+          return;
+        }
     setBalance(data.balance);
     setFreeCredits(data.free_credits);
     setWinnings(data.wins);
@@ -352,6 +361,11 @@ export function Dashboard({ onLogout }: SidebarProps) {
     setLevel2(dataRef.level2);
 
     const data = await fetchUserData(userID,deviceID);
+    if (data === null) {
+          alert("Unauthorize, Please Login again");
+          onLogout();
+          return;
+        }
     setBalance(data.balance);
     setFreeCredits(data.free_credits);
     setWinnings(data.wins);
@@ -477,6 +491,11 @@ const handleSubmit = async (e) => {
       setLevel2(dataRef.level2);
 
       const data = await fetchUserData(userID,deviceID);
+      if (data === null) {
+          alert("Unauthorize, Please Login again");
+          onLogout();
+          return;
+        }
       setBalance(data.balance);
       setFreeCredits(data.free_credits);
       setWinnings(data.wins);
@@ -541,6 +560,11 @@ const handleSubmit = async (e) => {
       setLevel2(dataRef.level2);
 
       const data = await fetchUserData(userID,deviceID);
+      if (data === null) {
+          alert("Unauthorize, Please Login again");
+          onLogout();
+          return;
+        }
       setBalance(data.balance);
       setFreeCredits(data.free_credits);
       setWinnings(data.wins);
@@ -603,6 +627,11 @@ const handleSubmit = async (e) => {
       setLevel2(dataRef.level2);
 
       const data = await fetchUserData(userID,deviceID);
+      if (data === null) {
+          alert("Unauthorize, Please Login again");
+          onLogout();
+          return;
+        }
       setBalance(data.balance);
       setFreeCredits(data.free_credits);
       setWinnings(data.wins);
@@ -665,6 +694,11 @@ const handleSubmit = async (e) => {
       setLevel2(dataRef.level2);
 
       const data = await fetchUserData(userID,deviceID);
+      if (data === null) {
+          alert("Unauthorize, Please Login again");
+          onLogout();
+          return;
+        }
       setBalance(data.balance);
       setFreeCredits(data.free_credits);
       setWinnings(data.wins);
@@ -2049,7 +2083,7 @@ const handleSubmit = async (e) => {
 }
 
 // Account Management Modal Component
-function AccountManagementModal({ onClose }: { onClose: () => void }) {
+function AccountManagementModal({ onClose }: { onClose: () => void }, { onLogout }: SidebarProps) {
   const [activeTab, setActiveTab] = useState('profile');
   const { setUserID,userID,deviceID } = useUser();
   const [mobile, setMobile] = useState("");
@@ -2148,6 +2182,10 @@ function AccountManagementModal({ onClose }: { onClose: () => void }) {
       
       const handleUpdate = async () => {
         const data = await fetchUserData(userID,deviceID);
+        if (data === null) {
+          setError("Unauthorize, Please Login again");
+          onLogout();
+        }
         setMobile(data.mobile);
         setReferral(data.referral);
         setStatus(data.status);
