@@ -27,7 +27,7 @@ import { FiCopy } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from "./UserContext";
-import { addBetClients, cashIn, cashInCashko, cashOutCashko, cashOutCashkoCommission, convertCommissionsToBalance, convertWinsToBalance, fetchUserData, getBetClientData, getCommissions, getGames, getGamesToday, getMyBetClientsCount, getReferrals, updatePassword, checkMaintainingBalance, addLog, getMySavedBetsCount, getMyBetClients, getUserType } from '@/lib/apiCalls';
+import { addBetClients, cashInCashko, cashOutCashko, cashOutCashkoCommission, convertCommissionsToBalance, convertWinsToBalance, fetchUserData, getBetClientData, getCommissions, getGames, getGamesToday, getMyBetClientsCount, getReferrals, updatePassword, checkMaintainingBalance, addLog, getMySavedBetsCount, getMyBetClients, getUserType } from '@/lib/apiCalls';
 import { formatPeso } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -340,8 +340,7 @@ export function Dashboard({ onLogout }: SidebarProps) {
   };
 
   const cashInSubmit =  async () => {
-  
-    console.log(userID);
+    setLoading(true);
     const dataRemit = await cashInCashko(cashInAmount.toString(),creditAmount.toString(),userID,channel);
     if(dataRemit.error)
     {
@@ -2232,25 +2231,6 @@ function AccountManagementModal({ onClose }: { onClose: () => void }, { onLogout
     navigator.clipboard.writeText(employerReferralLink);
     toast.success("Link copied to clipboard!", { autoClose: 1500 });
   };
-
-  const cashInSubmit =  async () => {
-  
-    console.log(userID);
-    const formData = new FormData();
-    formData.append("amount", cashInAmount.toString());
-    formData.append('userID', userID);
-    const dataRemit = await cashIn(formData);
-    console.log(dataRemit.transID);
-    setCashInAmount(0);
-    alert("Cash In successfully! Transaction ID: " + dataRemit.transID);
-};
-
-const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  let value = parseFloat(e.target.value); // Convert to number, fallback to 0
-  if (value > transLimit) value = transLimit; // Restrict maximum value
-  setCashInAmount(value);
-  
-};
 
 const handleShare = () => {
   const canvas = document.querySelector('canvas');

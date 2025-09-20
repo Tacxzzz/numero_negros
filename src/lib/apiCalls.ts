@@ -290,37 +290,6 @@ export const updateDatabase = async (user: any , getAccessTokenSilently: any) =>
 
 
 
-export const cashIn = async (
-  formData: FormData,
-) => {
-  try {
-    const response = await axios.post(
-      `${API_URL}/main/cashIn`,
-      formData,
-      {
-        withCredentials: true,
-        headers: { "Content-Type": "application/json" }
-      }
-    );
-
-    if (response.data && response.data.authenticated) {
-      const userData = response.data;
-      return {
-        transID: userData.transCode+userData.transID,
-      };
-    } else {
-      console.warn("User data is empty or invalid.");
-      return { transID: "" };
-    }
-    
-  } catch (error) {
-    console.error("Failed to send remittance:", error);
-    return { transID: "" };
-  }
-};
-
-
-
 export const fetchUserData = async (userID: string, deviceID: string) => { 
   try {
     const response = await axios.post(`${API_URL}/main/getUserData`, { userID, deviceID },{
@@ -984,39 +953,17 @@ export const cashInCashko = async (
   try {
     const timestamp = Date.now().toString();
     const clientNo = `PP${timestamp}`;
-    const clientCode = import.meta.env.VITE_CLIENT_CODE;
-    const privateKey = import.meta.env.VITE_PRIVATE_KEY;
+    const amount = amountToPay.toString();
+    const hrefbackurl = `${window.location.origin}/payment-success`
+    const callbackurl = API_URL;
 
-    const formData = new FormData();
-    formData.append("clientCode", clientCode);
-    formData.append("chainName", "BANK");
-    formData.append("coinUnit", "PHP");
-    formData.append("clientNo",clientNo );
-    formData.append("memberFlag", "user1001");
-    formData.append("requestAmount", amountToPay.toString());
-    formData.append("requestTimestamp", timestamp);
-    formData.append("callbackurl", `${API_URL}/main/requestDepositCashko`);
-    formData.append("hrefbackurl", `${window.location.origin}/payment-success`);
-    formData.append("toPayQr", "0");
-    formData.append("dataType", "PAY_PAGE");
-    formData.append("channel", channel);
-    formData.append("sign", generateSign(clientCode, clientNo, timestamp, privateKey));
-
-    const response = await axios.post(
-      "https://gw01.ckogway.com/api/coin/pay/request",
-      formData
-    );
-    console.log(response);
-    if (response.data && response.data.success && response.data.code === 200) {
-      const { orderNo, receiveAddr, chainName, coinUnit, requestAmount, status, payUrl, hrefbackurl, sign } = response.data.data;
-
-      const res = await axios.post(`${API_URL}/main/cashInRequest`, {userID, orderNo, creditCashin,amountToPay,clientNo },{
+    const res = await axios.post(`${API_URL}/main/cashInRequest`, {userID, creditCashin,amount ,clientNo, channel, hrefbackurl, callbackurl, timestamp },{
         withCredentials: true,
         headers: { "Content-Type": "application/json" }
       });
-  
+      console.log(res);
       if (res.data && res.data.authenticated) {
-        window.location.href = payUrl;
+        window.location.href = res.data.payUrl;
         return { error: false };
       } 
       else 
@@ -1024,32 +971,10 @@ export const cashInCashko = async (
         console.warn("User data is empty or invalid.");
         return { error: true };
       }
-     
-    } 
-    else {
-      console.warn("Transaction response is missing expected data.");
-      return {error: true};
-    }
   } catch (error) {
     console.error("Cashko request failed:", error);
     return {error: true};
   }
-};
-
-
-
-
-const generateSign = (clientCode: string, clientNo: string, latest_requestTimestamp: string, privateKey: string) => {
-  const signString = `${clientCode}&BANK&PHP&${clientNo}&${latest_requestTimestamp}${privateKey}`;
-  const resultHash = CryptoJS.MD5(signString).toString(CryptoJS.enc.Hex);
-  return resultHash;
-};
-
-
-const generateSignPAID = (clientCode: string, clientNo: string, privateKey: string) => {
-  const signString = `${clientCode}&${clientNo}${privateKey}`;
-  const resultHash = CryptoJS.MD5(signString).toString(CryptoJS.enc.Hex);
-  return resultHash;
 };
 
 export const cashOutCashko = async (
@@ -1062,10 +987,7 @@ export const cashOutCashko = async (
   try {
     const timestamp = Date.now().toString();
     const clientNo = `PPCO${timestamp}`;
-    const clientCode = import.meta.env.VITE_CLIENT_CODE;
-    const privateKey = import.meta.env.VITE_PRIVATE_KEY;
-    const callbackurl = `${API_URL}/main/requestCashOutCashko`;
-    const sign = generateSign(clientCode, clientNo, timestamp, privateKey);
+    const callbackurl = `${API_URL}`;
 
     const res = await axios.post(`${API_URL}/main/cashOutRequest`, {
         userID,
@@ -1074,15 +996,14 @@ export const cashOutCashko = async (
         full_name,
         bank,
         account,
-        clientCode,
         callbackurl,
-        sign,
         timestamp
       },{
         withCredentials: true,
         headers: { "Content-Type": "application/json" }
       });
-
+      console.log("result:");
+      console.log(res);
       if (res.data && res.data.authenticated) {
         return { error: false };
       } else {
@@ -1107,10 +1028,7 @@ export const cashOutCashkoCommission = async (
   try {
     const timestamp = Date.now().toString();
     const clientNo = `PPCO${timestamp}`;
-    const clientCode = import.meta.env.VITE_CLIENT_CODE;
-    const privateKey = import.meta.env.VITE_PRIVATE_KEY;
-    const callbackurl = `${API_URL}/main/requestCashOutCashko`;
-    const sign = generateSign(clientCode, clientNo, timestamp, privateKey);
+    const callbackurl = `${API_URL}`;
 
     const res = await axios.post(`${API_URL}/main/cashOutRequestCommissions`, {
         userID,
@@ -1119,9 +1037,7 @@ export const cashOutCashkoCommission = async (
         full_name,
         bank,
         account,
-        clientCode,
         callbackurl,
-        sign,
         timestamp
       },{
         withCredentials: true,
