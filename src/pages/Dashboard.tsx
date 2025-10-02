@@ -2207,7 +2207,7 @@ function AccountManagementModal({ onClose }: { onClose: () => void }, { onLogout
         const coordinator = userTypeData.find((u) => u.type === "coordinator");
 
         const encodedParams = btoa(`ref=${userID}&userType=${data.type}&key=${randomKey}`); // Encode full params
-        const employerEncodedParams = btoa(`ref=${userID}&userType=${data.type}&fromEmployer=yes&mobile=${mobile}&key=${randomKey}`);
+        const employerEncodedParams = btoa(`ref=${userID}&userType=${data.type}&fromEmployer=yes&mobile=${data.mobile}&key=${randomKey}`);
 
         setReferralLink(`${currentURL}/create-account?data=${encodedParams}`);
         setEmployerReferralLink(`${currentURL}/create-account?data=${employerEncodedParams}`);
