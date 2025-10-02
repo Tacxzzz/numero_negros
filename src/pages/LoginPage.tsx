@@ -9,7 +9,7 @@ import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 import { useUser } from "./UserContext";
 import { loginAccount, sendOTPForReset, verifyOTPForgot, verifyOTPLogin } from '@/lib/apiCalls';
 import { useClient } from "./ClientContext";
-import BetMotoLogo from "@/files/BetMotoLogoWithName.svg";
+import BetMotoLogo from "@/files/IloIloLogo.png";
 import { PhoneIcon, LockIcon, PhoneCallIcon, LucidePhone, Phone, LockKeyholeIcon, EyeOffIcon, EyeIcon } from "lucide-react"; 
 import { FiLock, FiPhone } from 'react-icons/fi';
 
@@ -84,7 +84,7 @@ export function LoginPage() {
     const data = await loginAccount(formData);
     console.log(data);
     if(!data.authenticated){
-      window.location.href = "https://bet88.ph";
+      setError("Invalid credentials");
       setIsLoading(false);
       return;
     }

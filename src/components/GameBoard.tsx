@@ -63,8 +63,11 @@ export function GameBoard({ onTileClick, lengthChoice = 25,lengthStart = 0, scor
         ) {
           const scoreCount = getScoreCount(tile.value);
           if (scoreCount >= 2) {
-            isDisabled = true;
+            isDisabled = distinctScores.includes(tile.value);
           }
+        }
+        else if (gameId !== "1" && gameId !== "2") {
+          isDisabled = false;
         }
         // ✅ Default disabling condition
         else if (
@@ -72,7 +75,7 @@ export function GameBoard({ onTileClick, lengthChoice = 25,lengthStart = 0, scor
           gameId !== "1" &&
           gameId !== "2" &&
           gameId !== "3" &&
-          gameId !== "4"
+          gameId !== "4" 
         ) {
           isDisabled = true;
         }

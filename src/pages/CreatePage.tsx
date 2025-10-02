@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { createAccount, verifyOTP } from '@/lib/apiCalls';
 import { useUser } from "./UserContext";
-import BetMotoLogo from "@/files/BetMotoLogoWithName.svg"; 
+import BetMotoLogo from "@/files/IloIloLogo.png"; 
 import { PhoneIcon, LockIcon, LockKeyholeIcon, EyeOffIcon, EyeIcon } from "lucide-react";
 import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';

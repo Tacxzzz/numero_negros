@@ -245,7 +245,7 @@ export function GamePage({onLogout}:SidebarProps) {
 
             randomScores = Array.from(uniqueNumbers);
     }
-    else if(Number(gameId)>8) {
+    else if(Number(gameId)>8 && Number(gameId)<25) {
       const uniqueNumbers = new Set<string>();
 
           while (uniqueNumbers.size < 2) {
