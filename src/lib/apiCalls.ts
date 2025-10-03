@@ -5,6 +5,14 @@ const API_URL = import.meta.env.VITE_DATABASE_URL;
 const rawToken = import.meta.env.VITE_API_KEY;
 const API_KEY = btoa(rawToken);
 
+axios.interceptors.request.use((config) => {
+  const token = sessionStorage.getItem("authToken"); // or sessionStorage
+  if (token) {
+    config.headers["Authorization"] = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export const createAccount = async (
   formData: FormData,
 ) => {
@@ -234,7 +242,8 @@ export const loginAccount = async (
       return {
         userID: userData.userID,
         authenticated: userData.authenticated,
-        newDevice: userData.newDevice
+        newDevice: userData.newDevice,
+        token: userData.token
       };
     } else {
       console.warn("User data is empty or invalid.");
