@@ -2307,36 +2307,44 @@ const handleShare = () => {
                 <h3 className="font-bold mt-2">{mobile}</h3>
               </div>
               
-              {userType !== 'bettor' && (
+              {(userType !== 'bettor' || refLevel === "nolimit") && (
                 <div className="space-y-3">
-                  <div>
+                  {refLevel === "nolimit" && (
+                    <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Referral Link (
-                          {coordinator === null || usher === null || bettor === null
-                            ? ""
-                            : userType === "coordinator"
-                            ? Number(coordinator.bet_commission_percent) - Number(bettor.bet_commission_percent)
-                            : userType === "usher"
-                            ? Number(usher.bet_commission_percent) - Number(usher.employer_commission_share) - Number(bettor.bet_commission_percent)
-                            : level1Percent} %)
+                        {coordinator === null || usher === null || bettor === null
+                          ? ""
+                          : userType === "coordinator"
+                          ? 0
+                          : userType === "usher"
+                          ? 0
+                          : noLimitPercent} %)
                       </label>
-                      <div className="flex items-center">
+
+                      <div className="flex items-center mb-3">
                         <Input defaultValue={referralLink} disabled className="mr-2" />
-                        <button 
-                          onClick={handleCopy} 
-                          className="p-2 hover:bg-gray-200"
+                        <button
+                          onClick={handleCopy}
+                          className="p-2 hover:bg-gray-200 rounded"
+                          title="Copy Referral Link"
                         >
                           <FiCopy />
                         </button>
                       </div>
-                  </div>
-                  <Button onClick={() => {
-                    openNestedModal();
-                    setIsEmployer(false);
-                  }} className="w-full bg-blue-600 text-white">
-                    Share QR
-                  </Button>
-                  {employer === 'yes' && (
+
+                      <Button
+                        onClick={() => {
+                          openNestedModal();
+                          setIsEmployer(false);
+                        }}
+                        className="w-full bg-blue-600 text-white"
+                      >
+                        Share QR
+                      </Button>
+                    </div>
+                  )}
+                  {employer === 'yes' && userType === 'coordinator' && (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Referral Link for Usher ({coordinator === null ||  usher === null || bettor === null ? "" : usher.employer_commission_share} %)</label>
                       <div className="flex items-center">
@@ -2373,6 +2381,18 @@ const handleShare = () => {
                             
                           </div>
                       </div> */}
+                    </>
+                  )}
+
+                  {refLevel === 'nolimit' && (
+                    <>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred</label>
+                        <div className="flex items-center">
+                          <Input readOnly value={nolimit} disabled className="mr-2" />
+                          
+                        </div>
+                      </div>
                     </>
                   )}
                   
