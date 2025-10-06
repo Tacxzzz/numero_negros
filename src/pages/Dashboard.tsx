@@ -2365,7 +2365,7 @@ const handleShare = () => {
                     </div>
                   )}
 
-                  {refLevel === 'level2' && userType !== 'bettor' && (
+                  {refLevel === 'level2' && userType !== 'bettor' && userType !== 'usher' && (
                     <>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">No. of Referred</label>
