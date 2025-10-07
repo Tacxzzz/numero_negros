@@ -2346,7 +2346,7 @@ const handleShare = () => {
                   )}
                   {employer === 'yes' && userType === 'coordinator' && (
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Referral Link for Usher ({coordinator === null ||  usher === null || bettor === null ? "" : usher.employer_commission_share} %)</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Referral Link for Usher</label>
                       <div className="flex items-center">
                         <Input defaultValue={employerReferralLink} disabled className="mr-2" />
                         <button 
