@@ -131,11 +131,10 @@ export const ShareModal: React.FC<ShareModalProps> = ({
         
         <div ref={captureContentRef}>
           {imageData && (
-            <div className="flex justify-center my-4">
+            <div>
               <img 
                 src={imageData} 
                 alt="Lottery Ticket" 
-                className="max-w-full max-h-60 object-contain border rounded-md"
               />
             </div>
           )}

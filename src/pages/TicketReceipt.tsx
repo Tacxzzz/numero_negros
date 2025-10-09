@@ -161,16 +161,16 @@ const TicketReceipt: React.FC = () => {
         <Card className="w-full max-w-sm shadow-lg mt-4">
           <CardContent className="p-6 flex flex-col items-center">
             {/* Logo */}
-            <div className="mb-6 mt-4">
+            <div className="">
               {/* <div className="font-bold text-4xl text-center">
                 {bet.game_name}
                 <div className="text-xs font-bold bg-black text-white px-2 text-center">LOTTO</div>
               </div> */}
               
-              <div className="font-bold text-3xl text-center items-center justify-center ">
-                <div className="mb-3">{bet.game_name}</div>
+              <div className="font-bold text-xl text-center items-center justify-center ">
+                <div className="mb-1">{bet.game_name}</div>
                 
-                <div className="flex items-center justify-center text-xs font-bold bg-black text-white text-align-center px-2 py-2 font-bold mt-2">LOTTO</div>
+                <div className="flex items-center justify-center text-xs font-bold bg-black text-white text-align-center font-bold">LOTTO</div>
                 
               </div>
 
@@ -178,39 +178,36 @@ const TicketReceipt: React.FC = () => {
             </div>
 
             {/* Ticket Details */}
-            <div className="w-full grid grid-cols-2 gap-4 mb-4">
-              <div className="space-y-1">
-                <div className="flex">
+            <div className="w-full grid">
+                <div className="flex justify-between items-start w-full font-bold text-xl">
                   <span>{bet.bets}</span>
-                </div>
-                <div className="flex justify-between items-start w-full text-sm">
-                  <span className="mr-2">Ticket Price:</span>
                   <span>{formatPeso(bet.bet)}</span>
                 </div>
-                <div className="text-sm">
-                  {bet.created_date} {bet.created_time}
+                <div className="flex justify-between items-start w-full text-l font-bold">
+                  <span>Winnings: </span>
+                  <span>{bet.jackpot}</span>
                 </div>
+                <div className="flex justify-between items-start w-full text-l font-bold">
+                  <span>Created: </span>
+                  <span>{bet.created_date} {bet.created_time}</span>
+                </div>
+                <div className="flex justify-between items-start w-full text-l font-bold">
+                  <span>Draw: </span>
+                  <span>{bet.draw_date} {bet.draw_time}</span>
+                </div>
+              <div className="space-y-1">
+                
                 {/* <div className="text-sm">{getTransCode(bet.created_date + " " + bet.created_time) + bet.id}</div> */}
               </div>
-              <div className="space-y-1 text-right">
-                <div>{bet.game_type_name} {formatPeso(bet.bet)}</div>
-                <div> </div>
-                <div className="text-sm">
-                    {bet.draw_date} {bet.draw_time}
-                </div>
-                <div className="text-sm font-bold">
-                    {bet.bakas_full_name}
-                </div>
+              <div className=" flex flex-col items-center mt-2 text-xl font-bold">
+                {getTransCode(bet.created_date + " " + bet.created_time) + bet.id}
               </div>
             </div>
 
            {/* Barcode */}
-            <div className="w-full my-4 flex flex-col items-center">
+            {/* <div className=" flex flex-col items-center">
                  <Barcode value={getTransCode(bet.created_date + " " + bet.created_time) + bet.id} />
-                {/* <div className="text-sm mt-2">
-                  {getTransCode(bet.created_date + " " + bet.created_time) + bet.id}
-                </div> */}
-              </div>
+              </div> */}
 
 
           </CardContent>
