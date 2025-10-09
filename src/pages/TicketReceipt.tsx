@@ -185,7 +185,7 @@ const TicketReceipt: React.FC = () => {
                 </div>
                 <div className="flex justify-between items-start w-full text-l font-bold">
                   <span>Winnings: </span>
-                  <span>{bet.jackpot}</span>
+                  <span>{formatPeso(bet.jackpot)}</span>
                 </div>
                 <div className="flex justify-between items-start w-full text-l font-bold">
                   <span>Created: </span>
