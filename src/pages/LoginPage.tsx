@@ -9,7 +9,7 @@ import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 import { useUser } from "./UserContext";
 import { loginAccount, sendOTPForReset, verifyOTPForgot, verifyOTPLogin } from '@/lib/apiCalls';
 import { useClient } from "./ClientContext";
-import BetMotoLogo from "@/files/NegrosLogo.png";
+import BetMotoLogo from "@/files/BetMotoLogoOnly.png";
 import { PhoneIcon, LockIcon, PhoneCallIcon, LucidePhone, Phone, LockKeyholeIcon, EyeOffIcon, EyeIcon } from "lucide-react"; 
 import { FiLock, FiPhone } from 'react-icons/fi';
 
@@ -188,7 +188,7 @@ export function LoginPage() {
 
 <div className="flex justify-center">
 
-        <img src={BetMotoLogo} alt="BetMoto Logo" width="200" height="100" />
+        <img src={BetMotoLogo} alt="BetMoto Logo" width="100" height="100" />
         
           {/* <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg">
             <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg"> */}
@@ -200,7 +200,7 @@ export function LoginPage() {
           </div> */}
         </div>
 
-        
+        <h2 className="text-2xl font-bold text-center mb-3 text-[#c63018]">PisoGame Plus</h2>
         
         {/* Login Form */}
         <div className="overflow-hidden">

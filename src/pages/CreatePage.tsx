@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { createAccount, verifyOTP } from '@/lib/apiCalls';
 import { useUser } from "./UserContext";
-import BetMotoLogo from "@/files/NegrosLogo.png"; 
+import BetMotoLogo from "@/files/BetMotoLogoOnly.png"; 
 import { PhoneIcon, LockIcon, LockKeyholeIcon, EyeOffIcon, EyeIcon } from "lucide-react";
 import useBrowserCheck from '@/components/WebBrowserChecker';
 import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
@@ -133,7 +133,7 @@ export function CreatePage() {
         </div> */}
         {/* Logo */}
         <div className="flex justify-center">
-        <img src={BetMotoLogo} alt="BetMoto Logo" width="200" height="100" />
+        <img src={BetMotoLogo} alt="BetMoto Logo" width="100" height="100" />
           {/* <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg">
             <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg"> */}
               {/* <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-500">
@@ -143,6 +143,8 @@ export function CreatePage() {
             </div>
           </div> */}
         </div>
+
+        <h2 className="text-2xl font-bold text-center mb-3 text-[#c63018]">PisoGame Plus</h2>
         
         {/* Login Form */}
         {/* <div className="bg-white rounded-3xl shadow-xl overflow-hidden"> */}
