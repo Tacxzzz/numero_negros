@@ -33,7 +33,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 import { useClient } from "./ClientContext";
-import BetMotoLogo from "@/files/CapizLogo.png";
+import BetMotoLogo from "@/files/NegrosLogo.png";
 import AdvertisementModal from '@/components/AdvertisementModal';
 import AdvertisementImage from "@/files/advertisement.svg";
 

@@ -9,7 +9,7 @@ import OpenInExternalBrowser from '@/components/OpenInExternalBrowser';
 import { useUser } from "./UserContext";
 import { loginAccount, sendOTPForReset, verifyOTPForgot, verifyOTPLogin } from '@/lib/apiCalls';
 import { useClient } from "./ClientContext";
-import BetMotoLogo from "@/files/CapizLogo.png";
+import BetMotoLogo from "@/files/NegrosLogo.png";
 import { PhoneIcon, LockIcon, PhoneCallIcon, LucidePhone, Phone, LockKeyholeIcon, EyeOffIcon, EyeIcon } from "lucide-react"; 
 import { FiLock, FiPhone } from 'react-icons/fi';
 
