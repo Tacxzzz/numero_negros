@@ -48,7 +48,7 @@ export function SavedBets({onLogout}:SidebarProps) {
   const uniqueDrawDateTimes = [
     ...new Set(
         savedBets
-        .filter((b) => !b.response || b.response.trim() === "" || b.response === "insufficient balance")
+        .filter((b) => !b.response || b.response.trim() === "" || b.response === "insufficient balance" || b.response === "sold out")
         .map((b) => `${b.draw_date} ${b.draw_time}`)
     ),
     ];
@@ -241,7 +241,7 @@ export function SavedBets({onLogout}:SidebarProps) {
             .filter(
                 (b) =>
                 `${b.draw_date} ${b.draw_time}` === dt &&
-                (!b.response || b.response.trim() === "" || b.response === "insufficient balance")
+                (!b.response || b.response.trim() === "" || b.response === "insufficient balance" || b.response === "sold out")
             )
             .reduce((sum, b) => sum + Number(b.bet || 0), 0);
 
@@ -262,7 +262,7 @@ export function SavedBets({onLogout}:SidebarProps) {
                     .filter(
                         (b) =>
                         `${b.draw_date} ${b.draw_time}` === dt &&
-                        (!b.response || b.response.trim() === "" || b.response === "insufficient balance")
+                        (!b.response || b.response.trim() === "" || b.response === "insufficient balance"  || b.response === "sold out")
                     )
                     .map((b) => b.id);
 
@@ -343,7 +343,7 @@ export function SavedBets({onLogout}:SidebarProps) {
                   <div className='col-span-3'>
                     <Button
                       className="w-full sm:w-auto bg-blue-500 border-blue-500 text-white hover:bg-blue-500/20 hover:text-blue-700"
-                      onClick={() => navigate('/ticketreceipt', { state: { betID: bet.id, from: 'My Bets', isSavedBet: true } })}
+                      onClick={() => navigate('/ticketreceipt', { state: { receiptID: bet.receipt_id, from: 'My Bets', isSavedBet: true } })}
                     >
                       Receipt
                     </Button>

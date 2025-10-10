@@ -424,7 +424,7 @@ function BetsTable({ bets}: { bets: any[]}) {
                 <TableCell className="text-center">
                  <Button
                     className="w-full sm:w-auto bg-blue-500 border-blue-500 text-white hover:bg-blue-500/20 hover:text-blue-700"
-                    onClick={() => navigate('/ticketreceipt', { state: { betID: bet.id, from: 'My Bets', isSavedBet: false } })}
+                    onClick={() => navigate('/ticketreceipt', { state: { receiptID: bet.receipt_id, from: 'My Bets', isSavedBet: false } })}
                   >
                     Receipt
                   </Button>

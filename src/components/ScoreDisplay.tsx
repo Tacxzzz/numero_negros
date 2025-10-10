@@ -5,16 +5,36 @@ export function ScoreDisplay({ scores }: { scores: string[] }) {
   const fontSize = scores.length > 5 ? "text-base sm:text-lg" : "text-lg sm:text-2xl";
 
   return (
-    <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 flex flex-nowrap justify-center gap-2 sm:gap-4 max-w-[90vw] overflow-hidden">
-      {scores.map((score, index) => (
-        <div key={index} className="relative flex items-center justify-center">
-          <div className={`rounded-full bg-gray-100 flex items-center justify-center shadow-lg border-4 border-[#0a1765] ${circleSize}`}>
-            <div className={`rounded-full bg-gray-100 flex items-center justify-center border-2  ${innerCircleSize}`}>
-              <span className={`text-[#000080] font-bold ${fontSize}`}>{score}</span>
+    <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 flex items-center justify-center gap-4 sm:gap-6 max-w-[90vw] overflow-hidden">
+      {/* Original scores */}
+      <div className="flex flex-nowrap justify-center gap-2 sm:gap-4">
+        {scores.map((score, index) => (
+          <div key={`original-${index}`} className="relative flex items-center justify-center">
+            <div className={`rounded-full bg-gray-100 flex items-center justify-center shadow-lg border-4 border-[#0a1765] ${circleSize}`}>
+              <div className={`rounded-full bg-gray-100 flex items-center justify-center border-2 ${innerCircleSize}`}>
+                <span className={`text-[#000080] font-bold ${fontSize}`}>{score}</span>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
+
+      {/* Separator */}
+      <div className="h-10 w-[2px] bg-[#0a1765] opacity-60"></div>
+
+      {/* Inverse scores */}
+      <div className="flex flex-nowrap justify-center gap-2 sm:gap-4">
+        {[...scores].reverse().map((score, index) => (
+          <div key={`inverse-${index}`} className="relative flex items-center justify-center">
+            <div className={`rounded-full bg-gray-100 flex items-center justify-center shadow-lg border-4 border-[#0a1765] ${circleSize}`}>
+              <div className={`rounded-full bg-gray-100 flex items-center justify-center border-2 ${innerCircleSize}`}>
+                <span className={`text-[#000080] font-bold ${fontSize}`}>{score}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
+
   );
 }

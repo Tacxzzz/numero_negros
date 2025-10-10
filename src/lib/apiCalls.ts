@@ -1843,3 +1843,113 @@ export const getUserType = async () => {
     return [];
   }
 };
+
+export const confirmDoubleBet = async (
+  formData: FormData,
+) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/main/confirmDoubleBet`,
+      formData,
+      {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" }
+      }
+    );
+
+    if (response.data) {
+
+      const userData = response.data;
+      return {
+        authenticated: userData.authenticated,
+        message: userData.message,
+        receipt_id: userData.receipt_id,
+        back: userData.back,
+      };
+
+    } else {
+      console.warn("User data is empty or invalid.");
+      return { authenticated: false, message: "no response on the api",back:true };
+    }
+    
+  } catch (error) {
+    console.error("Failed to send remittance:", error);
+    return { authenticated: false, message: "no response on the api",back:true };
+  }
+};
+
+export const getReceiptByID = async (
+  receiptID: string
+) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getReceiptByID`, { receiptID},{
+        headers: { "Content-Type": "application/json" }
+      });
+
+    if (Array.isArray(response.data)) {
+      console.log(response.data);
+      
+    } else if (response.data.error) {
+      return [];
+    }
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch recipients:", error);
+    return [];
+  }
+};
+
+export const saveDoubleBet = async (
+  formData: FormData,
+) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/main/saveDoubleBet`,
+      formData,
+      {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" }
+      }
+    );
+
+    if (response.data) {
+
+      const userData = response.data;
+      return {
+        authenticated: userData.authenticated,
+        message: userData.message,
+        receipt_id: userData.receipt_id,
+        back: userData.back,
+      };
+
+    } else {
+      console.warn("User data is empty or invalid.");
+      return { authenticated: false, message: "no response on the api",back:true };
+    }
+    
+  } catch (error) {
+    console.error("Failed to send remittance:", error);
+    return { authenticated: false, message: "no response on the api",back:true };
+  }
+};
+
+export const getSaveReceiptByID = async (
+  receiptID: string
+) => {
+  try {
+    const response = await axios.post(`${API_URL}/main/getSaveReceiptByID`, { receiptID},{
+        headers: { "Content-Type": "application/json" }
+      });
+
+    if (Array.isArray(response.data)) {
+      console.log(response.data);
+      
+    } else if (response.data.error) {
+      return [];
+    }
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch recipients:", error);
+    return [];
+  }
+};

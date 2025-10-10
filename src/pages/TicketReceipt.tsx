@@ -6,7 +6,7 @@ import { ShareModal } from "@/components/ShareModal";
 import { SendModal } from "@/components/SendModal";
 import { useLocation } from 'react-router-dom';
 import { useNavigate, Link } from 'react-router-dom';
-import { addLog, getBetByID, getSavedBetByID } from "@/lib/apiCalls";
+import { addLog, getBetByID, getReceiptByID, getSavedBetByID, getSaveReceiptByID } from "@/lib/apiCalls";
 import { formatPeso, getTransCode } from "@/lib/utils";
 import Barcode from 'react-barcode';
 import { useUser } from "./UserContext";
@@ -19,7 +19,7 @@ const TicketReceipt: React.FC = () => {
   
   const navigate = useNavigate();
   const location = useLocation();
-  const betID = location.state?.betID;
+  const receiptID = location.state?.receiptID;
   const fromPage = location.state?.from;
   const isSavedBet = location.state?.isSavedBet;
   const ticketRef = useRef<HTMLDivElement>(null);
@@ -33,12 +33,13 @@ const TicketReceipt: React.FC = () => {
     useEffect(() => {
         const handleUpdate = async () => {
           if (!isSavedBet) {
-            const gameBetData = await getBetByID(betID);
+            const gameBetData = await getReceiptByID(receiptID);
             console.log(gameBetData);
             setTicketData(gameBetData);
           }
           else {
-            const gameBetData = await getSavedBetByID(betID);
+            console.log(receiptID);
+            const gameBetData = await getSaveReceiptByID(receiptID);
             console.log(gameBetData);
             setTicketData(gameBetData);
           }
@@ -47,7 +48,7 @@ const TicketReceipt: React.FC = () => {
           console.log(addViewLog.authenticated);
           };
           handleUpdate();
-      }, [betID]);
+      }, [receiptID]);
 
 
   // Load dependencies dynamically after component mounts
@@ -156,67 +157,56 @@ const TicketReceipt: React.FC = () => {
       </header>
 
       {/* Ticket Card */}
-      <div ref={ticketRef}>
-        {ticketData.map((bet) => (
-        <Card className="w-full max-w-sm shadow-lg mt-4">
-          <CardContent className="p-6 flex flex-col items-center">
-            {/* Logo */}
-            <div className="">
-              {/* <div className="font-bold text-4xl text-center">
-                {bet.game_name}
-                <div className="text-xs font-bold bg-black text-white px-2 text-center">LOTTO</div>
-              </div> */}
-              
-              <div className="font-bold text-xl text-center items-center justify-center ">
-                <div className="mb-1">{bet.game_name}</div>
-                
-                <div className="flex items-center justify-center text-xs font-bold bg-black text-white text-align-center font-bold">LOTTO</div>
-                
+      {ticketData.length > 0 ? (
+        <div ref={ticketRef}>
+          <Card className="w-full max-w-sm shadow-lg mt-4">
+            <CardContent className="p-6 flex flex-col items-center">
+              <div className="font-bold text-xl text-center items-center justify-center">
+                <div className="mb-1">{ticketData[0].game_name}</div>
+                <div className="flex items-center justify-center text-xs font-bold bg-black text-white text-align-center font-bold">
+                  LOTTO
+                </div>
               </div>
 
-              
-            </div>
+              <div className="w-full grid">
+                {ticketData.map((bet) => (
+                  <React.Fragment key={bet.id}>
+                    <div className="flex justify-between items-start w-full font-bold text-xl">
+                      <span>{bet.bets}</span>
+                      <span>{formatPeso(bet.bet)}</span>
+                    </div>
+                    <div className="flex justify-between items-start w-full text-l font-bold mb-1">
+                      <span>Winnings: </span>
+                      <span>{bet.bet_status === "success" ? formatPeso(bet.jackpot) : "S/O"}</span>
+                    </div>
+                  </React.Fragment>
+                ))}
 
-            {/* Ticket Details */}
-            <div className="w-full grid">
-                <div className="flex justify-between items-start w-full font-bold text-xl">
-                  <span>{bet.bets}</span>
-                  <span>{formatPeso(bet.bet)}</span>
-                </div>
-                <div className="flex justify-between items-start w-full text-l font-bold">
-                  <span>Winnings: </span>
-                  <span>{formatPeso(bet.jackpot)}</span>
-                </div>
                 <div className="flex justify-between items-start w-full text-l font-bold">
                   <span>Created: </span>
-                  <span>{bet.created_date} {bet.created_time}</span>
+                  <span>
+                    {ticketData[0].created_date} {ticketData[0].created_time}
+                  </span>
                 </div>
                 <div className="flex justify-between items-start w-full text-l font-bold">
                   <span>Draw: </span>
-                  <span>{bet.draw_date} {bet.draw_time}</span>
+                  <span>
+                    {ticketData[0].draw_date} {ticketData[0].draw_time}
+                  </span>
                 </div>
-              <div className="space-y-1">
-                
-                {/* <div className="text-sm">{getTransCode(bet.created_date + " " + bet.created_time) + bet.id}</div> */}
+
+                <div className="flex flex-col items-center mt-2 text-xl font-bold">
+                  {getTransCode(
+                    ticketData[0].created_date + " " + ticketData[0].created_time
+                  ) + ticketData[0].receipt_id}
+                </div>
               </div>
-              <div className=" flex flex-col items-center mt-2 text-xl font-bold">
-                {getTransCode(bet.created_date + " " + bet.created_time) + bet.id}
-              </div>
-            </div>
-
-           {/* Barcode */}
-            {/* <div className=" flex flex-col items-center">
-                 <Barcode value={getTransCode(bet.created_date + " " + bet.created_time) + bet.id} />
-              </div> */}
-
-
-          </CardContent>
-        </Card>
-        ))}
-
-
-
-      </div>
+            </CardContent>
+          </Card>
+        </div>
+      ) : (
+        <div className="text-center mt-10 text-gray-500">Loading receipt...</div>
+      )}
 
             {/* Action Buttons */}
             <div className="w-full grid grid-cols-3 gap-2 mt-4 max-w-sm">

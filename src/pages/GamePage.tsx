@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import { useUser } from "./UserContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { addLog, confirmBet, fetchUserData, getBetClientData, getDrawByID, getDrawsByID, getGameByID, getGameTypeByID, getGameTypes, readMyFavorite, saveBet, saveFavorite } from '@/lib/apiCalls';
+import { addLog, confirmBet, confirmDoubleBet, fetchUserData, getBetClientData, getDrawByID, getDrawsByID, getGameByID, getGameTypeByID, getGameTypes, readMyFavorite, saveBet, saveDoubleBet, saveFavorite } from '@/lib/apiCalls';
 import CountdownTimer from './CountdownTimer';
 import { checkBettingTime, formatPeso } from '@/lib/utils';
 import { useClient } from "./ClientContext";
@@ -48,6 +48,7 @@ export function GamePage({onLogout}:SidebarProps) {
   const [gameTypesData, setGameTypesData] = useState<any[]>([]);
   const [gameDrawsData, setGameDrawsData] = useState<any[]>([]);
   const [multiplier, setMultiplier] = useState(1);
+  const [inverseMultiplier, setInverseMultiplier] = useState(1);
 
   const [agent, setAgent] = useState("");
 
@@ -62,9 +63,22 @@ export function GamePage({onLogout}:SidebarProps) {
       setBetAllow(false);
     }
   };
+
+  const handleInverseMultiplierChange = (e) => {
+    const value = parseInt(e.target.value, 10);
+    setInverseMultiplier(value);
+    if (!isNaN(value) && value > 0) {
+      setBetAllow(true);
+    } else {
+      setBetAllow(false);
+    }
+  };
   
   const adjustedBet = gameTypeData[0]?.bet * multiplier;
   const adjustedWinnings = gameTypeData[0]?.jackpot * multiplier;
+
+  const adjustedInverseBet = gameTypeData[0]?.bet * inverseMultiplier;
+  const adjustedInverseWinnings = gameTypeData[0]?.jackpot * inverseMultiplier;
 
   const [loading, setLoading] = useState(true);
 
@@ -297,6 +311,8 @@ export function GamePage({onLogout}:SidebarProps) {
       formData.append('game_type', gameType);
       formData.append('bets', scores.filter((score) => score !== "").join("-"));
       formData.append('jackpot', gameTypeData[0].jackpot);
+      formData.append("multiplier_inverse", inverseMultiplier.toString());
+      formData.append('bets_inverse', scores.filter((score) => score !== "").slice().reverse().join("-"));
 
       if (selectedSource == 'freeCredits') {
         formData.append('free_credit', 'yes')
@@ -304,7 +320,7 @@ export function GamePage({onLogout}:SidebarProps) {
         formData.append('free_credit', 'no')
       }
 
-      const data = await confirmBet(formData);
+      const data = await confirmDoubleBet(formData);
       
       if(data.authenticated)
       {
@@ -312,7 +328,7 @@ export function GamePage({onLogout}:SidebarProps) {
         setScores(Array.from({ length: digits }, () => ""));
         setLoading(false);
 
-        navigate('/ticketreceipt', { state: { betID: data.bet_id, from: 'Game', isSavedBet: false } });
+        navigate('/ticketreceipt', { state: { receiptID: data.receipt_id, from: 'Game', isSavedBet: false } });
       }
       else
       {
@@ -342,11 +358,10 @@ export function GamePage({onLogout}:SidebarProps) {
       formData.append('game_type', gameType);
       formData.append('bets', scores.filter((score) => score !== "").join("-"));
       formData.append('jackpot', gameTypeData[0].jackpot);
+      formData.append("multiplier_inverse", inverseMultiplier.toString());
+      formData.append('bets_inverse', scores.filter((score) => score !== "").slice().reverse().join("-"));
 
-      console.log(multiplier.toString());
-      console.log(gameTypeData[0].jackpot);
-
-      const data = await saveBet(formData);
+      const data = await saveDoubleBet(formData);
       
       if(data.authenticated)
       {
@@ -354,7 +369,7 @@ export function GamePage({onLogout}:SidebarProps) {
         setScores(Array.from({ length: digits }, () => ""));
         setLoading(false);
 
-        navigate('/ticketreceipt', { state: { betID: data.bet_id, from: 'Game', isSavedBet: true } })
+        navigate('/ticketreceipt', { state: { receiptID: data.receipt_id, from: 'Game', isSavedBet: true } })
       }
       else
       {
@@ -365,7 +380,6 @@ export function GamePage({onLogout}:SidebarProps) {
         }
         else
         {
-
           setScores(Array.from({ length: digits }, () => ""));
           setLoading(false);
         }
@@ -653,50 +667,98 @@ const hasAllDistinctScores = (scores: string[]) => {
                     <DialogContent className="bg-gradient-to-b from-[#348df3cf] to-[#002a6e] border-2 border-[#348df3cf] rounded-xl max-w-xs sm:max-w-sm">
                       <DialogHeader>
                         <DialogTitle className="text-center text-xl font-bold text-gray-100">
-                        <h5>Selected Numbers: </h5><h4>{scores.filter((score) => score !== "").join("-") || ""}
-                        </h4>
-                        <br/>
-                        <h4>{gameData[0]?.name} {gameTypeData[0]?.game_type}</h4>
-                        <h4>{gameDrawData[0]?.date} {gameDrawData[0]?.time}</h4>
-                        <br/>
-                        <h4>
-                          Bet : {formatPeso(adjustedBet)}<br />
-                          Winnings : {formatPeso(adjustedWinnings)}
-                        </h4> 
-                        <p className="text-gray-200 font-bold text-sm sm:text-base">
-                          Time left: <CountdownTimer date={gameDrawData[0]?.date} time={gameDrawData[0]?.time} cutoffMinutes={gameDrawData[0]?.deadline} />
-                        </p>
-                        </DialogTitle>
-                      </DialogHeader>
-                      <div className="space-y-4 my-0">
-                        <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg">
-                          <Label htmlFor="bet" className="text-[#002a6e] font-medium block mb-2">
-                            Your Current Balance : {formatPeso(balance)}
-                          </Label>
-                        </div>
+                        <h5>Selected Numbers:</h5>
+                  <h4>
+                    {scores.filter((score) => score !== "").join("-") || ""} &nbsp;|&nbsp;
+                    {scores.filter((score) => score !== "").slice().reverse().join("-") || ""}
+                  </h4>
 
-                        {clientId && (
-                          <>
-                          <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg">
-                          <Label htmlFor="bet" className="text-[#002a6e] font-medium block mb-2">
+                  <br />
+
+                  <h4>{gameData[0]?.name} {gameTypeData[0]?.game_type}</h4>
+                  <h4>{gameDrawData[0]?.date} {gameDrawData[0]?.time}</h4>
+
+                  <br />
+
+                  {/* Bet + Winnings Display */}
+                  <div className="flex flex-wrap justify-center text-center">
+                    {/* Original section */}
+                    <div className='text-xs'>
+                      <h4 className="font-semibold text-[#002a6e]">{scores.filter((score) => score !== "").join("-") || ""}</h4>
+                      <p>Bet: {formatPeso(adjustedBet)}</p>
+                      <p>Winnings: {formatPeso(adjustedWinnings)}</p>
+                    </div>
+
+                    {/* Separator */}
+                    <div className="w-[2px] bg-[#0a1765] opacity-50 mx-2"></div>
+
+                    {/* Inverse section */}
+                    <div className='text-xs'>
+                      <h4 className="font-semibold text-[#002a6e]">{scores.filter((score) => score !== "").slice().reverse().join("-") || ""}</h4>
+                      <p>Bet: {formatPeso(adjustedInverseBet)}</p>
+                      <p>Winnings: {formatPeso(adjustedInverseWinnings)}</p>
+                    </div>
+                  </div>
+
+                  <p className="text-gray-200 font-bold text-sm sm:text-base mt-4">
+                    Time left:{" "}
+                    <CountdownTimer
+                      date={gameDrawData[0]?.date}
+                      time={gameDrawData[0]?.time}
+                      cutoffMinutes={gameDrawData[0]?.deadline}
+                    />
+                  </p>
+
+                  </DialogTitle>
+                  </DialogHeader>
+
+                  <div className="space-y-4 my-0">
+                    <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg">
+                      <Label htmlFor="bet" className="text-[#002a6e] font-medium block mb-2">
+                        Your Current Balance : {formatPeso(balance)}
+                      </Label>
+                    </div>
+
+                    {clientId && (
+                      <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg">
+                        <Label htmlFor="bet" className="text-[#002a6e] font-medium block mb-2">
                           Playing as : {clientFullName}
-                          </Label>
-                        </div>
-                        </>
-                        )} 
-                        <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg">
-                              <Label htmlFor="multiplier" className="text-[#002a6e] font-medium block mb-2">
-                                Bet Amount
-                              </Label>
-                              <input
-                                type="number"
-                                id="multiplier"
-                                value={multiplier}
-                                onChange={handleMultiplierChange}
-                                min={1}
-                                className="w-full p-2 rounded border border-[#002a6e] focus:outline-none focus:ring-2 focus:ring-[#348df3cf] text-center font-bold text-[#002a6e]"
-                              />
-                </div>
+                        </Label>
+                      </div>
+                    )}
+
+                    {/* Horizontal inputs */}
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {/* Original bet */}
+                      <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg flex-1 min-w-[50px]">
+                        <Label htmlFor="multiplier" className="text-[#002a6e] font-medium block mb-2">
+                          Bet Amount (Original)
+                        </Label>
+                        <input
+                          type="number"
+                          id="multiplier"
+                          value={multiplier}
+                          onChange={handleMultiplierChange}
+                          min={1}
+                          className="w-full p-2 rounded border border-[#002a6e] focus:outline-none focus:ring-2 focus:ring-[#348df3cf] text-center font-bold text-[#002a6e]"
+                        />
+                      </div>
+
+                      {/* Inverse bet */}
+                      <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg flex-1 min-w-[50px]">
+                        <Label htmlFor="inverseMultiplier" className="text-[#002a6e] font-medium block mb-2">
+                          Bet Amount (Inverse)
+                        </Label>
+                        <input
+                          type="number"
+                          id="inverseMultiplier"
+                          value={inverseMultiplier}
+                          onChange={handleInverseMultiplierChange}
+                          min={1}
+                          className="w-full p-2 rounded border border-[#002a6e] focus:outline-none focus:ring-2 focus:ring-[#348df3cf] text-center font-bold text-[#002a6e]"
+                        />
+                      </div>
+                    </div>
                   <Button 
                     className="w-full bg-gradient-to-r from-[#348df3cf] to-[#002a6e] hover:from-pink-600 hover:to-orange-600 text-white rounded-full py-4 text-sm font-bold"
                     disabled={balance < gameTypeData[0]?.bet || betAllow===false}
