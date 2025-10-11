@@ -40,6 +40,7 @@ import AdvertisementImage from "@/files/advertisement.svg";
 const AnnouncementsMarquee = lazy(() => import("@/components/AnnouncementsMarque"));
 const AutoScrollWinnersCarousel = lazy(() => import("@/components/AutoScrollWinnersCarousel"));
 const AutoScrollResultsToday = lazy(() => import("@/components/AutoScrollResultsToday"));
+const AutoScrollNationalResultsToday = lazy(() => import("@/components/AutoScrollNationalResultsToday"));
 import { setTawkWidgetVisible } from '@/lib/tawkWidgetUtils';
 import DailyCheckInCard from '@/components/DailyCheckInCard';
 
@@ -818,6 +819,10 @@ const handleSubmit = async (e) => {
       adContent: <ImageAdCard image={Prizes2} alt="Prizes 2" />,
     },
   ];
+
+  const handleGoToPisoPlayClick = () => {
+    window.open("https://pisoplays.com", "_blank", "noopener,noreferrer");
+  };
   
   return (
   <>
@@ -1119,6 +1124,16 @@ const handleSubmit = async (e) => {
             <AutoScrollWinnersCarousel />
           </TabsContent>
         </Tabs>
+        <div className="bg-blue-400 text-white flex items-center text-sm justify-center rounded font-bold p-1">
+          National Draws
+        </div>
+        <AutoScrollNationalResultsToday />
+        <div className='flex flex-col items-center'>
+          <Button onClick={handleGoToPisoPlayClick} className="bg-blue-400 hover:bg-blue-500 text-white text-xs h-auto font-semibold px-6 py-2 mb-2 rounded-full shadow-md transition-transform transform hover:scale-105">
+            🎲 Try Pisoplay & Bet for 2D, 3D and More
+          </Button>
+        </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-white rounded-xl shadow p-4 flex justify-between items-center">
             <div>

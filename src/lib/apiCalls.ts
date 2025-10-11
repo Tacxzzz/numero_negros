@@ -1953,3 +1953,21 @@ export const getSaveReceiptByID = async (
     return [];
   }
 };
+
+export const getNationalDrawResultsToday = async () => {
+  try {
+    const response = await axios.get(`https://scamemes.online/numero/main/getDrawResultsToday`, {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" }
+      });
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data.error) {
+      return [];
+    }
+  } catch (error) {
+    console.error('Failed to fetch draws today:', error);
+    return[];
+  }
+}
