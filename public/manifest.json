@@ -1,18 +1,18 @@
 {
-    "name": "PisoGame Plus",
-    "short_name": "PisoGame Plus",
+    "name": "Negros STL",
+    "short_name": "Negros STL",
     "start_url": "/",
     "display": "standalone",
     "theme_color": "#f0ba2c",
     "background_color": "#ffffff",
     "icons": [
       {
-        "src": "/icons/BetMotoLogoOnly.png",
+        "src": "/icons/NegrosLogo.png",
         "sizes": "192x192",
         "type": "image/png"
       },
       {
-        "src": "/icons/BetMotoLogoOnly.png",
+        "src": "/icons/NegrosLogo.png",
         "sizes": "512x512",
         "type": "image/png"
       }
