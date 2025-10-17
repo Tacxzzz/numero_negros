@@ -52,21 +52,21 @@ export function GameBoard({ onTileClick, lengthChoice = 25,lengthStart = 0, scor
         // ✅ For gameType 5 and 8 -> Check distinct scores
         if (
           (gameId === "2" || gameId === "3") &&
-          (gameType === "5" || gameType === "8")
+          (gameType === "5" || gameType === "8" || gameType === "31" || gameType === "57")
         ) {
           isDisabled = distinctScores.includes(tile.value);
         }
         // ✅ For gameType 4 and 7 -> Check if 2 or more occurrences
         else if (
           (gameId === "2" || gameId === "3") &&
-          (gameType === "4" || gameType === "7")
+          (gameType === "4" || gameType === "7" || gameType === "30" || gameType === "56")
         ) {
           const scoreCount = getScoreCount(tile.value);
           if (scoreCount >= 2) {
             isDisabled = distinctScores.includes(tile.value);
           }
         }
-        else if (gameId !== "1" && gameId !== "2") {
+        else if (gameId == "4") {
           isDisabled = false;
         }
         // ✅ Default disabling condition
@@ -75,9 +75,10 @@ export function GameBoard({ onTileClick, lengthChoice = 25,lengthStart = 0, scor
           gameId !== "1" &&
           gameId !== "2" &&
           gameId !== "3" &&
-          gameId !== "4" 
+          gameId !== "4" &&
+          gameId !== "26" 
         ) {
-          isDisabled = true;
+          isDisabled = distinctScores.includes(tile.value);
         }
 
         return (

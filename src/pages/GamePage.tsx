@@ -250,7 +250,7 @@ export function GamePage({onLogout}:SidebarProps) {
           );
       }
       }
-      else if(Number(gameId)>4 && Number(gameId)<8) {
+      else if(Number(gameId)>4 && Number(gameId)<10) {
         const uniqueNumbers = new Set<string>();
 
             while (uniqueNumbers.size < 3) {
@@ -259,7 +259,7 @@ export function GamePage({onLogout}:SidebarProps) {
 
             randomScores = Array.from(uniqueNumbers);
     }
-    else if(Number(gameId)>8 && Number(gameId)<25) {
+    else if(Number(gameId)>9 && Number(gameId)<25) {
       const uniqueNumbers = new Set<string>();
 
           while (uniqueNumbers.size < 2) {
@@ -300,7 +300,7 @@ export function GamePage({onLogout}:SidebarProps) {
     const handleSaveCombination = async () => {
       setScores(favorites);
     };
-    const handleBetConfirm = async () => {
+    const handleDoubleBetConfirm = async () => {
       setPlayModalOpen(false);
       setLoading(true);
       const formData = new FormData();
@@ -347,7 +347,7 @@ export function GamePage({onLogout}:SidebarProps) {
       }
     };
 
-    const handleBetSave= async () => {
+    const handleDoubleBetSave= async () => {
       setPlayModalOpen(false);
       setLoading(true);
       const formData = new FormData();
@@ -380,6 +380,93 @@ export function GamePage({onLogout}:SidebarProps) {
         }
         else
         {
+          setScores(Array.from({ length: digits }, () => ""));
+          setLoading(false);
+        }
+        
+      }
+    };
+
+    const handleBetConfirm = async () => {
+      setPlayModalOpen(false);
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("draw_id", drawId);
+      formData.append("multiplier", multiplier.toString());
+      formData.append('userID', userID);
+      formData.append('clientID', clientId || "");  
+      formData.append('game_type', gameType);
+      formData.append('bets', scores.filter((score) => score !== "").join("-"));
+      formData.append('jackpot', gameTypeData[0].jackpot);
+
+      if (selectedSource == 'freeCredits') {
+        formData.append('free_credit', 'yes')
+      } else {
+        formData.append('free_credit', 'no')
+      }
+
+      const data = await confirmBet(formData);
+      
+      if(data.authenticated)
+      {
+        alert(data.message);
+        setScores(Array.from({ length: digits }, () => ""));
+        setLoading(false);
+
+        navigate('/ticketreceipt', { state: { receiptID: data.receipt_id, from: 'Game', isSavedBet: false } });
+      }
+      else
+      {
+        alert(data.message);
+        if(data.back)
+        {
+          navigate(`/game-history/${gameId}`);
+        }
+        else
+        {
+
+          setScores(Array.from({ length: digits }, () => ""));
+          setLoading(false);
+        }
+        
+      }
+    };
+
+    const handleBetSave= async () => {
+      setPlayModalOpen(false);
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("draw_id", drawId);
+      formData.append("multiplier", multiplier.toString());
+      formData.append('userID', userID);
+      formData.append('clientID', clientId || "");  
+      formData.append('game_type', gameType);
+      formData.append('bets', scores.filter((score) => score !== "").join("-"));
+      formData.append('jackpot', gameTypeData[0].jackpot);
+
+      console.log(multiplier.toString());
+      console.log(gameTypeData[0].jackpot);
+
+      const data = await saveBet(formData);
+      
+      if(data.authenticated)
+      {
+        alert(data.message);
+        setScores(Array.from({ length: digits }, () => ""));
+        setLoading(false);
+
+        navigate('/ticketreceipt', { state: { receiptID: data.receipt_id, from: 'Game', isSavedBet: true } })
+      }
+      else
+      {
+        alert(data.message);
+        if(data.back)
+        {
+          navigate(`/game-history/${gameId}`);
+        }
+        else
+        {
+
           setScores(Array.from({ length: digits }, () => ""));
           setLoading(false);
         }
@@ -443,7 +530,7 @@ const hasAllDistinctScores = (scores: string[]) => {
       <div className="w-full h-full max-w-md overflow-hidden relative">
         {/* Score display */}
         <div className='flex flex-col items-center '>
-        <ScoreDisplay scores={scores} />
+        <ScoreDisplay scores={scores} isDouble={(gameId == '26' ? true : false)}/>
         <br/><br/>
         </div>
 
@@ -669,8 +756,17 @@ const hasAllDistinctScores = (scores: string[]) => {
                         <DialogTitle className="text-center text-xl font-bold text-gray-100">
                         <h5>Selected Numbers:</h5>
                   <h4>
-                    {scores.filter((score) => score !== "").join("-") || ""} &nbsp;|&nbsp;
-                    {scores.filter((score) => score !== "").slice().reverse().join("-") || ""}
+                    {scores.filter((score) => score !== "").join("-")}
+                    {gameId === "26" && (
+                      <>
+                        {"\u00A0|\u00A0"}
+                        {scores
+                          .filter((score) => score !== "")
+                          .slice()
+                          .reverse()
+                          .join("-")}
+                      </>
+                    )}
                   </h4>
 
                   <br />
@@ -689,15 +785,20 @@ const hasAllDistinctScores = (scores: string[]) => {
                       <p>Winnings: {formatPeso(adjustedWinnings)}</p>
                     </div>
 
-                    {/* Separator */}
-                    <div className="w-[2px] bg-[#0a1765] opacity-50 mx-2"></div>
+                    {gameId === "26" && (
+                      <>
+                        {/* Separator */}
+                        <div className="w-[2px] bg-[#0a1765] opacity-50 mx-2"></div>
 
-                    {/* Inverse section */}
-                    <div className='text-xs'>
-                      <h4 className="font-semibold text-[#002a6e]">{scores.filter((score) => score !== "").slice().reverse().join("-") || ""}</h4>
-                      <p>Bet: {formatPeso(adjustedInverseBet)}</p>
-                      <p>Winnings: {formatPeso(adjustedInverseWinnings)}</p>
-                    </div>
+                        {/* Inverse section */}
+                        <div className='text-xs'>
+                          <h4 className="font-semibold text-[#002a6e]">{scores.filter((score) => score !== "").slice().reverse().join("-") || ""}</h4>
+                          <p>Bet: {formatPeso(adjustedInverseBet)}</p>
+                          <p>Winnings: {formatPeso(adjustedInverseWinnings)}</p>
+                        </div>
+                      </>
+                    )}
+                    
                   </div>
 
                   <p className="text-gray-200 font-bold text-sm sm:text-base mt-4">
@@ -744,25 +845,30 @@ const hasAllDistinctScores = (scores: string[]) => {
                         />
                       </div>
 
-                      {/* Inverse bet */}
-                      <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg flex-1 min-w-[50px]">
-                        <Label htmlFor="inverseMultiplier" className="text-[#002a6e] font-medium block mb-2">
-                          Bet Amount (Inverse)
-                        </Label>
-                        <input
-                          type="number"
-                          id="inverseMultiplier"
-                          value={inverseMultiplier}
-                          onChange={handleInverseMultiplierChange}
-                          min={1}
-                          className="w-full p-2 rounded border border-[#002a6e] focus:outline-none focus:ring-2 focus:ring-[#348df3cf] text-center font-bold text-[#002a6e]"
-                        />
-                      </div>
+                      {gameId == "26" && (
+                        <>
+                          {/* Inverse bet */}
+                          <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg flex-1 min-w-[50px]">
+                            <Label htmlFor="inverseMultiplier" className="text-[#002a6e] font-medium block mb-2">
+                              Bet Amount (Inverse)
+                            </Label>
+                            <input
+                              type="number"
+                              id="inverseMultiplier"
+                              value={inverseMultiplier}
+                              onChange={handleInverseMultiplierChange}
+                              min={1}
+                              className="w-full p-2 rounded border border-[#002a6e] focus:outline-none focus:ring-2 focus:ring-[#348df3cf] text-center font-bold text-[#002a6e]"
+                            />
+                          </div>
+                        </>
+                      )}
+                      
                     </div>
                   <Button 
                     className="w-full bg-gradient-to-r from-[#348df3cf] to-[#002a6e] hover:from-pink-600 hover:to-orange-600 text-white rounded-full py-4 text-sm font-bold"
                     disabled={balance < gameTypeData[0]?.bet || betAllow===false}
-                    onClick={handleBetConfirm}
+                    onClick={gameId == "26" ? handleDoubleBetConfirm : handleBetConfirm}
                     >
                     CONFIRM BET
                   </Button>
@@ -771,7 +877,7 @@ const hasAllDistinctScores = (scores: string[]) => {
                   <Button 
                     className="w-full bg-gradient-to-r from-green-500 to-emerald-700 hover:from-green-600 hover:to-green-800 text-white rounded-full py-4 text-sm font-bold"
                     disabled={betAllow === false}
-                    onClick={handleBetSave}
+                    onClick={gameId == "26" ? handleDoubleBetSave : handleBetSave }
                   >
                     SAVE BET
                   </Button>

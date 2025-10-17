@@ -580,7 +580,7 @@ export const confirmBet = async (
       return {
         authenticated: userData.authenticated,
         message: userData.message,
-        bet_id: userData.bet_id,
+        receipt_id: userData.receipt_id,
         back: userData.back,
       };
 
@@ -613,7 +613,7 @@ export const saveBet = async (
       const userData = response.data;
       return {
         authenticated: userData.authenticated,
-        bet_id: userData.bet_id,
+        receipt_id: userData.receipt_id,
         message: userData.message,
         back: userData.back,
       };
