@@ -36,8 +36,10 @@ export function GamePage({onLogout}:SidebarProps) {
   const [lengthChoice, setLengthChoice] = useState(0); 
   const [digits, setDigits] = useState(0); 
   const [scores, setScores] = useState<string[]>([]);
+  const [scoresInverse, setInverseScores] = useState<string[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentReverseIndex, setCurrentReverseIndex] = useState(0);
 
   const [starModalOpen, setStarModalOpen] = useState(false);
   const [playModalOpen, setPlayModalOpen] = useState(false);
@@ -49,6 +51,7 @@ export function GamePage({onLogout}:SidebarProps) {
   const [gameDrawsData, setGameDrawsData] = useState<any[]>([]);
   const [multiplier, setMultiplier] = useState(1);
   const [inverseMultiplier, setInverseMultiplier] = useState(1);
+  const [activeDisplay, setActiveDisplay] = useState<"left" | "right">("left");
 
   const [agent, setAgent] = useState("");
 
@@ -57,17 +60,25 @@ export function GamePage({onLogout}:SidebarProps) {
   const handleMultiplierChange = (e) => {
     const value = parseInt(e.target.value, 10);
     setMultiplier(value);
-    if (!isNaN(value) && value > 0) {
+    
+    const hasValidInverse = !isNaN(inverseMultiplier) && inverseMultiplier >= 1;
+    const hasValidMultiplier = !isNaN(value) && value >= 1;
+
+    if (hasValidInverse || hasValidMultiplier) {
       setBetAllow(true);
     } else {
       setBetAllow(false);
     }
   };
 
-  const handleInverseMultiplierChange = (e) => {
+  const handleInverseMultiplierChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value, 10);
     setInverseMultiplier(value);
-    if (!isNaN(value) && value > 0) {
+
+    const hasValidInverse = !isNaN(value) && value >= 1;
+    const hasValidMultiplier = !isNaN(multiplier) && multiplier >= 1;
+
+    if (hasValidInverse || hasValidMultiplier) {
       setBetAllow(true);
     } else {
       setBetAllow(false);
@@ -105,6 +116,14 @@ export function GamePage({onLogout}:SidebarProps) {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % scores.length);
   };
 
+  const handleInverseTileClick = (newScore: string) => {
+    const updatedScores = [...scoresInverse];
+    updatedScores[currentReverseIndex] = newScore;
+    setInverseScores(updatedScores);
+
+    setCurrentReverseIndex((prevIndex) => (prevIndex + 1) % scoresInverse.length);
+  };
+
   // const isMessengerWebview = useBrowserCheck();
     
   // if (isMessengerWebview) {
@@ -134,7 +153,9 @@ export function GamePage({onLogout}:SidebarProps) {
           return;
         }
         setCurrentIndex(0);
+        setCurrentReverseIndex(0);
         setScores(Array.from({ length: digits }, () => ""));
+        setInverseScores(Array.from({ length: digits }, () => ""));
         navigate(`/game/${gameId}/${selectedGameType}/${selectedDraw}`, { replace: true });
         setLoading(false);
       }
@@ -180,6 +201,7 @@ export function GamePage({onLogout}:SidebarProps) {
           setLengthChoice(data[0].range_end);
           setDigits(data[0].num_digits);
           setScores(Array.from({ length: data[0].num_digits }, () => ""));
+          setInverseScores(Array.from({ length: data[0].num_digits }, () => ""));
           const dataTypes = await getGameTypes(gameId, userType);
           setGameTypesData(dataTypes);
           const dataDraws = await getDrawsByID(gameId);
@@ -303,6 +325,10 @@ export function GamePage({onLogout}:SidebarProps) {
     const handleDoubleBetConfirm = async () => {
       setPlayModalOpen(false);
       setLoading(true);
+
+      const hasValidInverse = !isNaN(inverseMultiplier) && inverseMultiplier >= 1;
+      const hasValidMultiplier = !isNaN(multiplier) && multiplier >= 1;
+
       const formData = new FormData();
       formData.append("draw_id", drawId);
       formData.append("multiplier", multiplier.toString());
@@ -312,7 +338,7 @@ export function GamePage({onLogout}:SidebarProps) {
       formData.append('bets', scores.filter((score) => score !== "").join("-"));
       formData.append('jackpot', gameTypeData[0].jackpot);
       formData.append("multiplier_inverse", inverseMultiplier.toString());
-      formData.append('bets_inverse', scores.filter((score) => score !== "").slice().reverse().join("-"));
+      formData.append('bets_inverse', scoresInverse.filter((score) => score !== "").join("-"));
 
       if (selectedSource == 'freeCredits') {
         formData.append('free_credit', 'yes')
@@ -320,72 +346,112 @@ export function GamePage({onLogout}:SidebarProps) {
         formData.append('free_credit', 'no')
       }
 
-      const data = await confirmDoubleBet(formData);
-      
-      if(data.authenticated)
-      {
+      try {
+        let data;
+
+        if (hasValidInverse && hasValidMultiplier) {
+          data = await confirmDoubleBet(formData);
+        } else {
+          // Single bet mode
+          const singleFormData = new FormData();
+          for (const [key, value] of formData.entries()) {
+            singleFormData.append(key, value as string | Blob);
+          }
+
+          if (!hasValidMultiplier && hasValidInverse) {
+            // If only inverse is valid, use its scores
+            singleFormData.set("bets", scoresInverse.filter(score => score !== "").join("-"));
+            singleFormData.set("multiplier", inverseMultiplier.toString());
+          }
+
+          data = await confirmBet(singleFormData);
+        }
+
+        // 🔹 Handle success/failure uniformly
         alert(data.message);
-        setScores(Array.from({ length: digits }, () => ""));
+
+        if (data.authenticated) {
+          resetScores();
+          navigate("/ticketreceipt", {
+            state: { receiptID: data.receipt_id, from: "Game", isSavedBet: false },
+          });
+        } else {
+          if (data.back) navigate(`/game-history/${gameId}`);
+          resetScores();
+        }
+      } catch (err) {
+        console.error("Error saving bet:", err);
+        alert("An unexpected error occurred. Please try again.");
+      } finally {
         setLoading(false);
-
-        navigate('/ticketreceipt', { state: { receiptID: data.receipt_id, from: 'Game', isSavedBet: false } });
-      }
-      else
-      {
-        alert(data.message);
-        if(data.back)
-        {
-          navigate(`/game-history/${gameId}`);
-        }
-        else
-        {
-
-          setScores(Array.from({ length: digits }, () => ""));
-          setLoading(false);
-        }
-        
       }
     };
 
-    const handleDoubleBetSave= async () => {
+    const handleDoubleBetSave = async () => {
       setPlayModalOpen(false);
       setLoading(true);
+
+      const hasValidInverse = !isNaN(inverseMultiplier) && inverseMultiplier >= 1;
+      const hasValidMultiplier = !isNaN(multiplier) && multiplier >= 1;
+
       const formData = new FormData();
       formData.append("draw_id", drawId);
       formData.append("multiplier", multiplier.toString());
-      formData.append('userID', userID);
-      formData.append('clientID', clientId || "");  
-      formData.append('game_type', gameType);
-      formData.append('bets', scores.filter((score) => score !== "").join("-"));
-      formData.append('jackpot', gameTypeData[0].jackpot);
       formData.append("multiplier_inverse", inverseMultiplier.toString());
-      formData.append('bets_inverse', scores.filter((score) => score !== "").slice().reverse().join("-"));
+      formData.append("userID", userID);
+      formData.append("clientID", clientId || "");
+      formData.append("game_type", gameType);
+      formData.append("jackpot", gameTypeData[0].jackpot);
+      formData.append("bets", scores.filter(score => score !== "").join("-"));
+      formData.append("bets_inverse", scoresInverse.filter(score => score !== "").join("-"));
 
-      const data = await saveDoubleBet(formData);
-      
-      if(data.authenticated)
-      {
+      try {
+        let data;
+
+        if (hasValidInverse && hasValidMultiplier) {
+          data = await saveDoubleBet(formData);
+        } else {
+          // Single bet mode
+          const singleFormData = new FormData();
+          for (const [key, value] of formData.entries()) {
+            singleFormData.append(key, value as string | Blob);
+          }
+
+          if (!hasValidMultiplier && hasValidInverse) {
+            // If only inverse is valid, use its scores
+            singleFormData.set("bets", scoresInverse.filter(score => score !== "").join("-"));
+            singleFormData.set("multiplier", inverseMultiplier.toString());
+          }
+
+          data = await saveBet(singleFormData);
+        }
+
+        // 🔹 Handle success/failure uniformly
         alert(data.message);
-        setScores(Array.from({ length: digits }, () => ""));
+
+        if (data.authenticated) {
+          resetScores();
+          navigate("/ticketreceipt", {
+            state: { receiptID: data.receipt_id, from: "Game", isSavedBet: true },
+          });
+        } else {
+          if (data.back) navigate(`/game-history/${gameId}`);
+          resetScores();
+        }
+      } catch (err) {
+        console.error("Error saving bet:", err);
+        alert("An unexpected error occurred. Please try again.");
+      } finally {
         setLoading(false);
-
-        navigate('/ticketreceipt', { state: { receiptID: data.receipt_id, from: 'Game', isSavedBet: true } })
-      }
-      else
-      {
-        alert(data.message);
-        if(data.back)
-        {
-          navigate(`/game-history/${gameId}`);
-        }
-        else
-        {
-          setScores(Array.from({ length: digits }, () => ""));
-          setLoading(false);
-        }
-        
       }
     };
+
+    // Helper for resetting scores
+    const resetScores = () => {
+      setScores(Array.from({ length: digits }, () => ""));
+      setInverseScores(Array.from({ length: digits }, () => ""));
+    };
+
 
     const handleBetConfirm = async () => {
       setPlayModalOpen(false);
@@ -411,6 +477,7 @@ export function GamePage({onLogout}:SidebarProps) {
       {
         alert(data.message);
         setScores(Array.from({ length: digits }, () => ""));
+        setInverseScores(Array.from({ length: digits }, () => ""));
         setLoading(false);
 
         navigate('/ticketreceipt', { state: { receiptID: data.receipt_id, from: 'Game', isSavedBet: false } });
@@ -426,6 +493,7 @@ export function GamePage({onLogout}:SidebarProps) {
         {
 
           setScores(Array.from({ length: digits }, () => ""));
+          setInverseScores(Array.from({ length: digits }, () => ""));
           setLoading(false);
         }
         
@@ -453,6 +521,7 @@ export function GamePage({onLogout}:SidebarProps) {
       {
         alert(data.message);
         setScores(Array.from({ length: digits }, () => ""));
+        setInverseScores(Array.from({ length: digits }, () => ""));
         setLoading(false);
 
         navigate('/ticketreceipt', { state: { receiptID: data.receipt_id, from: 'Game', isSavedBet: true } })
@@ -468,6 +537,7 @@ export function GamePage({onLogout}:SidebarProps) {
         {
 
           setScores(Array.from({ length: digits }, () => ""));
+          setInverseScores(Array.from({ length: digits }, () => ""));
           setLoading(false);
         }
         
@@ -507,6 +577,20 @@ const hasAllDistinctScores = (scores: string[]) => {
           </div>
         );
       }
+
+      const handleBetClick = () => {
+        // Check if either multiplier is valid
+        const hasValidInverse = !isNaN(inverseMultiplier) && inverseMultiplier >= 1;
+        const hasValidMultiplier = !isNaN(multiplier) && multiplier >= 1;
+
+        if (hasValidInverse || hasValidMultiplier) {
+          setPlayModalOpen(true);
+          setBetAllow(true);
+        } else {
+          setPlayModalOpen(true);
+          setBetAllow(false);
+        }
+      };
   
   return (
     <div className="min-h-screen bg-gradient-to-r from-[#C0382C] to-[#C0382C] flex flex-col items-center justify-center p-4 overflow-hidden relative">
@@ -529,13 +613,61 @@ const hasAllDistinctScores = (scores: string[]) => {
       {/* Game container */}
       <div className="w-full h-full max-w-md overflow-hidden relative">
         {/* Score display */}
-        <div className='flex flex-col items-center '>
-        <ScoreDisplay scores={scores} isDouble={(gameId == '26' ? true : false)}/>
-        <br/><br/>
+        <div className="flex flex-col items-center gap-4">
+          
+          {/* Score Displays */}
+          <div className="flex flex-nowrap justify-center items-center gap-4 sm:gap-6 max-w-[90vw] overflow-hidden mx-auto">
+            <div
+              className={`transition-transform duration-200 ${
+                activeDisplay === "left" ? "scale-100" : "opacity-70"
+              }`}
+            >
+              <ScoreDisplay scores={scores} />
+            </div>
+
+            {gameId === "26" && (
+              <>
+                <div className="h-10 w-[2px] bg-[#0a1765] opacity-60"></div>
+                <div
+                  className={`transition-transform duration-200 ${
+                    activeDisplay === "right" ? "scale-100" : "opacity-70"
+                  }`}
+                >
+                  <ScoreDisplay scores={scoresInverse} />
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Picker Buttons */}
+          {gameId === "26" && (
+            <div className="flex w-full max-w-sm gap-3 text-xs pl-4 pr-4">
+              <button
+                onClick={() => setActiveDisplay("left")}
+                className={`flex-1 px-4 py-2 rounded-lg font-semibold border transition-colors ${
+                  activeDisplay === "left"
+                    ? "bg-blue-900 text-white border-blue-700"
+                    : "bg-gray-200 text-gray-700 border-gray-300"
+                }`}
+              >
+                {activeDisplay == "left" ? "Selected" : "Select"}
+              </button>
+              <button
+                onClick={() => setActiveDisplay("right")}
+                className={`flex-1 px-4 py-2 rounded-lg font-semibold border transition-colors ${
+                  activeDisplay === "right"
+                    ? "bg-blue-900 text-white border-blue-700"
+                    : "bg-gray-200 text-gray-700 border-gray-300"
+                }`}
+              >
+                {activeDisplay == "right" ? "Selected" : "Select"}
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Stylish Game Type Dropdown */}
-          <div className="relative z-10 p-4 pt-14">
+          <div className="relative z-10 p-4 pt-5">
             <label
               htmlFor="gameTypeDropdown"
               className="block text-sm font-medium text-[#FFD701] mb-2"
@@ -597,11 +729,11 @@ const hasAllDistinctScores = (scores: string[]) => {
           </div>
         
         {/* Game board */}
-        <div className="relative z-10 p-4 pt-16">
+        <div className="relative z-10 p-4 pt-3">
           <div className="bg-gradient-to-br from-[#E1BA5C] to-[#E1BA5C] backdrop-blur-sm rounded-3xl p-4 shadow-inner">
             {gameData &&
             (
-              <GameBoard onTileClick={handleTileClick} lengthChoice={lengthChoice} lengthStart={lengthStart} scores={scores} gameId={gameId} gameType={gameType} />
+              <GameBoard onTileClick={activeDisplay === 'left' ? handleTileClick : handleInverseTileClick} lengthChoice={lengthChoice} lengthStart={lengthStart} scores={activeDisplay === 'left' ? scores : scoresInverse} gameId={gameId} gameType={gameType} />
             )}
           </div>
         </div>
@@ -721,7 +853,7 @@ const hasAllDistinctScores = (scores: string[]) => {
            
                 <div className="flex items-center gap-4">
                   <button
-                    onClick={() => setPlayModalOpen(true)}
+                    onClick={handleBetClick}
                     disabled={
                       !(
                         scores.every((score) => score.trim() !== "") &&
@@ -757,13 +889,12 @@ const hasAllDistinctScores = (scores: string[]) => {
                         <h5>Selected Numbers:</h5>
                   <h4>
                     {scores.filter((score) => score !== "").join("-")}
-                    {gameId === "26" && (
+                    {gameId === "26" && scoresInverse.every(score => score.trim() !== "") && (
                       <>
                         {"\u00A0|\u00A0"}
-                        {scores
+                        {scoresInverse
                           .filter((score) => score !== "")
                           .slice()
-                          .reverse()
                           .join("-")}
                       </>
                     )}
@@ -785,14 +916,14 @@ const hasAllDistinctScores = (scores: string[]) => {
                       <p>Winnings: {formatPeso(adjustedWinnings)}</p>
                     </div>
 
-                    {gameId === "26" && (
+                    {gameId === "26" && scoresInverse.every(score => score.trim() !== "") && (
                       <>
                         {/* Separator */}
                         <div className="w-[2px] bg-[#0a1765] opacity-50 mx-2"></div>
 
                         {/* Inverse section */}
                         <div className='text-xs'>
-                          <h4 className="font-semibold text-[#002a6e]">{scores.filter((score) => score !== "").slice().reverse().join("-") || ""}</h4>
+                          <h4 className="font-semibold text-[#002a6e]">{scoresInverse.filter((score) => score !== "").slice().join("-") || ""}</h4>
                           <p>Bet: {formatPeso(adjustedInverseBet)}</p>
                           <p>Winnings: {formatPeso(adjustedInverseWinnings)}</p>
                         </div>
@@ -833,7 +964,7 @@ const hasAllDistinctScores = (scores: string[]) => {
                       {/* Original bet */}
                       <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg flex-1 min-w-[50px]">
                         <Label htmlFor="multiplier" className="text-[#002a6e] font-medium block mb-2">
-                          Bet Amount (Original)
+                          Bet Amount ({scores.filter((score) => score !== "").join("-") || ""})
                         </Label>
                         <input
                           type="number"
@@ -845,12 +976,12 @@ const hasAllDistinctScores = (scores: string[]) => {
                         />
                       </div>
 
-                      {gameId == "26" && (
+                      {gameId == "26" && scoresInverse.every(score => score.trim() !== "") && (
                         <>
                           {/* Inverse bet */}
                           <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg flex-1 min-w-[50px]">
                             <Label htmlFor="inverseMultiplier" className="text-[#002a6e] font-medium block mb-2">
-                              Bet Amount (Inverse)
+                              Bet Amount ({scoresInverse.filter((score) => score !== "").join("-") || ""})
                             </Label>
                             <input
                               type="number"
@@ -868,7 +999,7 @@ const hasAllDistinctScores = (scores: string[]) => {
                   <Button 
                     className="w-full bg-gradient-to-r from-[#348df3cf] to-[#002a6e] hover:from-pink-600 hover:to-orange-600 text-white rounded-full py-4 text-sm font-bold"
                     disabled={balance < gameTypeData[0]?.bet || betAllow===false}
-                    onClick={gameId == "26" ? handleDoubleBetConfirm : handleBetConfirm}
+                    onClick={gameId == "26"  && scoresInverse.every(score => score.trim() !== "") && !isNaN(inverseMultiplier) && inverseMultiplier > 0 ? handleDoubleBetConfirm : handleBetConfirm}
                     >
                     CONFIRM BET
                   </Button>
@@ -877,7 +1008,7 @@ const hasAllDistinctScores = (scores: string[]) => {
                   <Button 
                     className="w-full bg-gradient-to-r from-green-500 to-emerald-700 hover:from-green-600 hover:to-green-800 text-white rounded-full py-4 text-sm font-bold"
                     disabled={betAllow === false}
-                    onClick={gameId == "26" ? handleDoubleBetSave : handleBetSave }
+                    onClick={gameId == "26"  && scoresInverse.every(score => score.trim() !== "") && !isNaN(inverseMultiplier) && inverseMultiplier > 0 ? handleDoubleBetSave : handleBetSave }
                   >
                     SAVE BET
                   </Button>
