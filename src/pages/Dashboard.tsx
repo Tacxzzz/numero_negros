@@ -1325,7 +1325,7 @@ const handleSubmit = async (e) => {
           <TabsContent value="today" className="mt-0 space-y-6">
             {/* Local Draws */}
             <div>
-              <h3 className="text-lg font-bold mb-2 text-gray-800">Local Draws</h3>
+              <h3 className="text-lg font-bold mb-2 text-gray-800">Negros STL</h3>
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {todayGames
                   .filter((game) => game.id === "26")
@@ -1334,7 +1334,7 @@ const handleSubmit = async (e) => {
                   ))}
                 {todayGames.filter((game) => game.id === "26").length === 0 && (
                   <div className="col-span-full text-gray-500 text-sm italic text-center">
-                    No local draws available
+                    No draw available
                   </div>
                 )}
               </div>
@@ -1342,7 +1342,7 @@ const handleSubmit = async (e) => {
 
             {/* National Draws */}
             <div>
-              <h3 className="text-lg font-bold mb-2 text-gray-800">National Draws</h3>
+              <h3 className="text-lg font-bold mb-2 text-gray-800">PCSO National Draw</h3>
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {todayGames
                   .filter((game) => game.id !== "26")
@@ -1351,7 +1351,7 @@ const handleSubmit = async (e) => {
                   ))}
                 {todayGames.filter((game) => game.id !== "26").length === 0 && (
                   <div className="col-span-full text-gray-500 text-sm italic text-center">
-                    No national draws available
+                    No draw available
                   </div>
                 )}
               </div>
@@ -1360,7 +1360,7 @@ const handleSubmit = async (e) => {
           <TabsContent value="popular" className="mt-0 space-y-6">
             {/* Local Draws */}
             <div>
-              <h3 className="text-lg font-bold mb-2 text-gray-800">Local Draws</h3>
+              <h3 className="text-lg font-bold mb-2 text-gray-800">Negros STL</h3>
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {popularGames
                   .filter((game) => game.id === "26")
@@ -1369,7 +1369,7 @@ const handleSubmit = async (e) => {
                   ))}
                 {popularGames.filter((game) => game.id === "26").length === 0 && (
                   <div className="col-span-full text-gray-500 text-sm italic text-center">
-                    No local draws available
+                    No draw available
                   </div>
                 )}
               </div>
@@ -1377,7 +1377,7 @@ const handleSubmit = async (e) => {
 
             {/* National Draws */}
             <div>
-              <h3 className="text-lg font-bold mb-2 text-gray-800">National Draws</h3>
+              <h3 className="text-lg font-bold mb-2 text-gray-800">PCSO National Draw</h3>
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {popularGames
                   .filter((game) => game.id !== "26")
@@ -1386,7 +1386,7 @@ const handleSubmit = async (e) => {
                   ))}
                 {popularGames.filter((game) => game.id !== "26").length === 0 && (
                   <div className="col-span-full text-gray-500 text-sm italic text-center">
-                    No national draws available
+                    No draw available
                   </div>
                 )}
               </div>
