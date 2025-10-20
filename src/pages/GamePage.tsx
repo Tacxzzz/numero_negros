@@ -582,6 +582,12 @@ const hasAllDistinctScores = (scores: string[]) => {
         // Check if either multiplier is valid
         const hasValidInverse = !isNaN(inverseMultiplier) && inverseMultiplier >= 1;
         const hasValidMultiplier = !isNaN(multiplier) && multiplier >= 1;
+        
+        if (scores.filter((score) => score !== "").join("-") === scoresInverse.filter((score) => score !== "").join("-")) {
+          alert('Both input are the same combination please change one of them');
+          setBetAllow(false);
+          return;
+        }
 
         if (hasValidInverse || hasValidMultiplier) {
           setPlayModalOpen(true);
@@ -1008,7 +1014,7 @@ const hasAllDistinctScores = (scores: string[]) => {
                   <Button 
                     className="w-full bg-gradient-to-r from-green-500 to-emerald-700 hover:from-green-600 hover:to-green-800 text-white rounded-full py-4 text-sm font-bold"
                     disabled={betAllow === false}
-                    onClick={gameId == "26"  && scoresInverse.every(score => score.trim() !== "") && !isNaN(inverseMultiplier) && inverseMultiplier > 0 ? handleDoubleBetSave : handleBetSave }
+                    onClick={gameId == "26"  && scoresInverse.every(score => score.trim() !== "") && !isNaN(inverseMultiplier) && inverseMultiplier > 0  && scoresInverse !== scores ? handleDoubleBetSave : handleBetSave }
                   >
                     SAVE BET
                   </Button>
