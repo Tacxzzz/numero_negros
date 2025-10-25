@@ -148,8 +148,8 @@ export function CreatePage() {
         {/* <div className="bg-white rounded-3xl shadow-xl overflow-hidden"> */}
           <div className="p-8">
             <h2 className="text-2xl font-bold text-center mb-4 text-[#000080] uppercase">Create an Account</h2>
-            {decodedMobile !== '' && <p className="text-red-500 text-sm text-center mt-2">This link is from Coordinator : {decodedMobile}, 
-              Note that this coordinator can view all your data since your signing up as his/her usher</p>}
+            {decodedMobile !== '' && <p className="text-red-500 text-sm text-center mt-2">This link is from {decodedUserType == 'head coordinator' ? 'Head Coordinator' : 'Coordinator'} : {decodedMobile}, 
+              Note that this {decodedUserType == 'head coordinator' ? 'Head Coordinator' : 'Coordinator'} can view all your data since your signing up as his/her {decodedUserType == 'head coordinator' ? 'Coordinator' : 'Usher'}</p>}
             {error && <p className="text-red-500 text-sm text-center mt-2">{error}</p>}
             {!showOtp ? (
               <form onSubmit={handleLogin} className="space-y-4">

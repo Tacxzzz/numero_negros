@@ -2436,6 +2436,27 @@ const handleShare = () => {
                     </div>
                   )}
 
+                  {employer === 'yes' && userType === 'head coordinator' && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Referral Link for Coordinator</label>
+                      <div className="flex items-center">
+                        <Input defaultValue={employerReferralLink} disabled className="mr-2" />
+                        <button 
+                          onClick={handleEmployeeCopy} 
+                          className="p-2 hover:bg-gray-200"
+                        >
+                          <FiCopy />
+                        </button>
+                      </div>
+                      <Button onClick={() => {
+                        openNestedModal();
+                        setIsEmployer(true);
+                      }} className="w-full bg-blue-600 text-white mt-2">
+                        Share QR
+                      </Button>
+                    </div>
+                  )}
+
                   {refLevel === 'level2' && userType !== 'bettor' && userType !== 'usher' && (
                     <>
                       <div>
