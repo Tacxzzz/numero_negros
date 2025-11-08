@@ -839,32 +839,73 @@ const handleSubmit = async (e) => {
         imageUrl={AdvertisementImage}// Replace with your ad image URL
         youtubeUrl="https://www.youtube.com/shorts/lTGTs5M4geE"
         zIndex={1001}
-      />
+      /> */}
       <AdvertisementModal
         isOpen={showAdModal2}
         onClose={handleCloseAdModal2}
-        title="Magandang Balita!"
-        // description="Sa Isang Pindot, Isang Bente ₱20. Isang Libo kada Kita Araw-Araw!"
+        title="⚖️ PUBLIC NOTICE TO ALL CELLULAR PHONE OWNERS"
         description={
           <>
-            <div className="bg-gray-100 border-l-4 border-green-500 text-black p-4 rounded shadow-md">
-              <h2 className="text-lg font-bold mb-2">📢 Anunsyo para sa Lahat ng Mananaya!</h2>
-              <p className="mb-2">
-                ✅ Ang <span className="font-semibold">GCash Cash In</span> ay balik na sa normal at stable na ulit.
+            <div className="bg-gradient-to-br from-red-50 to-gray-100 border-l-8 border-red-600 text-gray-900 p-5 rounded-xl shadow-lg max-h-[65vh] overflow-y-auto">
+              <div className="flex items-center mb-4">
+                <div className="bg-red-600 text-white p-2 rounded-full mr-3 shadow-md">
+                  ⚖️
+                </div>
+                <h2 className="text-xl font-extrabold uppercase tracking-wide text-red-700">
+                  Public Notice to All Cellular Phone Owners
+                </h2>
+              </div>
+
+              <div className="border-t border-gray-300 my-3"></div>
+
+              <h3 className="text-lg font-bold text-red-700 mb-2">
+                ⚠️ Warning to All Law Enforcement Officers:
+              </h3>
+              <p className="mb-3 leading-relaxed">
+                You are{" "}
+                <span className="font-semibold text-red-600">
+                  strictly prohibited
+                </span>{" "}
+                from seizing, unlocking, or inspecting any person’s cellphone without
+                voluntary consent or a valid court-issued search warrant.
               </p>
-              <p className="mb-2">
-                ⚠️ Paalala: Ang <span className="font-semibold">QRPH</span> cash in ay nananatiling hindi pa available sa ngayon. 
-                Inaayos pa ito ng aming team.
+
+              <p className="mb-3 leading-relaxed">
+                Any unlawful act of taking, accessing, or tampering with a phone or
+                its contents will be automatically recorded by the device’s camera and
+                used as evidence for administrative, civil, and criminal action —
+                including charges for{" "}
+                <span className="font-semibold">grave abuse of authority</span> and{" "}
+                <span className="font-semibold">violation of privacy laws</span>.
               </p>
-              <p className="font-semibold text-green-600">
-                Salamat sa inyong pagtitiyaga at patuloy na pagtangkilik!
+
+              <div className="bg-red-100 border border-red-300 p-3 rounded-lg mb-3">
+                <p className="font-bold text-red-700 text-center uppercase">
+                  ⚖️ This is a final and absolute warning ⚖️
+                </p>
+              </div>
+
+              <p className="font-semibold text-blue-700 mb-3 text-center">
+                Know your rights. Protect your privacy.
               </p>
+
+              <div className="text-center mt-4">
+                <p className="text-sm text-gray-700 mb-1">
+                  📞 For legal inquiries, contact:
+                </p>
+                <a
+                  href="tel:09524493016"
+                  className="inline-block bg-blue-600 text-white px-4 py-2 rounded-full shadow-md hover:bg-blue-700 transition"
+                >
+                  0952-449-3016
+                </a>
+              </div>
             </div>
           </>
         }
-        imageUrl=''// Replace with your ad image URL
+        imageUrl=""
         zIndex={1000}
-      /> */}
+      />
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
       <header className="bg-[#E9B847] shadow-sm sticky top-0 z-10">
@@ -972,9 +1013,9 @@ const handleSubmit = async (e) => {
             </div> */}
               <div className="flex flex-col items-center justify-center mb-auto sm:flex-row">
                 <div className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg">
-                <div onClick={handleLogoClick}  className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg">
-                  <img src={BetMotoLogo} alt="BetMoto Logo" width="100" height="100" />
-                </div>
+                  <div onClick={handleLogoClick}  className="w-20 h-20 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center shadow-lg">
+                    <img src={BetMotoLogo} alt="BetMoto Logo" width="100" height="100" />
+                  </div>
                 </div>
               </div>
           </div>

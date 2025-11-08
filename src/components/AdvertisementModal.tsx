@@ -1,5 +1,5 @@
 import React from 'react';
-import BetMotoLogo from "@/files/BetMotoLogoWithName.svg";
+import BetMotoLogo from "@/files/NegrosLogo.png";
 import AdvertisementImage from "@/files/advertisement.svg"; 
 import AdvertisementImageContent from "@/files/advertisementContent.pdf";
 
@@ -84,7 +84,7 @@ const AdvertisementModal: React.FC<AdvertisementModalProps> = ({
     </button>
     
     <div className="flex justify-center">
-      <img src={BetMotoLogo} alt="Advertisement" className="w-16 h-12 object-cover rounded-md mb-4" />
+      <img src={BetMotoLogo} alt="Advertisement" className="w-12 h-12 object-cover rounded-md mb-4" />
     </div>
     {/* Conditional rendering: YouTube video or clickable image */}
     <div className="flex justify-center mb-4">

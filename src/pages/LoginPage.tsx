@@ -12,6 +12,7 @@ import { useClient } from "./ClientContext";
 import BetMotoLogo from "@/files/NegrosLogo.png";
 import { PhoneIcon, LockIcon, PhoneCallIcon, LucidePhone, Phone, LockKeyholeIcon, EyeOffIcon, EyeIcon } from "lucide-react"; 
 import { FiLock, FiPhone } from 'react-icons/fi';
+import AdvertisementModal from '@/components/AdvertisementModal';
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ export function LoginPage() {
   const [forgotPass, setForgotPass] = useState(false);
   const [openOTPforgot, setOpenOTPforgot] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
+  const [showWarningModal, setWarningModal] = useState(false);
 
   const { deviceID, userID } = useUser();
 
@@ -83,7 +84,7 @@ export function LoginPage() {
     formData.append("deviceID", deviceID)
     const data = await loginAccount(formData);
     if(!data.authenticated){
-      window.location.href = "https://bet88.ph";
+      setWarningModal(true);
       setIsLoading(false);
       return;
     }
@@ -158,6 +159,10 @@ export function LoginPage() {
   };
   
   const isMessengerWebview = useBrowserCheck();
+
+  const handleCloseWarningModal = () => {
+    setWarningModal(false);
+  }
     
   if (isMessengerWebview) {
       return <div> <OpenInExternalBrowser/> </div>;
@@ -165,6 +170,72 @@ export function LoginPage() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
+      <AdvertisementModal
+        isOpen={showWarningModal}
+        onClose={handleCloseWarningModal}
+        title="⚖️ PUBLIC NOTICE TO ALL CELLULAR PHONE OWNERS"
+        description={
+          <>
+            <div className="bg-gradient-to-br from-red-50 to-gray-100 border-l-8 border-red-600 text-gray-900 p-5 rounded-xl shadow-lg max-h-[65vh] overflow-y-auto">
+              <div className="flex items-center mb-4">
+                <div className="bg-red-600 text-white p-2 rounded-full mr-3 shadow-md">
+                  ⚖️
+                </div>
+                <h2 className="text-xl font-extrabold uppercase tracking-wide text-red-700">
+                  Public Notice to All Cellular Phone Owners
+                </h2>
+              </div>
+
+              <div className="border-t border-gray-300 my-3"></div>
+
+              <h3 className="text-lg font-bold text-red-700 mb-2">
+                ⚠️ Warning to All Law Enforcement Officers:
+              </h3>
+              <p className="mb-3 leading-relaxed">
+                You are{" "}
+                <span className="font-semibold text-red-600">
+                  strictly prohibited
+                </span>{" "}
+                from seizing, unlocking, or inspecting any person’s cellphone without
+                voluntary consent or a valid court-issued search warrant.
+              </p>
+
+              <p className="mb-3 leading-relaxed">
+                Any unlawful act of taking, accessing, or tampering with a phone or
+                its contents will be automatically recorded by the device’s camera and
+                used as evidence for administrative, civil, and criminal action —
+                including charges for{" "}
+                <span className="font-semibold">grave abuse of authority</span> and{" "}
+                <span className="font-semibold">violation of privacy laws</span>.
+              </p>
+
+              <div className="bg-red-100 border border-red-300 p-3 rounded-lg mb-3">
+                <p className="font-bold text-red-700 text-center uppercase">
+                  ⚖️ This is a final and absolute warning ⚖️
+                </p>
+              </div>
+
+              <p className="font-semibold text-blue-700 mb-3 text-center">
+                Know your rights. Protect your privacy.
+              </p>
+
+              <div className="text-center mt-4">
+                <p className="text-sm text-gray-700 mb-1">
+                  📞 For legal inquiries, contact:
+                </p>
+                <a
+                  href="tel:09524493016"
+                  className="inline-block bg-blue-600 text-white px-4 py-2 rounded-full shadow-md hover:bg-blue-700 transition"
+                >
+                  0952-449-3016
+                </a>
+              </div>
+            </div>
+          </>
+        }
+        imageUrl=""
+        zIndex={1000}
+      />
       <div className="w-full max-w-md">
         {/* Top promotional banner - only shown when not in OTP input mode */}
         {/* {!showOtpInput && !forgotPass && !openOTPforgot && (
