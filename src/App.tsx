@@ -67,13 +67,24 @@ function App() {
   if (redirected) {
     // Show locked screen instead of your app routes
     return (
-      <div className="flex items-center justify-center min-h-screen text-center">
-        <button
-          className="px-4 py-2 bg-blue-600 text-white rounded"
-          onClick={() => goToBet88()}
-        >
-          Go to Bet88
-        </button>
+      <div className="flex flex-col items-center justify-center min-h-screen text-center gap-4">
+        <div className="flex gap-4 mt-4">
+          <button
+            className="px-4 py-2 bg-blue-600 text-white rounded"
+            onClick={() => goToBet88()}
+          >
+            Go to Bet88
+          </button>
+          <button
+            className="px-4 py-2 bg-gray-600 text-white rounded"
+            onClick={() => {
+              sessionStorage.removeItem('redirectedToBet88'); // Clear the session flag
+              window.location.reload(); // Refresh the app so user can access it again
+            }}
+          >
+            Refresh
+          </button>
+        </div>
       </div>
     );
   }
