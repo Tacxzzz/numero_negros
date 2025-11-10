@@ -5,6 +5,7 @@ const AddToHomeScreen = () => {
   const [showButton, setShowButton] = useState(false)
 
   useEffect(() => {
+    // Listen for "Add to Home Screen" event
     const handler = (e: Event) => {
       e.preventDefault()
       setDeferredPrompt(e)
@@ -26,6 +27,7 @@ const AddToHomeScreen = () => {
     } else {
       console.log('User dismissed the A2HS prompt')
     }
+
     setDeferredPrompt(null)
     setShowButton(false)
   }
@@ -34,12 +36,11 @@ const AddToHomeScreen = () => {
 
   return (
     <button
-    onClick={handleClick}
-    className="fixed bottom-4 right-4 mb-16 px-4 py-2 bg-blue-800 text-white rounded-lg shadow-md z-50 font-bold"
+      onClick={handleClick}
+      className="fixed bottom-4 right-4 mb-16 px-4 py-2 bg-blue-800 text-white rounded-lg shadow-md z-50 font-bold hover:bg-blue-900 transition"
     >
-    Make a Shortcut
+      Make a Shortcut
     </button>
-
   )
 }
 

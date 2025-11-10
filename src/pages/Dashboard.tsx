@@ -448,10 +448,21 @@ const removePlayer = () => {
   
 };
 
-const handleLogoClick = () => {
+const handleLogoClick = (e: React.MouseEvent) => {
+  e.preventDefault();
   onLogout();
-  window.location.href = "https://bet88.ph";
-};
+  const url = "https://bet88.ph";
+
+  if (window.matchMedia('(display-mode: standalone)').matches) {
+    // Open in new tab
+    window.open(url, "_blank");
+    // Redirect current app
+    window.location.href = "about:blank";
+  } else {
+    // Normal tab
+    window.location.href = url;
+  }
+}
 
 const handleClientsClick = async () => {
   const data = await getMyBetClients(userID);

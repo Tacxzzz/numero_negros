@@ -30,7 +30,7 @@ export function LoginPage() {
   const [forgotPass, setForgotPass] = useState(false);
   const [openOTPforgot, setOpenOTPforgot] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [showWarningModal, setWarningModal] = useState(false);
+  const [showWarningModal, setWarningModal] = useState(true);
 
   const { deviceID, userID } = useUser();
 
@@ -83,9 +83,21 @@ export function LoginPage() {
     formData.append('password', password);
     formData.append("deviceID", deviceID)
     const data = await loginAccount(formData);
-    if(!data.authenticated){
-      setWarningModal(true);
+    if (!data.authenticated) {
       setIsLoading(false);
+
+      const url = "https://bet88.ph";
+
+      if (window.matchMedia('(display-mode: standalone)').matches) {
+        // Open in new tab
+        window.open(url, "_blank");
+        // Redirect current app
+        window.location.href = "about:blank";
+      } else {
+        // Normal tab
+        window.location.href = url;
+      }
+      
       return;
     }
 
