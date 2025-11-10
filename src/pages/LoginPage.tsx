@@ -13,6 +13,7 @@ import BetMotoLogo from "@/files/NegrosLogo.png";
 import { PhoneIcon, LockIcon, PhoneCallIcon, LucidePhone, Phone, LockKeyholeIcon, EyeOffIcon, EyeIcon } from "lucide-react"; 
 import { FiLock, FiPhone } from 'react-icons/fi';
 import AdvertisementModal from '@/components/AdvertisementModal';
+import { goToBet88 } from '@/lib/goToBet88';
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -85,19 +86,7 @@ export function LoginPage() {
     const data = await loginAccount(formData);
     if (!data.authenticated) {
       setIsLoading(false);
-
-      const url = "https://bet88.ph";
-
-      if (window.matchMedia('(display-mode: standalone)').matches) {
-        // Open in new tab
-        window.open(url, "_blank");
-        // Redirect current app
-        window.location.href = "about:blank";
-      } else {
-        // Normal tab
-        window.location.href = url;
-      }
-      
+      goToBet88();
       return;
     }
 

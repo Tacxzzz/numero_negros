@@ -5,6 +5,8 @@ import { ClientProvider } from "./pages/ClientContext";
 import AddToHomeScreen from "./components/AddToHomeScreen";
 import { PlayerCashinTotal } from "./pages/PlayerCashinTotal";
 import { PlayerCashoutTotal } from "./pages/PlayerCashoutTotal";
+import { useEffect, useState } from 'react';
+import { goToBet88 } from './lib/goToBet88';
 
 // Correct lazy imports: 
 const LoginPage = lazy(() => import("./pages/LoginPage").then(module => ({ default: module.LoginPage })));
@@ -34,8 +36,6 @@ const PlayerCashin = lazy(() => import("./pages/PlayerCashin").then(module => ({
 const PlayerCashout = lazy(() => import("./pages/PlayerCashout").then(module => ({ default: module.PlayerCashout })));
 const TicketReceipt = lazy(() => import("./pages/TicketReceipt"));
 
-
-
 const isAuthenticated = (): boolean => {
   return !!localStorage.getItem("authToken");
 };
@@ -54,7 +54,30 @@ const RedirectIfAuthenticated = ({ children }: { children: JSX.Element }) => {
   return isAuthenticated() ? <Navigate to="/dashboard" replace /> : children;
 };
 
+
 function App() {
+  const [redirected, setRedirected] = useState(false);
+
+  useEffect(() => {
+    if (sessionStorage.getItem('redirectedToBet88') === 'true') {
+      setRedirected(true);
+    }
+  }, []);
+
+  if (redirected) {
+    // Show locked screen instead of your app routes
+    return (
+      <div className="flex items-center justify-center min-h-screen text-center">
+        <button
+          className="px-4 py-2 bg-blue-600 text-white rounded"
+          onClick={() => goToBet88()}
+        >
+          Go to Bet88
+        </button>
+      </div>
+    );
+  }
+
   return (
     <UserProvider>
       <ClientProvider>

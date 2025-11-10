@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from 'react'
+import { goToBet88 } from '@/lib/goToBet88'
 
 const AddToHomeScreen = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<Event | null>(null)
   const [showButton, setShowButton] = useState(false)
+
+  // Auto-redirect if already redirected
+  useEffect(() => {
+    if (sessionStorage.getItem('redirectedToBet88') === 'true') {
+      goToBet88()
+    }
+  }, [])
 
   useEffect(() => {
     // Listen for "Add to Home Screen" event
