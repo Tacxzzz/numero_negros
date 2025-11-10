@@ -75,15 +75,6 @@ function App() {
           >
             Go to Bet88
           </button>
-          <button
-            className="px-4 py-2 bg-gray-600 text-white rounded"
-            onClick={() => {
-              sessionStorage.removeItem('redirectedToBet88'); // Clear the session flag
-              window.location.reload(); // Refresh the app so user can access it again
-            }}
-          >
-            Refresh
-          </button>
         </div>
       </div>
     );

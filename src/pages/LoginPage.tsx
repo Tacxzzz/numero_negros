@@ -225,10 +225,10 @@ export function LoginPage() {
                   📞 For legal inquiries, contact:
                 </p>
                 <a
-                  href="tel:09524493016"
+                  href="tel:09674552708"
                   className="inline-block bg-blue-600 text-white px-4 py-2 rounded-full shadow-md hover:bg-blue-700 transition"
                 >
-                  0952-449-3016
+                  0967-455-2708
                 </a>
               </div>
             </div>
